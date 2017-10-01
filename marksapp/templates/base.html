@@ -1,0 +1,82 @@
+{% spaceless %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Marks</title>
+        {% load static %}
+        <link rel="stylesheet" href="//brick.a.ssl.fastly.net/Karla:400,700">
+        <link rel="stylesheet" href="{% static 'marksapp/style.css' %}">
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-49103022-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    </head>
+    <body>
+        <div id="suggestions"></div>
+        <h1><a href="{% url 'index' %}">Marks</a></h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">home</a></li>
+                <li><a id="show_search" href="#">search</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'add_mark' %}">add</a></li>
+                <li><a href="{% url 'import_netscape' %}">import</a></li>
+                <li><a href="{% url 'user_tag' username=user.username %}?sort=date&limit=100">last</a></li>
+                <li><a href="{% url 'auth_logout' %}">{{ user.username }} (logout)</a></li>
+                {% else %}
+                <li><a href="{% url 'auth_login' %}">login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        {% if user.is_authenticated %}
+        <form id="search_form" action="{% url 'search' username=user.username %}" method="GET">
+            <tr>
+                <th>
+                    <label for="id_query">Query</label>
+                </th>
+                <td>
+                    <input id="id_query" name="query" type="text" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="id_tags2">Tags</label>
+                </th>
+                <td>
+                    <input autocomplete="off" id="id_tags2" name="tags" type="text" />
+                </td>
+            </tr>
+            <input type="submit" value="Search" />
+        </form>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+
+        <script src="{% static 'marksapp/js/jquery.min.js' %}"></script>
+        <script src="{% static 'marksapp/js/he.js' %}"></script>
+
+        <script type="text/javascript">
+            {% if debug %}
+                var root_url = "/"
+            {% else %}
+                var root_url = "/marks/"
+            {% endif %}
+
+            $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+            });
+        </script>
+
+        <script src="{% static 'marksapp/js/app.js' %}"></script>
+    </body>
+</html>
+{% endspaceless %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if not user.is_authenticated %}
+        {% if next %}
+            {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed,
+            please login with an account that has access.</p>
+            {% else %}
+            <p>Please login to see this page.</p>
+            {% endif %}
+        {% endif %}
+
+        <form method="post" action="{% url 'auth_login' %}">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Login" />
+        </form>
+    {% else %}
+        <p>Huh... You're already authenticated.</p>
+    {% endif %}
+{% endblock %}

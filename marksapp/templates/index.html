@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<span class="tag big marginbottom user">
+    <a>{{ username }}</a>
+</span>
+
+<div>sorting by {{ sort }}</div>
+<ul class="sort">
+    {% if sort != "name" %}<li><a href="?sort=name">name</a></li>{% endif %}
+    {% if sort != "quantity" %}<li><a href="?sort=quantity">quantity</a></li>{% endif %}
+</ul>
+
+<ul id="marks">
+    <li class="item">
+        <a href="{% url 'user_tag' username=username %}">all</a><span class="number">{{ all }}</span>
+    </li>
+
+    {% for tag in tags %}
+    {% comment %}
+    <li class="item indextagbg" style="width: {% widthratio tag.num_marks all 100 %}%">
+    {% endcomment %}
+    <li class="item">
+        <a class="tag_name" href="{% url 'user_tag' slug=tag.name username=username %}">{{ tag.name }}</a>
+        <span class="number">{{ tag.num_marks }}</span>
+        {% comment %}
+        <span style="margin-left: 10px; height:10px; display: inline-block; background-color: red; width: {% widthratio tag.num_marks all 70 %}%"></span>
+        {% endcomment %}
+    </li>
+    {% endfor %}
+</ul>
+
+<input type="text" id="filter">
+
+{% endblock %}

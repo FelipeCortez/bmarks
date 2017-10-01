@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<span class="tag big marginbottom user"><a href="#">{{ username }}</a></span>
+
+{% if query %}
+<span class="tag big marginbottom query"><a href="#">{{ query }}</a></span>
+{% endif %}
+
+{% for tag in tags %}
+    <span class="tag big">
+        <a href="#">{{ tag }}</a>
+    </span>
+    {% if not forloop.last %}
+        <span class="plus big">&</span>
+    {% endif %}
+{% endfor %}
+
+<ul id="marks">
+    {% for mark in marks %}
+    {% include "mark.html" %}
+    {% endfor %}
+</ul>
+
+{% comment %}
+<form id="tags_selected_form" action="#" method="POST">
+    <ul id="marks">
+        {% for mark in marks %}
+        {% include "mark.html" %}
+        {% endfor %}
+    </ul>
+
+    <button id="select_all">Select all</button>
+    <button id="deselect_all">Deselect all</button>
+
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+</form>
+{% endcomment %}
+{% endblock %}

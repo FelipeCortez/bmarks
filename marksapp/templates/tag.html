@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load filters %}
+
+<div class="marginbottom">
+    {% if user.is_authenticated and user.username == username %}
+    {% if tags|length == 1 %}
+        {% comment %}
+        <form action="#" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit" />
+        </form>
+
+        {% comment %}
+            <nav>
+                <ul>
+                    <li>
+                        <a href="{% url 'index' %}">edit</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'delete_tag' slug=tags.0 %}">delete</a>
+                    </li>
+                </ul>
+            </nav>
+        {% endcomment %}
+    {% endif %}
+    {% endif %}
+
+        <span class="tag big user">
+            <a>{{ username }}</a>
+        </span>
+        <span class="plus big mdot">&#183;</span>
+
+        {% for tag in tags %}
+            <span class="tag big">
+                {% if tags|length > 1 %}
+                <a class="action" href="{% url 'tag' tags|cut_tag:tag %}">x</a>
+                {% else %}
+                <a class="action" href="{% url 'user_index' username=username %}">x</a>
+                {% endif %}
+                <a href="#">{{ tag }}</a>
+            </span>
+            {% if not forloop.last %}
+                <span class="plus big">&</span>
+            {% endif %}
+        {% endfor %}
+
+</div>
+
+<ul id="marks">
+    {% for tag in tag_count %}
+    <li class="item">
+    <span class="tag">
+        <a class="action" href="{% url 'user_tag' slug=joinedtags|add:'+'|add:tag.name username=username %}">+</a>
+        <a href="{% url 'user_tag' slug=tag.name username=username %}">{{ tag.name }}</a>
+    </span>
+    <span class="number">{{ tag.num_marks }}</span>
+    </li>
+    {% endfor %}
+
+    {% for mark in marks %}
+    {% include "mark.html" %}
+    {% endfor %}
+</ul>
+{% endblock %}

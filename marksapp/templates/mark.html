@@ -1,0 +1,25 @@
+{% load filters %}
+
+<li class="item">
+    {% comment %}
+    <input name="check_mark" type="checkbox" value="{{ mark.id }}">
+    {% endcomment %}
+    <a href="{{ mark.url }}">{{ mark.name }}</a>
+    {% for tag in mark.tags.all %}
+    <span class="tag">
+        {% if not search and tag.name not in tags %}
+        <a class="action" href="{% url 'user_tag' slug=tags|add_tag:tag.name username=username %}">+</a>
+        {% endif %}
+        <a href="{% url 'user_tag' slug=tag.name username=username %}">{{ tag.name }}</a>
+    </span>
+    {% endfor %}
+    {% if user.is_authenticated and user.username == username %}
+    <span class="mdot">&#183;</span>
+    <span class="action"><a mark_id="{{ mark.id }}" class="info_btn" href="#" title="{{ mark.date_added }}">info</a></span>
+    <span class="action"><a mark_id="{{ mark.id }}" class="edit_btn" href="#">edit</a></span>
+    <span class="action"><a mark_id="{{ mark.id }}" class="delete_btn" href="#">delete</a></span>
+    <!--
+        <span class="action"><a mark_id="{{ mark.id }}" href="{% url 'delete_mark' mark.id %}" onclick="return confirm('Are you sure?');">delete</a></span>
+    -->
+    {% endif %}
+</li>
