@@ -1,49 +1,51 @@
 {% extends "base.html" %}
-
-{% block content %}
 {% load filters %}
 
-<div class="marginbottom">
-        <span class="tag big user">
-            <a>{{ username }}</a>
-        </span>
-        {% if query %}
-        <span class="plus big mdot">&#183;</span>
-        <span class="tag big query"><a href="#">{{ query }}</a></span>
-        {% endif %}
-
-        {% if tags %}
-        <span class="plus big mdot">&#183;</span>
-        {% endif %}
-
-        {% for tag in tags %}
-            <span class="tag big">
-                {% if tags|length > 1 %}
-                <a class="action" href="{% url 'user_tag' slug=tags|remove_tag:tag username=username %}">x</a>
-                {% else %}
-                <a class="action" href="{% url 'user_index' username=username %}">x</a>
-                {% endif %}
-                <a href="#">{{ tag }}</a>
-            </span>
-            {% if not forloop.last %}
-                <span class="plus big">&</span>
+{% block page_info %}
+    <span class="green-and-bold">
+    ·
+    {{ username }}
+    {% if tags %}
+    ·
+    {% endif %}
+    </span>
+    {% for tag in tags %}
+        <span class="tag">
+            {% if tags|length > 1 %}
+            <a class="action" href="{% url 'user_tag' slug=tags|remove_tag:tag username=username %}">x</a>
+            {% else %}
+            <a class="action" href="{% url 'user_index' username=username %}">x</a>
             {% endif %}
-        {% endfor %}
+            <a href="#">{{ tag }}</a>
+        </span>
+        {% if not forloop.last %}
+            <span class="plus">&</span>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+
+<div class="marginbottom">
+    {% if query %}
+    <span class="tag big query"><a href="#">{{ query }}</a></span>
+    {% endif %}
+
 </div>
 
+<!--
 <div>sorting by {{ sort }}</div>
 <ul class="sort">
     {% if sort != "name" %}<li><a href="?sort=name">name</a></li>{% endif %}
     {% if sort != "date" %}<li><a href="?sort=date">date</a></li>{% endif %}
 </ul>
+-->
 
 <ul>
 {% for mark in marks %}
 {% include "mark.html" %}
 {% endfor %}
 </ul>
-
-<div class="tilde">~</div>
 
 <ul id="marks">
     {% for tag in tag_count %}

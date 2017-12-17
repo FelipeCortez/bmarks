@@ -1,12 +1,14 @@
 {% spaceless %}
 <!DOCTYPE html>
 <html lang="en">
+    <!-- welcome to my source code!!! it's a bit tight in here -->
+
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Marks</title>
         {% load static %}
-        <link rel="stylesheet" href="//brick.a.ssl.fastly.net/Karla:400,700">
+        <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i" rel="stylesheet">
         <link rel="stylesheet" href="{% static 'marksapp/style.css' %}">
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -19,12 +21,10 @@
     </script>
     </head>
     <body>
-        <div id="suggestions"></div>
-        <h1><a href="{% url 'index' %}">Marks</a></h1>
-        <nav>
+        <div id="navbar">
             <ul>
-                <li><a href="{% url 'index' %}">home</a></li>
-                <li><a id="show_search" href="#">search</a></li>
+                <li><a class="active" href="{% url 'index' %}">home</a></li>
+                <li><a id="show-search" href="#">search</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'add_mark' %}">add</a></li>
                 <li><a href="{% url 'import_netscape' %}">import</a></li>
@@ -34,10 +34,34 @@
                 <li><a href="{% url 'auth_login' %}">login</a></li>
                 {% endif %}
             </ul>
-        </nav>
+        </div>
+
+        <div class="container">
+        <div id="suggestions"></div>
+
+        <div id="page-info">
+            <span class="green-and-bold">
+                <a href="{% url 'index' %}">marks</a>
+            </span>
+            {% block page_info %}
+            <span class="just-green">
+            ·
+                {% if user.is_authenticated %}
+                    {% if user.username == username %}
+                    <span class="italic">you</span>
+                    {% else %}
+                        {{ username }}
+                    {% endif %}
+                {% else %}
+                {{ user.username }}
+                {% endif %}
+            {% endblock %}
+            </span>
+        </div>
 
         {% if user.is_authenticated %}
-        <form id="search_form" action="{% url 'search' username=user.username %}" method="GET">
+        <form id="search-form" action="{% url 'search' username=user.username %}" method="GET">
+            <div class="form-container">
             <tr>
                 <th>
                     <label for="id_query">Query</label>
@@ -55,11 +79,13 @@
                 </td>
             </tr>
             <input type="submit" value="Search" />
+            </div>
         </form>
         {% endif %}
 
         {% block content %}
         {% endblock %}
+        </div>
 
         <script src="{% static 'marksapp/js/jquery.min.js' %}"></script>
         <script src="{% static 'marksapp/js/he.js' %}"></script>
