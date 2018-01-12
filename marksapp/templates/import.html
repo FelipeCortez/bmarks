@@ -1,13 +1,19 @@
 {% extends "base.html" %}
+
+{% block page_info %}
+<span class="green-and-bold">
+·
+import
+</span>
+{% endblock %}
+
 {% block content %}
 
-<span class="tag user big marginbottom">
-    <a>Import</a>
-</span>
-
 <form action="#" method="POST" enctype="multipart/form-data">
+    <div class="form-container">
     {% csrf_token %}
     {{ form }}
     <input type="submit">
+    </div>
 </form>
 {% endblock %}

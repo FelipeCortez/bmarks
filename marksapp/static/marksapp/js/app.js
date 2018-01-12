@@ -1,15 +1,13 @@
-(function($){
-  $.fn.focusTextToEnd = function(){
-    this.focus();
-    var $thisVal = this.val();
-    this.val('').val($thisVal);
-    return this;
-  }
-}(jQuery));
+$.fn.focusTextToEnd = function(){
+  this.focus();
+  var $thisVal = this.val();
+  this.val('').val($thisVal);
+  return this;
+}
 
-var all_tags = "hey";
+var all_tags = "";
 
-function get_all_tags() {
+function getAllTags() {
   $.ajax({
     url: root_url + 'api/tags/',
     dataType: 'json',
@@ -51,20 +49,22 @@ function filterSuggestions(prefix) {
         numberElement = $("<span/>").text(all_tags[i]["num_marks"]);
         numberElement.addClass("number");
 
-        tagName = $("<span/>").text(all_tags[i]["name"]);
+        tagName = $("<a/>").text(all_tags[i]["name"]);
         tagName.addClass("tag-name");
-        listElement = $("<li/>").append(tagName);
+
+        var listElement = $("<li/>").append(tagName);
         listElement.append(numberElement);
+
         list.append(listElement);
+
       }
     }
 
     offset = $("#id_tags").offset();
     input_height = $("#id_tags").outerHeight();
-    console.log(input_height);
     $("#suggestions").css({'top' : (offset.top + input_height) + 'px',
-      'left' : (offset.left) + 'px',
-      'display': 'block'});
+                           'left' : (offset.left) + 'px',
+                           'display': 'block'});
   } else {
     $("#suggestions").css({'display': 'none'});
   }
@@ -95,9 +95,10 @@ function editMarkForm(id, form) {
 }
 
 function getTitle(url) {
+  console.log("Oie");
   $.ajax({
     type: "POST",
-    url: root_url + 'api/getTitle/',
+    url: root_url + 'api/get_title/',
     data: {
       'url': url
     },
@@ -126,7 +127,7 @@ function editMark(id) {
 
 function deleteMark(id) {
   $.post({
-    url: root_url + 'api/deleteMark/' + id + '/',
+    url: root_url + 'api/delete_mark/' + id + '/',
     success: function(data) {
       console.log(data);
       location.reload();
@@ -140,9 +141,18 @@ function appendForm(form, el) {
 
 $(function() {
   populateWithParameters();
-  get_all_tags();
+  getAllTags();
   var mark_id = 0;
   $("#filter").hide();
+
+  $("#suggestions").on("click", "li", function() {
+    var tags = $("#id_tags").val().split(",");
+    var last = tags[tags.length - 1].replace(/ /g,'');
+    var fullTag = $(this).find("a").text();
+
+    $("#id_tags").val($("#id_tags").val() + fullTag.slice(last.length - fullTag.length));
+    $("#suggestions").css({'display': 'none'});
+  });
 
   $(".edit_btn").click(function(e) {
     e.preventDefault();
@@ -212,10 +222,19 @@ $(function() {
     }
   });
 
-  $(document).on("change paste keyup", "#id_tags", function(e) {
-    tags = $("#id_tags").val().split(",");
-    last = tags[tags.length - 1].replace(/ /g,'');
-    filterSuggestions(last);
+  $(document).on("keyup", "#id_tags", function(e) {
+    if ($("#id_tags").val().substr(-1) != " ") {
+      var tags = $("#id_tags").val().split(",");
+      var last = tags[tags.length - 1].replace(/ /g, '');
+      filterSuggestions(last);
+    } else {
+      $("#suggestions").css({'display': 'none'});
+    }
+  });
+
+  $(document).on("mousedown", "#suggestions", function(e) {
+    // prevents input from blurring
+    e.preventDefault();
   });
 
   $(document).on("focusout", "#id_tags", function(e) {
@@ -232,23 +251,4 @@ $(function() {
       }
     });
   });
-
-  /*
-    $(document).keyup(function(event){
-        var filter = $("#filter").val();
-
-        if(event.key == '/') {
-            $("#filter").show();
-            $("#filter").focus();
-        } else if(event.keyCode === 27) {
-  // ESC
-            $("#filter").val("").trigger("change");
-            $("#filter").hide();
-        } else if(event.keyCode === 13) {
-            if(filter != '') {
-                $(".tag_name:visible:first").focus();
-            }
-        }
-    });
-    */
 });

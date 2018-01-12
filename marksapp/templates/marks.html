@@ -26,14 +26,13 @@
 
 {% block content %}
 
+<!--
 <div class="marginbottom">
     {% if query %}
     <span class="tag big query"><a href="#">{{ query }}</a></span>
     {% endif %}
-
 </div>
 
-<!--
 <div>sorting by {{ sort }}</div>
 <ul class="sort">
     {% if sort != "name" %}<li><a href="?sort=name">name</a></li>{% endif %}

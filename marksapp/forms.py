@@ -63,7 +63,11 @@ class BookmarkForm(BaseModelForm):
 
     class Meta:
         model = Bookmark
-        fields = ['url', 'name', 'tags']
+        fields = ['url', 'name', 'tags', 'description']
+        widgets = {
+                'description': forms.Textarea(attrs={'rows':3, 'placeholder':'optional'}),
+        }
+
 
     def save(self, commit=True, *args, **kwargs):
         m = super(BookmarkForm, self).save(commit=False, *args, **kwargs)

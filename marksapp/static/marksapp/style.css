@@ -119,8 +119,24 @@ textarea {
     margin-bottom: 15px;
 }
 
+input[type='text']:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+input[type=file]:focus,
+input[type=submit]:focus,
+button:focus,
+textarea:focus {
+    box-shadow: 0 0 5px rgba(63, 145, 204, .8);
+    border-color: #1A79AA;
+}
+
 input[type=checkbox] {
     margin: 0 5px 0 0;
+}
+
+textarea {
+    min-height: 17px;
+    resize: vertical;
 }
 
 input[type=submit],
@@ -136,6 +152,18 @@ button {
     box-shadow: 2px 2px 0 rgba(0, 0, 0, .04);
     outline: none;
     float: right;
+}
+
+input[type=submit]:hover,
+button:hover {
+    background-color: #3F91CC;
+    color: #FFFFFF;
+    border-color: #1A79AA;
+}
+
+::placeholder {
+    color: #CCCCCC;
+    font-style: italic;
 }
 
 /* -------------------------------------------- */
@@ -259,6 +287,10 @@ li, li > a, li span, h6 {
     padding: 5px;
     background-color: white;
     border-bottom: 1px solid #D8D8D8;
+}
+
+#suggestions li:hover {
+    background-color: #F5F5F5;
 }
 
 #suggestions li:last-of-type {
