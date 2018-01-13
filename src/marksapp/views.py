@@ -336,17 +336,14 @@ def edit_selection(request):
 @login_required
 def edit_mark_form(request, id):
     mark = Bookmark.objects.get(id=id)
-    print("hey")
-
+    
     if request.method == 'POST':
-        print("what's")
         form = forms.BookmarkForm(request.POST, instance=mark)
         if form.is_valid():
             form.save()
             tag_untagged(request.user)
             return HttpResponse('success')
     else:
-        print("going on?")
         form = forms.BookmarkForm(instance=mark)
 
     return render(request, 'edit_mark_form.html', {'form': form})
