@@ -56,7 +56,6 @@ function filterSuggestions(prefix) {
         listElement.append(numberElement);
 
         list.append(listElement);
-
       }
     }
 
@@ -218,9 +217,16 @@ $(function() {
     }
   });
 
-  $(document).on("keyup", "#id_tags", function(e) {
-    if ($("#id_tags").val().substr(-1) != " ") {
-      let tags = $("#id_tags").val().split(",");
+  $(document).on("keyup click focus", "#id_tags", function(e) {
+    let tags_str = $("#id_tags").val();
+
+    // autocomplete should display when:
+    // caret is on the last character
+    // user is not selecting text
+    if (tags_str.substr(-1) != " " &&
+        tags_str.length == this.selectionStart &&
+        this.selectionStart == this.selectionEnd) {
+      let tags = tags_str.split(",");
       let last = tags[tags.length - 1].replace(/ /g, '');
       filterSuggestions(last);
     } else {

@@ -7,6 +7,9 @@ from django.core.validators import validate_slug
 class Tag(models.Model):
     name = models.SlugField(max_length=50, unique=True)
 
+    class Meta:
+        ordering = ["name"]
+
     def __str__(self):
         return self.name
 

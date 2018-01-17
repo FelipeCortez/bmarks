@@ -102,12 +102,14 @@ def marks(request, username, tags=[], query=''):
     else:
         bookmarks = bookmarks.order_by(Lower("name"))
 
+    #bookmarks.tags.order_by('name')
+    print(bookmarks)
+
     if limit: bookmarks = bookmarks[:limit]
 
     tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
                            .annotate(num_marks=Count('bookmark')) \
                            .order_by('-num_marks', 'name')
-
 
     context = {
         'username': username,
