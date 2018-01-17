@@ -102,9 +102,6 @@ def marks(request, username, tags=[], query=''):
     else:
         bookmarks = bookmarks.order_by(Lower("name"))
 
-    #bookmarks.tags.order_by('name')
-    print(bookmarks)
-
     if limit: bookmarks = bookmarks[:limit]
 
     tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
@@ -246,6 +243,54 @@ def import_json(request):
         form = forms.ImportJsonForm()
     return render(request, 'import.html', {'form': form})
 
+@login_required
+def edit_selection(request):
+    if request.method == 'POST':
+        marks_ids = request.POST.getlist('check_mark')
+        tags = tags_strip_split(request.POST.get('tags'))
+
+        for mark_id in marks_ids:
+            mark = Bookmark.objects.get(id=mark_id)
+            for tag in tags:
+                if tag[0] == "!":
+                    try:
+                        mark_tag = mark.tags.get(name=tag[1:])
+                    except Tag.DoesNotExist:
+                        mark_tag = None
+
+                    if mark_tag:
+                        mark.tags.remove(mark_tag)
+                # wow what's going on here lol
+                if re.match("^[-\w]+$", tag):
+                    t = Tag.objects.get_or_create(name=tag)[0]
+                    mark.tags.add(t)
+
+        tag_untagged(request.user)
+        return HttpResponse('success')
+
+    return HttpResponse('success')
+
+@login_required
+def edit_mark_form(request, id):
+    mark = Bookmark.objects.get(id=id)
+
+    if request.method == 'POST':
+        form = forms.BookmarkForm(request.POST, instance=mark)
+        if form.is_valid():
+            form.save()
+            tag_untagged(request.user)
+            return HttpResponse('success')
+    else:
+        form = forms.BookmarkForm(instance=mark)
+
+    return render(request, 'edit_mark_form.html', {'form': form})
+
+def changelog(request):
+    with open('etc/changelog.markdown') as f:
+        return HttpResponse(markdown.markdown(f.read()))
+
+# API
+
 def api_mark(request, id):
     mark = Bookmark.objects.get(id=id)
     mark_dict = {}
@@ -306,54 +351,8 @@ def api_get_title(request):
             return JsonResponse({"error": "couldn't load title"})
 
 @login_required
-def edit_selection(request):
-    if request.method == 'POST':
-        marks_ids = request.POST.getlist('check_mark')
-        tags = tags_strip_split(request.POST.get('tags'))
-
-        for mark_id in marks_ids:
-            mark = Bookmark.objects.get(id=mark_id)
-            for tag in tags:
-                if tag[0] == "!":
-                    try:
-                        mark_tag = mark.tags.get(name=tag[1:])
-                    except Tag.DoesNotExist:
-                        mark_tag = None
-
-                    if mark_tag:
-                        mark.tags.remove(mark_tag)
-                # wow what's going on here lol
-                if re.match("^[-\w]+$", tag):
-                    t = Tag.objects.get_or_create(name=tag)[0]
-                    mark.tags.add(t)
-
-        tag_untagged(request.user)
-        return HttpResponse('success')
-
-    return HttpResponse('success')
-
-@login_required
-def edit_mark_form(request, id):
-    mark = Bookmark.objects.get(id=id)
-
-    if request.method == 'POST':
-        form = forms.BookmarkForm(request.POST, instance=mark)
-        if form.is_valid():
-            form.save()
-            tag_untagged(request.user)
-            return HttpResponse('success')
-    else:
-        form = forms.BookmarkForm(instance=mark)
-
-    return render(request, 'edit_mark_form.html', {'form': form})
-
-@login_required
 def api_delete_mark(request, id):
     mark = Bookmark.objects.get(id=id).delete()
 
     if request.method == 'POST':
         return HttpResponse('success')
-
-def changelog(request):
-    with open('etc/changelog.markdown') as f:
-        return HttpResponse(markdown.markdown(f.read()))
