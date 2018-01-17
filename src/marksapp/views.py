@@ -125,11 +125,8 @@ def add_mark(request):
     if request.method == 'POST':
         form = forms.BookmarkForm(request.POST)
         # we don't want to expose user to the form but need to validate unique_together!
-        print("aaa")
         if form.is_valid():
-            print("bbb")
             if Bookmark.objects.filter(url=form.cleaned_data['url'], user=request.user).exists():
-                print("ccc")
                 return HttpResponse(form.cleaned_data['url'])
                 #raise ValidationError('urlerror')
             else:
@@ -336,7 +333,7 @@ def edit_selection(request):
 @login_required
 def edit_mark_form(request, id):
     mark = Bookmark.objects.get(id=id)
-    
+
     if request.method == 'POST':
         form = forms.BookmarkForm(request.POST, instance=mark)
         if form.is_valid():
@@ -356,5 +353,5 @@ def api_delete_mark(request, id):
         return HttpResponse('success')
 
 def changelog(request):
-    with open('changelog.markdown') as f:
+    with open('etc/changelog.markdown') as f:
         return HttpResponse(markdown.markdown(f.read()))

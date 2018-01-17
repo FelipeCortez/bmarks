@@ -1,11 +1,11 @@
 $.fn.focusTextToEnd = function(){
   this.focus();
-  var $thisVal = this.val();
+  let $thisVal = this.val();
   this.val('').val($thisVal);
   return this;
 }
 
-var all_tags = "";
+let all_tags = "";
 
 function getAllTags() {
   $.ajax({
@@ -17,42 +17,42 @@ function getAllTags() {
   });
 }
 
-var getUrlParameter = function getUrlParameter(sParam) {
-  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-    sURLVariables = sPageURL.split('&'),
-    sParameterName,
-    i;
+let getUrlParameter = function getUrlParameter(sParam) {
+  let sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                                    sURLletiables = sPageURL.split('&'),
+                                    sParameterName,
+                                    i;
 
-  for(i = 0; i < sURLVariables.length; i++) {
-    sParameterName = sURLVariables[i].split('=');
+  for (i = 0; i < sURLletiables.length; i++) {
+    sParameterName = sURLletiables[i].split('=');
 
-    if(sParameterName[0] === sParam) {
+    if (sParameterName[0] === sParam) {
       return sParameterName[1] === undefined ? true : sParameterName[1];
     }
   }
 };
 
 function populateWithParameters() {
-  if($("#id_name").val() == "" && $("#id_url").val() == "") {
+  if ($("#id_name").val() == "" && $("#id_url").val() == "") {
     $("#id_url").val(getUrlParameter("url"));
     $("#id_name").val(getUrlParameter("name"));
   }
 }
 
 function filterSuggestions(prefix) {
-  var list = $("#suggestions");
-  if(prefix) {
+  let list = $("#suggestions");
+  if (prefix) {
     list.empty();
 
-    for(i = 0; i < all_tags.length; ++i) {
-      if(all_tags[i]["name"].startsWith(prefix)) {
+    for (i = 0; i < all_tags.length; ++i) {
+      if (all_tags[i]["name"].startsWith(prefix)) {
         numberElement = $("<span/>").text(all_tags[i]["num_marks"]);
         numberElement.addClass("number");
 
         tagName = $("<a/>").text(all_tags[i]["name"]);
         tagName.addClass("tag-name");
 
-        var listElement = $("<li/>").append(tagName);
+        let listElement = $("<li/>").append(tagName);
         listElement.append(numberElement);
 
         list.append(listElement);
@@ -95,21 +95,17 @@ function editMarkForm(id, form) {
 }
 
 function getTitle(url) {
-  console.log("Oie");
   $.ajax({
     type: "POST",
     url: root_url + 'api/get_title/',
-    data: {
-      'url': url
-    },
+    data: {'url': url},
     dataType: 'json',
     success: function(data) {
-      if(!("error" in data)) {
-        if($("#id_name").val() == "") {
+      if (!("error" in data)) {
+        if ($("#id_name").val() == "") {
+          console.log(he.decode(data["url"]));
           $("#id_name").val(he.decode(data["url"]));
         }
-      } else {
-        //
       }
     }
   });
@@ -142,13 +138,13 @@ function appendForm(form, el) {
 $(function() {
   populateWithParameters();
   getAllTags();
-  var mark_id = 0;
+  let mark_id = 0;
   $("#filter").hide();
 
   $("#suggestions").on("click", "li", function() {
-    var tags = $("#id_tags").val().split(",");
-    var last = tags[tags.length - 1].replace(/ /g,'');
-    var fullTag = $(this).find("a").text();
+    let tags = $("#id_tags").val().split(",");
+    let last = tags[tags.length - 1].replace(/ /g,'');
+    let fullTag = $(this).find("a").text();
 
     $("#id_tags").val($("#id_tags").val() + fullTag.slice(last.length - fullTag.length));
     $("#suggestions").css({'display': 'none'});
@@ -156,7 +152,7 @@ $(function() {
 
   $(".edit_btn").click(function(e) {
     e.preventDefault();
-    if($("#editMarkForm")) {
+    if ($("#editMarkForm")) {
       $("#editMarkForm").remove();
     }
 
@@ -167,7 +163,7 @@ $(function() {
 
   $(".delete_btn").click(function(e) {
     e.preventDefault();
-    if(confirm('Are you sure?')) {
+    if (confirm('Are you sure?')) {
       mark_id = $(this).attr("mark_id");
       deleteMark(mark_id);
     }
@@ -217,15 +213,15 @@ $(function() {
   });
 
   $(document).on("change", "#id_url", function(e) {
-    if($("#id_name").val() == "") {
+    if ($("#id_name").val() == "") {
       getTitle($("#id_url").val());
     }
   });
 
   $(document).on("keyup", "#id_tags", function(e) {
     if ($("#id_tags").val().substr(-1) != " ") {
-      var tags = $("#id_tags").val().split(",");
-      var last = tags[tags.length - 1].replace(/ /g, '');
+      let tags = $("#id_tags").val().split(",");
+      let last = tags[tags.length - 1].replace(/ /g, '');
       filterSuggestions(last);
     } else {
       $("#suggestions").css({'display': 'none'});
@@ -233,7 +229,7 @@ $(function() {
   });
 
   $(document).on("mousedown", "#suggestions", function(e) {
-    // prevents input from blurring
+    // prevents input from blurring when clicking suggestions
     e.preventDefault();
   });
 
@@ -242,9 +238,9 @@ $(function() {
   });
 
   $(document).on("change paste keyup", "#filter", function(e) {
-    var filter = $("#filter").val();
+    let filter = $("#filter").val();
     $(".tag_name").each(function(index) {
-      if($(this).text().indexOf(filter) != -1) {
+      if ($(this).text().indexOf(filter) != -1) {
         $(this).parent().show();
       } else {
         $(this).parent().hide();

@@ -1,6 +1,12 @@
 changelog
 ---------
 
+## 2018-01-13
+- Project organisation
+
+## 2018-01-08
+- Suggestions now clickable
+
 ## 2017-07-27
 - Added logging
 
