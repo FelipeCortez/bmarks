@@ -25,7 +25,7 @@
                 {% if user.is_authenticated %}
                 <li><a {% if page_title == "add" %}     class="active" {% endif %} href="{% url 'add_mark' %}">add</a></li>
                 <li><a {% if page_title == "import" %}  class="active" {% endif %} href="{% url 'import_netscape' %}">import</a></li>
-                <li><a {% if page_title == "boi" %}     class="active" {% endif %} href="{% url 'auth_logout' %}">{{ user.username }} (logout)</a></li>
+                <li><a href="{% url 'auth_logout' %}">{{ user.username }} (logout)</a></li>
                 {% else %}
                 <li><a href="{% url 'auth_login' %}">login</a></li>
                 {% endif %}
@@ -60,30 +60,6 @@
             {% endblock %}
             </span>
         </div>
-
-        {% if user.is_authenticated %}
-        <form id="search-form" action="{% url 'search' username=user.username %}" method="GET">
-            <div class="form-container">
-            <tr>
-                <th>
-                    <label for="id_query">Query</label>
-                </th>
-                <td>
-                    <input id="id_query" name="query" type="text" />
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    <label for="id_tags2">Tags</label>
-                </th>
-                <td>
-                    <input autocomplete="off" id="id_tags2" name="tags" type="text" />
-                </td>
-            </tr>
-            <input type="submit" value="Search" />
-            </div>
-        </form>
-        {% endif %}
 
         {% block content %}
         {% endblock %}

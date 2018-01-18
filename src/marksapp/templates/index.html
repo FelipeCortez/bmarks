@@ -11,21 +11,46 @@
 </ul>
 -->
 
+<div class="extra-nav">
+    <a id="show-search" href="#">search</a>
+    <span class="separator">·</span>
+    <a href="#">sorting by name</a>
+</div>
+
+{% if user.is_authenticated %}
+<form id="search-form" action="{% url 'search' username=user.username %}" method="GET">
+    <div class="form-container">
+    <tr>
+        <th>
+            <label for="id_query">Query</label>
+        </th>
+        <td>
+            <input id="id_query" name="query" type="text" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <label for="id_tags2">Tags</label>
+        </th>
+        <td>
+            <input autocomplete="off" id="id_tags2" name="tags" type="text" />
+        </td>
+    </tr>
+    <input type="submit" value="Search" />
+    </div>
+</form>
+{% endif %}
+
+
 <ul id="marks">
     <li class="item">
         <a href="{% url 'user_tag' username=username %}">all</a><span class="number">{{ all }}</span>
     </li>
 
     {% for tag in tags %}
-    {% comment %}
-    <li class="item indextagbg" style="width: {% widthratio tag.num_marks all 100 %}%">
-    {% endcomment %}
     <li class="item">
         <a class="tag_name" href="{% url 'user_tag' slug=tag.name username=username %}">{{ tag.name }}</a>
         <span class="number">{{ tag.num_marks }}</span>
-        {% comment %}
-        <span style="margin-left: 10px; height:10px; display: inline-block; background-color: red; width: {% widthratio tag.num_marks all 70 %}%"></span>
-        {% endcomment %}
     </li>
     {% endfor %}
 </ul>

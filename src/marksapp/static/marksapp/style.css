@@ -40,22 +40,27 @@ body {
     font-weight: 500;
 }
 
-/* -------------------------------------------- */
+/* extra nav ---------------------------------- */
 
-.form-container {
-    position: relative;
-    padding: 15px;
-    margin: 10px 0 10px 0;
-    width: 500px;
-    background-color: #F5F5F5;
-    border: 2px solid #F5F5F5;
-    border-radius: 2px;
+.extra-nav {
+    border-top: 1px solid #D8D8D8;
+    border-bottom: 1px solid #D8D8D8;
+    margin-bottom: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 535px;
 }
 
-.form-container::after {
-    clear: both;
-    content: "";
-    display: block;
+.extra-nav a {
+    display: inline-block;
+    color: #3F91CC;
+    text-decoration: none;
+}
+
+.extra-nav .separator {
+    margin-left: 5px;
+    margin-right: 5px;
+    color: #3F91CC;
 }
 
 /* page title --------------------------------- */
@@ -92,6 +97,22 @@ body {
 }
 
 /* form --------------------------------------- */
+
+.form-container {
+    position: relative;
+    padding: 15px;
+    margin: 15px 0 15px 0;
+    width: 500px;
+    background-color: #F5F5F5;
+    border: 2px solid #F5F5F5;
+    border-radius: 2px;
+}
+
+.form-container::after {
+    clear: both;
+    content: "";
+    display: block;
+}
 
 label {
     display: block;
@@ -263,7 +284,7 @@ li, li > a, li span, h6 {
 
 .number {
     color: #B2B2B2;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
 }
 
