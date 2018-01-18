@@ -32,6 +32,8 @@ def index(request):
         return HttpResponseRedirect(reverse('auth_login'))
 
 def user_index(request, username):
+    get_object_or_404(User, username=username)
+
     search_form = forms.SearchForm()
     sort = request.GET.get('sort', '') or "name"
 
@@ -58,15 +60,10 @@ def user_index(request, username):
         'sort': sort,
         'search_form': search_form,
         'tags': top_tags,
-        'username': username
+        'username': username,
+        'page_title': 'home'
     }
     return render(request, "index.html", context)
-
-def tag(request, slug):
-    if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('user_tag', kwargs={'username': request.user, 'slug': slug}))
-    else:
-        return HttpResponseRedirect(reverse('user_tag', kwargs={'username': "felipecortez", 'slug': slug}))
 
 def user_tag(request, username, slug=None):
     tags = slug.split("+") if slug else []
@@ -82,6 +79,8 @@ def search(request, username):
     return marks(request, username, tags, query)
 
 def marks(request, username, tags=[], query=''):
+    get_object_or_404(User, username=username)
+
     bookmarks = Bookmark.objects.filter(user__username=username)
     sort = request.GET.get('sort', '') or "name"
     limit = request.GET.get('limit', '')
@@ -136,7 +135,7 @@ def add_mark(request):
     else:
         form = forms.BookmarkForm()
 
-    return render(request, 'add.html', {'form': form})
+    return render(request, 'add.html', {'form': form, 'page_title': 'add'})
 
 @login_required
 def edit_mark(request, id):
@@ -203,7 +202,7 @@ def import_netscape(request):
             return HttpResponseRedirect(reverse('index'))
     else:
         form = forms.NetscapeForm()
-    return render(request, 'import.html', {'form': form})
+    return render(request, 'import.html', {'form': form, 'page_title': 'import'})
 
 @login_required
 def export_json(request):

@@ -16,15 +16,6 @@ urlpatterns = [
     url(r'^mark/(?P<id>[0-9]+)/delete/$',
         views.delete_mark,
         name='delete_mark'),
-    url(r'^tag/(?P<slug>[-\w\d+]+)/$',
-        views.tag,
-        name='tag'),
-    url(r'^tag/(?P<slug>[-\w\d+]+)/delete/$',
-        views.delete_tag,
-        name='delete_tag'),
-    url(r'^tag/(?P<slug1>[-\w\d+]+)/merge/(?P<slug2>[-\w\d+]+)$',
-        views.merge,
-        name='merge'),
 
     # api
     url(r'^api/mark/(?P<id>[0-9]+)/$',
@@ -74,6 +65,9 @@ urlpatterns = [
     url(r'^changelog/$',
         views.changelog,
         name='changelog'),
+    url(r'login^$',
+        views.index,
+        name='index'),
 
     # registration
     url(r'^', include('registration.backends.hmac.urls')),

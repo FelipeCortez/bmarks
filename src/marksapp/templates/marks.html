@@ -41,9 +41,13 @@
 -->
 
 <ul>
+{% if marks %}
 {% for mark in marks %}
 {% include "mark.html" %}
 {% endfor %}
+{% else %}
+<p>No results found.</p>
+{% endif %}
 </ul>
 
 <ul id="marks">
@@ -60,7 +64,6 @@
     {% endfor %}
 
 </ul>
-
 
 {% comment %}
 <form id="bulk_form" action="/felipecortez/bulk/" method="POST">

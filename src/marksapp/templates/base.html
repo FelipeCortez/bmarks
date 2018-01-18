@@ -21,13 +21,11 @@
     <body>
         <div id="navbar">
             <ul>
-                <li><a class="active" href="{% url 'index' %}">home</a></li>
-                <li><a id="show-search" href="#">search</a></li>
+                <li><a {% if page_title == "home" %}    class="active" {% endif %} href="{% url 'index' %}">home</a></li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'add_mark' %}">add</a></li>
-                <li><a href="{% url 'import_netscape' %}">import</a></li>
-                <li><a href="{% url 'user_tag' username=user.username %}?sort=date&limit=100">last</a></li>
-                <li><a href="{% url 'auth_logout' %}">{{ user.username }} (logout)</a></li>
+                <li><a {% if page_title == "add" %}     class="active" {% endif %} href="{% url 'add_mark' %}">add</a></li>
+                <li><a {% if page_title == "import" %}  class="active" {% endif %} href="{% url 'import_netscape' %}">import</a></li>
+                <li><a {% if page_title == "boi" %}     class="active" {% endif %} href="{% url 'auth_logout' %}">{{ user.username }} (logout)</a></li>
                 {% else %}
                 <li><a href="{% url 'auth_login' %}">login</a></li>
                 {% endif %}
@@ -35,6 +33,12 @@
         </div>
 
         <div class="container">
+        {% comment %}
+        {% if user.is_authenticated %}
+        <a {% endif %} href="{% url 'user_tag' username=user.username %}?sort=date&limit=100">last</a>
+        {% endif %}
+        <li><a id="show-search" href="#">search</a></li>
+        {% endcomment %}
         <div id="suggestions"></div>
 
         <div id="page-info">

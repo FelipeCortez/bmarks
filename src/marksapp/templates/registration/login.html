@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block page_info %}
+<span class="green-and-bold">
+·
+login
+</span>
+{% endblock %}
+
 {% block content %}
 
     {% if not user.is_authenticated %}
@@ -13,10 +20,12 @@
         {% endif %}
 
         <form method="post" action="{% url 'auth_login' %}">
+        <div class="form-container">
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="Login" />
         </form>
+        </div>
     {% else %}
         <p>Huh... You're already authenticated.</p>
     {% endif %}
