@@ -33,12 +33,7 @@
         </div>
 
         <div class="container">
-        {% comment %}
-        {% if user.is_authenticated %}
-        <a {% endif %} href="{% url 'user_tag' username=user.username %}?sort=date&limit=100">last</a>
-        {% endif %}
-        <li><a id="show-search" href="#">search</a></li>
-        {% endcomment %}
+
         <div id="suggestions"></div>
 
         <div id="page-info">

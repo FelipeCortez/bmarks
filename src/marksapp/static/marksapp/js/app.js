@@ -6,6 +6,8 @@ $.fn.focusTextToEnd = function(){
 }
 
 let all_tags = "";
+let selectedIdx = -1;
+let lastPrefix = "";
 
 function getAllTags() {
   $.ajax({
@@ -36,36 +38,6 @@ function populateWithParameters() {
   if ($("#id_name").val() == "" && $("#id_url").val() == "") {
     $("#id_url").val(getUrlParameter("url"));
     $("#id_name").val(getUrlParameter("name"));
-  }
-}
-
-function filterSuggestions(prefix) {
-  let list = $("#suggestions");
-  if (prefix) {
-    list.empty();
-
-    for (i = 0; i < all_tags.length; ++i) {
-      if (all_tags[i]["name"].startsWith(prefix)) {
-        numberElement = $("<span/>").text(all_tags[i]["num_marks"]);
-        numberElement.addClass("number");
-
-        tagName = $("<a/>").text(all_tags[i]["name"]);
-        tagName.addClass("tag-name");
-
-        let listElement = $("<li/>").append(tagName);
-        listElement.append(numberElement);
-
-        list.append(listElement);
-      }
-    }
-
-    offset = $("#id_tags").offset();
-    input_height = $("#id_tags").outerHeight();
-    $("#suggestions").css({'top' : (offset.top + input_height) + 'px',
-                           'left' : (offset.left) + 'px',
-                           'display': 'block'});
-  } else {
-    $("#suggestions").css({'display': 'none'});
   }
 }
 
@@ -134,6 +106,46 @@ function appendForm(form, el) {
   el.parent().parent().append(form);
 }
 
+function filterSuggestions(prefix) {
+  let list = $("#suggestions");
+  if (prefix) {
+    list.empty();
+
+    for (i = 0; i < all_tags.length; ++i) {
+      if (all_tags[i]["name"].startsWith(prefix)) {
+        numberElement = $("<span/>").text(all_tags[i]["num_marks"]);
+        numberElement.addClass("number");
+
+        tagName = $("<a/>").text(all_tags[i]["name"]);
+        tagName.addClass("tag-name");
+
+        let listElement = $("<li/>").append(tagName);
+        listElement.append(numberElement);
+
+        list.append(listElement);
+      }
+    }
+
+    offset = $("#id_tags").offset();
+    input_height = $("#id_tags").outerHeight();
+    $("#suggestions").css({'top' : (offset.top + input_height) + 'px',
+                           'left' : (offset.left) + 'px',
+                           'display': 'block'});
+  } else {
+    $("#suggestions").css({'display': 'none'});
+  }
+}
+
+function completeWithSuggestedTag(selectedTag) {
+  let tags = $("#id_tags").val().split(",");
+  let last = tags[tags.length - 1].replace(/ /g,'');
+
+  $("#id_tags").val($("#id_tags").val() + selectedTag.slice(last.length - selectedTag.length));
+  $("#suggestions").css({'display': 'none'});
+  selectedIdx = -1;
+}
+
+
 $(function() {
   populateWithParameters();
   getAllTags();
@@ -141,12 +153,8 @@ $(function() {
   $("#filter").hide();
 
   $("#suggestions").on("click", "li", function() {
-    let tags = $("#id_tags").val().split(",");
-    let last = tags[tags.length - 1].replace(/ /g,'');
     let fullTag = $(this).find("a").text();
-
-    $("#id_tags").val($("#id_tags").val() + fullTag.slice(last.length - fullTag.length));
-    $("#suggestions").css({'display': 'none'});
+    completeWithSuggestedTag(fullTag);
   });
 
   $(".edit_btn").click(function(e) {
@@ -217,6 +225,8 @@ $(function() {
     }
   });
 
+  // autocomplete ------------------
+
   $(document).on("keyup click focus", "#id_tags", function(e) {
     let tags_str = $("#id_tags").val();
 
@@ -228,11 +238,46 @@ $(function() {
         this.selectionStart == this.selectionEnd) {
       let tags = tags_str.split(",");
       let last = tags[tags.length - 1].replace(/ /g, '');
-      filterSuggestions(last);
+      if (last != lastPrefix) {
+        filterSuggestions(last);
+        selectedIdx = -1;
+        lastPrefix = last;
+      }
     } else {
       $("#suggestions").css({'display': 'none'});
     }
   });
+
+  $(document).on("keydown", "#id_tags", function(e) {
+    switch (e.keyCode) {
+    case 40: // up
+      suggestionsSelect(1);
+      e.preventDefault();
+      break;
+    case 38: // down
+      suggestionsSelect(-1);
+      e.preventDefault();
+      break;
+    case 27: // ESC?
+      e.preventDefault();
+      $("#suggestions").css({'display': 'none'});
+      break;
+    case 13: // I think that's enter
+      e.preventDefault();
+      completeWithSuggestedTag($("#suggestions").children().eq(selectedIdx).find("a").text());
+      $("#suggestions").css({'display': 'none'});
+      break;
+    default:
+      break;
+    }
+  });
+
+  function suggestionsSelect(direction) {
+    let list = $("#suggestions");
+    list.children().eq(selectedIdx).removeClass("selected");
+    selectedIdx += direction;
+    list.children().eq(selectedIdx).addClass("selected");
+  }
 
   $(document).on("mousedown", "#suggestions", function(e) {
     // prevents input from blurring when clicking suggestions

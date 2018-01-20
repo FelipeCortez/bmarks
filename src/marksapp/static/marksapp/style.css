@@ -310,7 +310,7 @@ li, li > a, li span, h6 {
     border-bottom: 1px solid #D8D8D8;
 }
 
-#suggestions li:hover {
+#suggestions li:hover, #suggestions .selected {
     background-color: #F5F5F5;
 }
 

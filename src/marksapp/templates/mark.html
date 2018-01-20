@@ -15,7 +15,7 @@
     {% endfor %}
     {% if user.is_authenticated and user.username == username %}
     <span class="mdot">&#183;</span>
-    <span class="action"><a mark_id="{{ mark.id }}" class="info_btn" href="#" title="{{ mark.date_added }}">info</a></span>
+    <span class="action"><a mark_id="{{ mark.id }}" class="info_btn" href="#" title="{{ mark.date_added }} / {{ mark.description }}">info</a></span>
     <span class="action"><a mark_id="{{ mark.id }}" class="edit_btn" href="#">edit</a></span>
     <span class="action"><a mark_id="{{ mark.id }}" class="delete_btn" href="#">delete</a></span>
     <!--

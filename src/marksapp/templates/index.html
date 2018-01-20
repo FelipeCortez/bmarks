@@ -14,7 +14,9 @@
 <div class="extra-nav">
     <a id="show-search" href="#">search</a>
     <span class="separator">·</span>
-    <a href="#">sorting by name</a>
+    <a href="{% url 'user_tag' username=user.username %}?sort=date&limit=100">last</a>
+    <span class="separator">·</span>
+    <span>sorting by </span><a href="#">name</a>
 </div>
 
 {% if user.is_authenticated %}
