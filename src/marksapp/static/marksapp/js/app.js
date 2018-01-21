@@ -112,7 +112,7 @@ function filterSuggestions(prefix) {
     list.empty();
 
     for (i = 0; i < all_tags.length; ++i) {
-      if (all_tags[i]["name"].startsWith(prefix)) {
+      if (all_tags[i]["name"].startsWith(prefix) && all_tags[i]["name"] != prefix) {
         numberElement = $("<span/>").text(all_tags[i]["num_marks"]);
         numberElement.addClass("number");
 
@@ -126,11 +126,15 @@ function filterSuggestions(prefix) {
       }
     }
 
-    offset = $("#id_tags").offset();
-    input_height = $("#id_tags").outerHeight();
-    $("#suggestions").css({'top' : (offset.top + input_height) + 'px',
-                           'left' : (offset.left) + 'px',
-                           'display': 'block'});
+    if (list.children().length > 0) {
+      offset = $("#id_tags").offset();
+      input_height = $("#id_tags").outerHeight();
+      $("#suggestions").css({'top' : (offset.top + input_height) + 'px',
+                             'left' : (offset.left) + 'px',
+                             'display': 'block'});
+    } else {
+      $("#suggestions").css({'display': 'none'});
+    }
   } else {
     $("#suggestions").css({'display': 'none'});
   }
