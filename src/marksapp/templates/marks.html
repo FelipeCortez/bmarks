@@ -26,19 +26,17 @@
 
 {% block content %}
 
-<!--
-<div class="marginbottom">
-    {% if query %}
-    <span class="tag big query"><a href="#">{{ query }}</a></span>
-    {% endif %}
+<div class="extra-nav">
+    <!--
+        <a id="show-search" href="#">search</a>
+        <span class="separator">·</span>
+    <a href="{% url 'user_tag' username=username %}?sort=date&limit=100">last</a>
+    <span class="separator">·</span>
+    -->
+    <span>sorting by </span>
+    {% if sort != "name" %}<a href="?sort=name">date</a>{% endif %}
+    {% if sort != "date" %}<a href="?sort=date">name</a>{% endif %}
 </div>
-
-<div>sorting by {{ sort }}</div>
-<ul class="sort">
-    {% if sort != "name" %}<li><a href="?sort=name">name</a></li>{% endif %}
-    {% if sort != "date" %}<li><a href="?sort=date">date</a></li>{% endif %}
-</ul>
--->
 
 <ul>
 {% if marks %}

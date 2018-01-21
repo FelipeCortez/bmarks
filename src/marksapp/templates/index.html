@@ -2,25 +2,19 @@
 
 {% block content %}
 
-<!--
-<div>sorting by {{ sort }}</div>
-
-<ul class="sort">
-    {% if sort != "name" %}<li><a href="?sort=name">name</a></li>{% endif %}
-    {% if sort != "quantity" %}<li><a href="?sort=quantity">quantity</a></li>{% endif %}
-</ul>
--->
 
 <div class="extra-nav">
     <a id="show-search" href="#">search</a>
     <span class="separator">·</span>
-    <a href="{% url 'user_tag' username=user.username %}?sort=date&limit=100">last</a>
+    <a href="{% url 'user_tag' username=username %}?sort=date&limit=100">last</a>
     <span class="separator">·</span>
-    <span>sorting by </span><a href="#">name</a>
+    <span>sorting by </span>
+    {% if sort != "name" %}<a href="?sort=name">quantity</a>{% endif %}
+    {% if sort != "quantity" %}<a href="?sort=quantity">name</a>{% endif %}
 </div>
 
 {% if user.is_authenticated %}
-<form id="search-form" action="{% url 'search' username=user.username %}" method="GET">
+<form id="search-form" action="{% url 'search' username=username %}" method="GET">
     <div class="form-container">
     <tr>
         <th>
