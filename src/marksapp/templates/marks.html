@@ -4,7 +4,7 @@
 {% block page_info %}
     <span class="green-and-bold">
     ·
-    {{ username }}
+    <a href="{% url 'user_index' username=username %}">{{ username }}</a>
     {% if tags %}
     ·
     {% endif %}
@@ -30,8 +30,8 @@
     <!--
         <a id="show-search" href="#">search</a>
         <span class="separator">·</span>
-    <a href="{% url 'user_tag' username=username %}?sort=date&limit=100">last</a>
-    <span class="separator">·</span>
+        <a href="{% url 'user_tag' username=username %}?sort=date&limit=100">last</a>
+        <span class="separator">·</span>
     -->
     <span>sorting by </span>
     {% if sort != "name" %}<a href="?sort=name">date</a>{% endif %}
