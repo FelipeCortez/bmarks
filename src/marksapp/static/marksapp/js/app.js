@@ -267,9 +267,11 @@ $(function() {
       $("#suggestions").css({'display': 'none'});
       break;
     case 13: // I think that's enter
-      e.preventDefault();
-      completeWithSuggestedTag($("#suggestions").children().eq(selectedIdx).find("a").text());
-      $("#suggestions").css({'display': 'none'});
+      if ($("#suggestions").css("display") != "none") {
+        e.preventDefault();
+        completeWithSuggestedTag($("#suggestions").children().eq(selectedIdx).find("a").text());
+        $("#suggestions").css({'display': 'none'});
+      }
       break;
     default:
       break;
