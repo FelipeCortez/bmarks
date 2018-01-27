@@ -102,6 +102,16 @@ function deleteMark(id) {
   });
 }
 
+function bumpMark(id) {
+  $.post({
+    url: root_url + 'api/bump_mark/' + id + '/',
+    success: function(data) {
+      console.log(data);
+      location.reload();
+    }
+  });
+}
+
 function appendForm(form, el) {
   el.parent().parent().append(form);
 }
@@ -178,6 +188,12 @@ $(function() {
       mark_id = $(this).attr("mark_id");
       deleteMark(mark_id);
     }
+  });
+
+  $(".bump_btn").click(function(e) {
+    e.preventDefault();
+    mark_id = $(this).attr("mark_id");
+    bumpMark(mark_id);
   });
 
   $(document).on("submit", "#edit-mark-form", (function(e) {

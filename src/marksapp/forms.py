@@ -68,7 +68,6 @@ class BookmarkForm(BaseModelForm):
                 'description': forms.Textarea(attrs={'rows':3, 'placeholder':'optional'}),
         }
 
-
     def save(self, commit=True, *args, **kwargs):
         m = super(BookmarkForm, self).save(commit=False, *args, **kwargs)
         form_tags = self.cleaned_data['tags'].replace(" ", "").split(",")

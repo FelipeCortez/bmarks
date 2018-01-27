@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core import serializers
 from django.core.exceptions import ValidationError
+from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from marksapp.models import Bookmark, Tag
 from collections import OrderedDict
@@ -352,6 +353,15 @@ def api_get_title(request):
 @login_required
 def api_delete_mark(request, id):
     mark = Bookmark.objects.get(id=id).delete()
+
+    if request.method == 'POST':
+        return HttpResponse('success')
+
+@login_required
+def api_bump_mark(request, id):
+    mark = get_object_or_404(Bookmark, id=id)
+    mark.date_added = now()
+    mark.save()
 
     if request.method == 'POST':
         return HttpResponse('success')
