@@ -1,4 +1,6 @@
 from django import template
+from django.template.defaultfilters import stringfilter
+import markdown as mdown # sorry
 
 register = template.Library()
 
@@ -13,3 +15,8 @@ def add_tag(value, new_tag):
     tags = value[:]
     tags.append(new_tag)
     return "+".join(tags)
+
+@register.filter(name='markdown')
+@stringfilter
+def markdown(value):
+    return mdown.markdown(value)

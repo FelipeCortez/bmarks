@@ -15,7 +15,7 @@ class Tag(models.Model):
 
 class Bookmark(models.Model):
     name = models.CharField(max_length=128)
-    url = models.CharField(max_length=512)
+    url = models.CharField(max_length=512, blank=True)
     description = models.TextField(blank=True)
     date_added = models.DateTimeField('date added', default=timezone.now)
     tags = models.ManyToManyField(Tag)

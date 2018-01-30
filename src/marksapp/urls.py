@@ -44,9 +44,6 @@ urlpatterns = [
         name='edit_selection'),
 
     # user actions
-    url(r'^(?P<username>\w+)/search/$',
-        views.search,
-        name='search'),
     url(r'^(?P<username>\w+)/tag/(?P<slug>[-\w\d+]+)/$',
         views.user_tag,
         name='user_tag'),

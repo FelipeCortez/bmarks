@@ -71,30 +71,28 @@ def user_tag(request, username, slug=None):
 
     return marks(request, username, tags)
 
-def search(request, username):
-    query = request.GET.get('query', '')
-    tags = request.GET.get('tags', '')
-    tags = tags_strip_split(tags)
-    tags = list(OrderedDict.fromkeys(tags))
-
-    return marks(request, username, tags, query)
-
-def marks(request, username, tags=[], query=''):
+def marks(request, username, tags=[]):
     get_object_or_404(User, username=username)
 
     bookmarks = Bookmark.objects.filter(user__username=username)
     sort = request.GET.get('sort', '') or "name"
     limit = request.GET.get('limit', '')
+
+    search_query = request.GET.get('query', '')
+    search_tags = request.GET.get('tags', '')
     if limit: limit = int(limit)
 
-    if query:
-        bookmarks = bookmarks.filter(name__search=query)
+    if search_query:
+        bookmarks = bookmarks.filter(name__search=search_query)
+
+    if search_tags:
+        for tag in tags_strip_split(search_tags):
+            bookmarks = bookmarks.filter(tags__name=tag)
 
     for tag in tags:
         bookmarks = bookmarks.filter(tags__name=tag)
 
-    # add the username == request.user condition!
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated() or username != request.user:
         bookmarks = bookmarks.exclude(tags__name="private")
 
     if sort == "date":
@@ -113,8 +111,9 @@ def marks(request, username, tags=[], query=''):
         'sort': sort,
         'tag_count': tag_count,
         'tags': tags,
-        'query': query,
+        'query': search_query,
         'marks': bookmarks,
+        'limit': limit
     }
 
     return render(request, "marks.html", context)
