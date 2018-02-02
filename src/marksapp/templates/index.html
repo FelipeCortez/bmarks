@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div id="suggestions"></div>
 
 <div class="extra-nav">
     <a id="show-search" href="#">search</a>
@@ -25,10 +26,10 @@
     </tr>
     <tr>
         <th>
-            <label for="id_tags2">Tags</label>
+            <label for="id_tags">Tags</label>
         </th>
         <td>
-            <input autocomplete="off" id="id_tags2" name="tags" type="text" />
+            <input autocomplete="off" id="id_tags" name="tags" type="text" />
         </td>
     </tr>
     <input type="submit" value="Search" />

@@ -187,7 +187,7 @@ button:hover {
     font-style: italic;
 }
 
-/* -------------------------------------------- */
+/* main site ---------------------------------- */
 
 .marginbottom {
     margin-bottom: 20px;
@@ -286,6 +286,17 @@ li, li > a, li span, h6 {
     color: #B2B2B2;
     font-size: 12px;
     font-weight: 400;
+}
+
+.description {
+    background-color: #F5F5F5;
+    max-width: 525px;
+    padding: 0px 5px 0px 5px;
+    color: black;
+}
+
+.description {
+
 }
 
 /* suggestions -------------------------------- */

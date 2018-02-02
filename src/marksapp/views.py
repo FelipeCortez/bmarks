@@ -20,7 +20,7 @@ import re
 import markdown
 
 def tags_strip_split(tags):
-    return tags.replace(" ", "").split(",") if tags else []
+    return tags.replace(",", " ").split() if tags else []
 
 def tag_untagged(user):
     for mark in Bookmark.objects.filter(user=user, tags__isnull=True):
@@ -124,7 +124,7 @@ def add_mark(request):
         form = forms.BookmarkForm(request.POST)
         # we don't want to expose user to the form but need to validate unique_together!
         if form.is_valid():
-            if Bookmark.objects.filter(url=form.cleaned_data['url'], user=request.user).exists():
+            if form.cleaned_data['url'] and Bookmark.objects.filter(url=form.cleaned_data['url'], user=request.user).exists():
                 return HttpResponse(form.cleaned_data['url'])
                 #raise ValidationError('urlerror')
             else:

@@ -153,6 +153,7 @@ function filterSuggestions(prefix) {
 function completeWithSuggestedTag(selectedTag) {
   let tags = $("#id_tags").val().split(",");
   let last = tags[tags.length - 1].replace(/ /g,'');
+  if (last[0] == "-") { last = last.substr(1); }
 
   $("#id_tags").val($("#id_tags").val() + selectedTag.slice(last.length - selectedTag.length));
   $("#suggestions").css({'display': 'none'});
@@ -163,6 +164,7 @@ function completeWithSuggestedTag(selectedTag) {
 $(function() {
   populateWithParameters();
   getAllTags();
+
   let mark_id = 0;
   $("#filter").hide();
 
@@ -258,6 +260,7 @@ $(function() {
         this.selectionStart == this.selectionEnd) {
       let tags = tags_str.split(",");
       let last = tags[tags.length - 1].replace(/ /g, '');
+      if (last[0] == "-") { last = last.substr(1); }
       if (last != lastPrefix) {
         filterSuggestions(last);
         selectedIdx = -1;
@@ -278,11 +281,11 @@ $(function() {
       suggestionsSelect(-1);
       e.preventDefault();
       break;
-    case 27: // ESC?
+    case 27: // esc
       e.preventDefault();
       $("#suggestions").css({'display': 'none'});
       break;
-    case 13: // I think that's enter
+    case 13: // enter
       if ($("#suggestions").css("display") != "none") {
         e.preventDefault();
         completeWithSuggestedTag($("#suggestions").children().eq(selectedIdx).find("a").text());

@@ -3,6 +3,7 @@ from django.forms import ModelForm, CharField
 from django.utils.safestring import mark_safe
 from django.forms.utils import flatatt
 from marksapp.models import Bookmark, Tag
+import marksapp.views
 import re
 
 # https://github.com/wagtail/wagtail/issues/130#issuecomment-37180123
@@ -49,11 +50,12 @@ class CommaTags(forms.Widget):
                 for each in value:
                     objects.append(each)
             else:
-                objects = value.replace(" ", "").split(",")
+                objects = marksapp.views.tags_strip_split(value)
 
         values = []
         for each in objects:
             values.append(str(each))
+
         value = ', '.join(values)
         final_attrs['value'] = value
         return mark_safe(u'<input%s />' % flatatt(final_attrs))
@@ -70,7 +72,7 @@ class BookmarkForm(BaseModelForm):
 
     def save(self, commit=True, *args, **kwargs):
         m = super(BookmarkForm, self).save(commit=False, *args, **kwargs)
-        form_tags = self.cleaned_data['tags'].replace(" ", "").split(",")
+        form_tags = marksapp.views.tags_strip_split(self.cleaned_data['tags'])
         m.save()
         self.instance.tags.clear()
 
