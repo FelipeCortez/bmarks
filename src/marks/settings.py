@@ -30,6 +30,8 @@ INTERNAL_IPS = (
     '127.0.0.1',
 )
 
+AUTHENTICATION_BACKENDS = ['marksapp.backends.CaseInsensitiveModelBackend']
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -134,6 +136,7 @@ FORCE_SCRIPT_NAME = '/marks' if not DEBUG else ''
 LOGIN_URL = FORCE_SCRIPT_NAME + '/login/'
 
 LOGIN_REDIRECT_URL = FORCE_SCRIPT_NAME + '/'
+LOGOUT_REDIRECT_URL = FORCE_SCRIPT_NAME + '/'
 
 STATIC_ROOT = '/srv/www/marks/static/' if not DEBUG else os.path.join(BASE_DIR, "/static")
 STATIC_URL = '/marks/static/' if not DEBUG else '/static/'

@@ -109,6 +109,12 @@ class TagForm(BaseModelForm):
 
         return True
 
+class RegistrationForm(BaseForm):
+    username = CharField(label='Username', required=True)
+    password = CharField(label='Password', required=True,
+                         widget=forms.PasswordInput)
+
+
 class NetscapeForm(forms.Form):
     file = forms.FileField()
 

@@ -4,6 +4,7 @@ from django.db.models import Count, When, Case, Sum, F
 from django.db.models.functions import Lower
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.core import serializers
 from django.core.exceptions import ValidationError
@@ -30,7 +31,7 @@ def index(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('user_index', args=[request.user.username]))
     else:
-        return HttpResponseRedirect(reverse('auth_login'))
+        return HttpResponseRedirect(reverse('login'))
 
 def user_index(request, username):
     get_object_or_404(User, username=username)
@@ -126,7 +127,7 @@ def add_mark(request):
         if form.is_valid():
             if form.cleaned_data['url'] and Bookmark.objects.filter(url=form.cleaned_data['url'], user=request.user).exists():
                 return HttpResponse(form.cleaned_data['url'])
-                #raise ValidationError('urlerror')
+                # TODO: show something meaningful urgently
             else:
                 mark = form.save(commit=False)
                 mark.user = request.user
@@ -288,7 +289,43 @@ def changelog(request):
     with open('etc/changelog.markdown') as f:
         return HttpResponse(markdown.markdown(f.read()))
 
-# API
+def register(request):
+    context = {}
+
+    if request.method == 'POST':
+        form = forms.RegistrationForm(request.POST)
+        # we don't want to expose user to the form but need to validate unique_together!
+        if form.is_valid():
+            context["form"] = form
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            try:
+                username_db = User.objects.get(username__iexact=username)
+                form.add_error(None, "Username already exists")
+            except User.DoesNotExist:
+                user = User.objects.create_user(username=username,
+                                              password=password)
+
+                new_user = authenticate(username=username,
+                                        password=password)
+
+                if new_user is not None:
+                    login(request, new_user)
+                    return HttpResponseRedirect(reverse('index'))
+        else:
+            form.add_error(None, "Something wrong happened")
+        return render(request, 'registration/registration_form.html', context)
+    else:
+        form = forms.RegistrationForm()
+        context["form"] = form
+
+    return render(request, 'registration/registration_form.html', context)
+
+def about(request):
+    return HttpResponse("Developed by felipecortezfi@gmail.com. If you need anything just send me an email")
+    #return render(request, 'import.html')
+
+# API ---------------------------------
 
 def api_mark(request, id):
     mark = Bookmark.objects.get(id=id)

@@ -1,6 +1,9 @@
 changelog
 ---------
 
+## 2018-03-09
+- Registration page
+
 ## 2018-01-13
 - Project organisation
 

@@ -25,9 +25,10 @@
                 {% if user.is_authenticated %}
                 <li><a {% if page_title == "add" %}     class="active" {% endif %} href="{% url 'add_mark' %}">add</a></li>
                 <li><a {% if page_title == "import" %}  class="active" {% endif %} href="{% url 'import_netscape' %}">import</a></li>
-                <li><a href="{% url 'auth_logout' %}">{{ user.username }} (logout)</a></li>
+                <li><a href="{% url 'logout' %}">{{ user.username }} (logout)</a></li>
                 {% else %}
-                <li><a href="{% url 'auth_login' %}">login</a></li>
+                <li><a href="{% url 'register' %}">register</a></li>
+                <li><a href="{% url 'login' %}">login</a></li>
                 {% endif %}
             </ul>
         </div>

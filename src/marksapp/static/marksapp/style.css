@@ -114,6 +114,10 @@ body {
     display: block;
 }
 
+.errorlist {
+    margin-bottom: 10px;
+}
+
 label {
     display: block;
     width: 500px;

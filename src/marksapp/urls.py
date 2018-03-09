@@ -65,11 +65,11 @@ urlpatterns = [
     url(r'^changelog/$',
         views.changelog,
         name='changelog'),
-    url(r'login^$',
-        views.index,
-        name='index'),
-
-    # registration
-    url(r'^', include('registration.backends.hmac.urls')),
-    #url(r'^', include('django.contrib.auth.urls')),
+    url(r'^register/$',
+        views.register,
+        name='register'),
+    url(r'^about/$',
+        views.about,
+        name='about'),
+    url(r'^', include('django.contrib.auth.urls')),
 ]
