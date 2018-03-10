@@ -25,6 +25,9 @@
     <span class="action"><a mark_id="{{ mark.id }}" class="bump_btn" href="#">bump</a></span>
     {% endif %}
     {% if mark.description %}
-    <div class="description">{{ mark.description|markdown|safe }}</div>
+    <div class="description-container">
+        <div class="triangle"></div>
+        <div class="description">{{ mark.description|markdown|safe }}</div>
+    </div>
     {% endif %}
 </li>
