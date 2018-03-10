@@ -181,7 +181,6 @@ $(function() {
 
     mark_id = $(this).attr("mark_id");
     editMarkForm(mark_id, $(this));
-    console.log("opa");
   });
 
   $(".delete_btn").click(function(e) {
@@ -196,6 +195,23 @@ $(function() {
     e.preventDefault();
     mark_id = $(this).attr("mark_id");
     bumpMark(mark_id);
+  });
+
+  $(".info_btn").click(function(e) {
+    e.preventDefault();
+    mark_id = $(this).attr("mark_id");
+    $(".description-container[mark_id='" + mark_id + "']").toggle();
+    //$(".description-container[mark_id='" + mark_id + "']").css({'display': 'block'});
+  });
+
+  $(".expand_all_btn").click(function(e) {
+    e.preventDefault();
+    $(".description-container").show();
+  });
+
+  $(".collapse_all").click(function(e) {
+    e.preventDefault();
+    $(".description-container").hide();
   });
 
   $(document).on("submit", "#edit-mark-form", (function(e) {

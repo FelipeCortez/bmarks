@@ -276,7 +276,7 @@ li, li > a, li span {
 }
 
 .action:hover {
-    /*background-color: rgba(0, 0, 0, .2);*/
+
 }
 
 .mdot {
@@ -374,6 +374,7 @@ li, li > a, li span {
 
 .description-container {
     position: relative;
+    display: none;
 }
 
 .triangle {

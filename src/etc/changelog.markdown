@@ -1,6 +1,10 @@
 changelog
 ---------
 
+## 2018-03-10
+- Nowrap for marks, scrolling container and proper descriptions
+- Description now hidden by default. Added buttons to expand/collapse
+
 ## 2018-03-09
 - Registration page
 
