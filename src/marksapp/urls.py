@@ -68,8 +68,8 @@ urlpatterns = [
     url(r'^register/$',
         views.register,
         name='register'),
-    url(r'^about/$',
-        views.about,
-        name='about'),
-    url(r'^', include('django.contrib.auth.urls')),
+    url(r'^guide/$',
+        views.guide,
+        name='guide'),
+    url(r'^', include('django.contrib.auth.urls'), {'extra_context':{'page_title': 'login'}}),
 ]

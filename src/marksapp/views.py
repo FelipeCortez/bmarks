@@ -291,6 +291,7 @@ def changelog(request):
 
 def register(request):
     context = {}
+    context["page_title"] = "register"
 
     if request.method == 'POST':
         form = forms.RegistrationForm(request.POST)
@@ -321,9 +322,9 @@ def register(request):
 
     return render(request, 'registration/registration_form.html', context)
 
-def about(request):
-    return HttpResponse("Developed by felipecortezfi@gmail.com. If you need anything just send me an email")
-    #return render(request, 'import.html')
+def guide(request):
+    context = {'page_title': 'guide'}
+    return render(request, 'guide.html', context)
 
 # API ---------------------------------
 

@@ -385,10 +385,13 @@ li, li > a, li span {
     background-color: #F5F5F5;
     top: -6px;
     left: 10px;
+    border-left: 1px solid rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(0, 0, 0, 0.3);
     z-index: 2;
 }
 
 .description {
+    border: 1px solid rgba(0, 0, 0, 0.3);
     position: relative;
     background-color: #F5F5F5;
     min-width: 525px;
