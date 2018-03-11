@@ -8,11 +8,25 @@ guide
 {% endblock %}
 
 {% block content %}
-Welcome to Marks.
+Welcome to Marks. This is a bookmarking website that organizes your links using tags instead of categories.
 <h2>Importing</h2>
-You can import your bookmarks from Chrome, Firefox, Safari, Opera, Internet Explorer, as long as they're in the Netscape bookmark format. Your directories will become tags automatically.
-<h2>Private marks</h2>
-<h2>Unlisted marks</h2>
+You can import your bookmarks from Chrome, Firefox, Safari, Opera, Internet Explorer, as long as they're in the Netscape bookmark format. Your directories will be converted to tags automatically. If you have a bookmark inside the folders "Photography -> Music" they'll get the tags "Photography" and "Music". If you have a bookmark inside the folders "Music -> Photography", they'll get the same tags as the other bookmark.
+<h2>Adding bookmarks</h2>
+<h3>URL</h3>
+That's the link to your bookmarked site. If you copy and paste it, the title will be fetched from the page automatically and added to the Name field as long as it is blank.
+<h3>Name</h3>
+The name of your bookmark.
+<h3>Tags</h3>
+Comma-separated tags for your bookmark.
+<h3>Private marks</h3>
+If you add the "private" tag to a bookmark, it'll become hidden to the public.
+<h3>Unlisted marks</h3>
+If you prefix a tag with ".", it won't show up in the public tag view, but the bookmarks will be visible if you share the tag's URL.
+<h3>Descriptions</h3>
+When you add a bookmark, you can write a description for it using Markdown syntax.
+<h2>Viewing bookmarks</h2>
+You can sort bookmark listings by name or by date (most recent first).
+ The description for a bookmark is hidden by default and can be seen by clicking on <code>info</code>, or simply clicking <code>expand all</code>.
 <h2>Contact</h2>
 Developed by felipecortezfi@gmail.com. If you need anything just send me an email.
 {% endblock %}

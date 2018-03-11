@@ -5,6 +5,7 @@ $.fn.focusTextToEnd = function(){
   return this;
 }
 
+const root_url = "/";
 let all_tags = "";
 let selectedIdx = -1;
 let lastPrefix = "";

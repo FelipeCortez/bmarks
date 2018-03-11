@@ -24,7 +24,7 @@ if os.environ.get('DJANGO_DEVELOPMENT') is not None:
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', '.felipecortez.net']
+ALLOWED_HOSTS = ['127.0.0.1', '.bmarks.net']
 
 INTERNAL_IPS = (
     '127.0.0.1',
@@ -131,15 +131,13 @@ USE_L10N = True
 
 USE_TZ = True
 
-FORCE_SCRIPT_NAME = '/marks' if not DEBUG else ''
+LOGIN_URL = '/login/'
 
-LOGIN_URL = FORCE_SCRIPT_NAME + '/login/'
-
-LOGIN_REDIRECT_URL = FORCE_SCRIPT_NAME + '/'
-LOGOUT_REDIRECT_URL = FORCE_SCRIPT_NAME + '/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 STATIC_ROOT = '/srv/www/marks/static/' if not DEBUG else os.path.join(BASE_DIR, "/static")
-STATIC_URL = '/marks/static/' if not DEBUG else '/static/'
+STATIC_URL = '/static/'
 
 X_FRAME_OPTIONS = 'DENY'
 

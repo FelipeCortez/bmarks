@@ -99,12 +99,6 @@
         <script src="{% static 'marksapp/js/he.js' %}"></script>
 
         <script type="text/javascript">
-            {% if debug %}
-                var root_url = "/"
-            {% else %}
-                var root_url = "/marks/"
-            {% endif %}
-
             $.ajaxSetup({
             data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
             });
