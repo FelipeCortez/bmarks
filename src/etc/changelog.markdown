@@ -1,6 +1,11 @@
 changelog
 ---------
 
+## 2018-03-11
+- Moved to bmarks.net
+- Writing a guide
+- Improved readme
+
 ## 2018-03-10
 - Nowrap for marks, scrolling container and proper descriptions
 - Description now hidden by default. Added buttons to expand/collapse

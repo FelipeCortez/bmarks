@@ -394,11 +394,14 @@ li, li > a, li span {
     border: 1px solid rgba(0, 0, 0, 0.3);
     position: relative;
     background-color: #F5F5F5;
-    min-width: 525px;
+    max-width: 525px;
     padding: 7px;
     color: black;
     margin: 10px 0 15px 0;
-    overflow: visible;
+    overflow: scroll;
+    white-space: normal;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.8);
 }
 
 .description h1,
