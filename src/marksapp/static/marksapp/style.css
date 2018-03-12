@@ -249,17 +249,11 @@ li, li > a, li span {
 }
 
 .action {
-    /*border: 1px solid #36b2e8;*/
-    /*box-shadow: inset 0px 0px 0px 1px #36b2e8;*/
     margin-right: 3px;
 }
 
 .action, .action a {
-    /*
-    background-color: #9ad8eb;
-    color: #fffeee;
-    */
-    color: #9ad8eb;
+    color: #8badc0;
     padding: 0 1px 0 1px;
     text-decoration: none;
 }
@@ -393,15 +387,15 @@ li, li > a, li span {
 .description {
     border: 1px solid rgba(0, 0, 0, 0.3);
     position: relative;
+    color: rgb(75, 75, 75);
     background-color: #F5F5F5;
-    max-width: 525px;
+    width: 525px;
     padding: 7px;
-    color: black;
-    margin: 10px 0 15px 0;
+    margin: 10px 0 10px 0;
     overflow: scroll;
     white-space: normal;
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.8);
+    border-radius: 2px;
 }
 
 .description h1,
@@ -414,18 +408,20 @@ li, li > a, li span {
     margin-bottom: 5px;
 }
 
+.description li {
+    color: inherit;
+}
+
 .description ul, ol {
     margin-left: 25px;
 }
 
 .description ol li {
     list-style-type: decimal;
-    color: black;
 }
 
 .description ul li {
     list-style-type: square;
-    color: black;
 }
 
 .description > *:first-child {
@@ -445,4 +441,9 @@ li, li > a, li span {
 
 .description p {
     margin: 5px 0 5px 0;
+}
+
+.description a {
+    color: #3F91CC;
+    text-decoration: underline;
 }

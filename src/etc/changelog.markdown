@@ -1,6 +1,10 @@
 changelog
 ---------
 
+## 2018-03-12
+- Fixed wrapping in descriptions
+- Changed Analytics script
+
 ## 2018-03-11
 - Moved to bmarks.net
 - Writing a guide

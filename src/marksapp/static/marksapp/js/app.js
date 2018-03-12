@@ -3,12 +3,18 @@ $.fn.focusTextToEnd = function(){
   let $thisVal = this.val();
   this.val('').val($thisVal);
   return this;
-}
+};
 
+var params = new URLSearchParams(location.search);
 const root_url = "/";
 let all_tags = "";
 let selectedIdx = -1;
 let lastPrefix = "";
+
+function changeParams(func) {
+  func();
+  window.history.replaceState({}, '', `${location.pathname}?${params}`);
+}
 
 function getAllTags() {
   $.ajax({
@@ -20,7 +26,7 @@ function getAllTags() {
   });
 }
 
-let getUrlParameter = function getUrlParameter(sParam) {
+let getURLParameter = function getURLParameter(sParam) {
   let sPageURL = decodeURIComponent(window.location.search.substring(1)),
                                     sURLletiables = sPageURL.split('&'),
                                     sParameterName,
@@ -37,8 +43,8 @@ let getUrlParameter = function getUrlParameter(sParam) {
 
 function populateWithParameters() {
   if ($("#id_name").val() == "" && $("#id_url").val() == "") {
-    $("#id_url").val(getUrlParameter("url"));
-    $("#id_name").val(getUrlParameter("name"));
+    $("#id_url").val(getURLParameter("url"));
+    $("#id_name").val(getURLParameter("name"));
   }
 }
 
@@ -166,6 +172,10 @@ $(function() {
   populateWithParameters();
   getAllTags();
 
+  if (params.get("expand") == "all") {
+    $(".description-container").show();
+  }
+
   let mark_id = 0;
   $("#filter").hide();
 
@@ -202,17 +212,24 @@ $(function() {
     e.preventDefault();
     mark_id = $(this).attr("mark_id");
     $(".description-container[mark_id='" + mark_id + "']").toggle();
-    //$(".description-container[mark_id='" + mark_id + "']").css({'display': 'block'});
   });
 
   $(".expand_all_btn").click(function(e) {
     e.preventDefault();
     $(".description-container").show();
+    params.set("expand", "all");
+    window.history.replaceState({}, '', `${location.pathname}?${params}`);
+    changeParams(function() {
+      params.set("expand", "all");
+    }); // maybe a bit too clever
   });
 
   $(".collapse_all").click(function(e) {
     e.preventDefault();
     $(".description-container").hide();
+    changeParams(function() {
+      params.delete("expand");
+    });
   });
 
   $(document).on("submit", "#edit-mark-form", (function(e) {
