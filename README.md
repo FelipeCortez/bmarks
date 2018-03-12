@@ -16,4 +16,4 @@ A bookmarking tool made with Python 3 + Django 1.10. Running [here](https://bmar
 
 ## Bookmarklet
 
-```javascript:location.href='http://felipecortez.net/marks/add/?url='+encodeURIComponent(location.href)+'&name='+encodeURIComponent(document.title)```
+```javascript:location.href='https://bmarks.net/add/?url='+encodeURIComponent(location.href)+'&name='+encodeURIComponent(document.title)```

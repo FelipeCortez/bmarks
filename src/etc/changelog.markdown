@@ -48,7 +48,7 @@ changelog
 
 ## 2017-05-01
 - Bookmarklet!
-- javascript:location.href='http://felipecortez.net/marks/add/?url='+encodeURIComponent(location.href)+'&name='+encodeURIComponent(document.title)
+- javascript:location.href='https://bmarks.net/add/?url='+encodeURIComponent(location.href)+'&name='+encodeURIComponent(document.title)
 
 ## 2017-04-30
 - Bug fixes
