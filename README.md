@@ -13,6 +13,7 @@ A bookmarking tool made with Python 3 + Django 1.10. Running [here](https://bmar
 - [ ] Unlisted marks with dot prefix
 - [ ] Bulk editing
 - [ ] Wayback Archive Availability API integration
+- [ ] Browser extensions
 
 ## Bookmarklet
 

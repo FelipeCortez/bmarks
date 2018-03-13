@@ -1,9 +1,13 @@
 changelog
 ---------
 
+## 2018-03-13
+- More little CSS changes
+
 ## 2018-03-12
 - Fixed wrapping in descriptions
 - Changed Analytics script
+- Lots of little CSS changes
 
 ## 2018-03-11
 - Moved to bmarks.net

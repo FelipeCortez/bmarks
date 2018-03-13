@@ -379,22 +379,22 @@ li, li > a, li span {
     background-color: #F5F5F5;
     top: -6px;
     left: 10px;
-    border-left: 1px solid rgba(0, 0, 0, 0.3);
-    border-top: 1px solid rgba(0, 0, 0, 0.3);
+    border-left: 1px solid rgba(0, 0, 0, 0.15);
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
     z-index: 2;
 }
 
 .description {
-    border: 1px solid rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.15);
     position: relative;
     color: rgb(75, 75, 75);
     background-color: #F5F5F5;
     width: 525px;
     padding: 7px;
     margin: 10px 0 10px 0;
-    overflow: scroll;
+    overflow: auto;
     white-space: normal;
-    font-size: 14px;
+    font-size: 12px;
     border-radius: 2px;
 }
 
@@ -410,6 +410,7 @@ li, li > a, li span {
 
 .description li {
     color: inherit;
+    font-size: 12px;
 }
 
 .description ul, ol {
@@ -435,8 +436,8 @@ li, li > a, li span {
 .description blockquote {
     color: gray;
     margin: 0;
-    padding: 0 10px;
-    border-left: 3px solid gray;
+    padding: 1px 0 1px 10px;
+    border-left: 3px solid rgba(0, 0, 0, .3);
 }
 
 .description p {
@@ -445,5 +446,6 @@ li, li > a, li span {
 
 .description a {
     color: #3F91CC;
+    font-size: 12px;
     text-decoration: underline;
 }
