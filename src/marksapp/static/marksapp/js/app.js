@@ -11,6 +11,10 @@ let all_tags = "";
 let selectedIdx = -1;
 let lastPrefix = "";
 
+function splitTags(string) {
+  return string.trim().split(/[\s,]+/);
+}
+
 function changeParams(func) {
   func();
   window.history.replaceState({}, '', `${location.pathname}?${params}`);
@@ -158,7 +162,7 @@ function filterSuggestions(prefix) {
 }
 
 function completeWithSuggestedTag(selectedTag) {
-  let tags = $("#id_tags").val().split(",");
+  let tags = splitTags($("#id_tags").val());
   let last = tags[tags.length - 1].replace(/ /g,'');
   if (last[0] == "-") { last = last.substr(1); }
 
@@ -284,15 +288,15 @@ $(function() {
   // autocomplete ------------------
 
   $(document).on("keyup click focus", "#id_tags", function(e) {
-    let tags_str = $("#id_tags").val();
+    let tagsStr = $("#id_tags").val();
 
     // autocomplete should display when:
     // caret is on the last character
     // user is not selecting text
-    if (tags_str.substr(-1) != " " &&
-        tags_str.length == this.selectionStart &&
+    if (tagsStr.substr(-1) != " " &&
+        tagsStr.length == this.selectionStart &&
         this.selectionStart == this.selectionEnd) {
-      let tags = tags_str.split(",");
+      let tags = splitTags(tagsStr);
       let last = tags[tags.length - 1].replace(/ /g, '');
       if (last[0] == "-") { last = last.substr(1); }
       if (last != lastPrefix) {
