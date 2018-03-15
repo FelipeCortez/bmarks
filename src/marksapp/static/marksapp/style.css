@@ -58,14 +58,22 @@ body {
     text-decoration: none;
 }
 
-.extra-nav .separator {
-    margin-left: 5px;
-    margin-right: 5px;
+.separator {
     color: #3F91CC;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+}
+
+.extra-nav .separator {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.item .separator {
+    margin-left: 3px;
+    margin-right: 3px;
 }
 
 /* page title --------------------------------- */
@@ -209,10 +217,13 @@ ul, ol {
 }
 
 li, li > a, li span {
-    color: #3F91CC;
     font-size: 14px;
     font-weight: 400;
     text-decoration: none;
+}
+
+li > a {
+    color: #3F91CC;
 }
 
 .item {

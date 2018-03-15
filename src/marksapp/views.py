@@ -40,14 +40,12 @@ def user_index(request, username):
     sort = request.GET.get('sort', '') or "name"
 
     bookmarks = Bookmark.objects.filter(user__username=username)
-    noprivates = bookmarks.exclude(tags__name="private")
 
     if not username == request.user.username:
-        top_tags = Tag.objects.filter(bookmark__in=noprivates)
-    else:
-        top_tags = Tag.objects.filter(bookmark__in=bookmarks)
+        bookmarks = bookmarks.exclude(tags__name="private")
 
-    top_tags = top_tags.annotate(num_marks=Count('bookmark'))
+    top_tags = Tag.objects.filter(bookmark__in=bookmarks) \
+                          .annotate(num_marks=Count('bookmark'))
 
     if not request.user.is_authenticated():
         top_tags = top_tags.exclude(name="private")

@@ -279,6 +279,18 @@ $(function() {
     $("#id_query").focus();
   });
 
+  $("a[rel~='keep-params']").click(function(e) {
+    e.preventDefault();
+
+    var params = window.location.search,
+        dest = $(this).attr('href') + params;
+
+    // in my experience, a short timeout has helped overcome browser bugs
+    window.setTimeout(function() {
+      window.location.href = dest;
+    }, 100);
+  });
+
   $(document).on("change", "#id_url", function(e) {
     if ($("#id_name").val() == "") {
       getTitle($("#id_url").val());

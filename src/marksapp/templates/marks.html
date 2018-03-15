@@ -12,9 +12,12 @@
     {% for tag in tags %}
         <span class="tag">
             {% if tags|length > 1 %}
-            <a class="action" href="{% url 'user_tag' slug=tags|remove_tag:tag username=username %}">x</a>
+            <a class="action"
+               href="{% url 'user_tag' slug=tags|remove_tag:tag username=username %}"
+               rel="keep-params">x</a>
             {% else %}
-            <a class="action" href="{% url 'user_index' username=username %}">x</a>
+            <a class="action"
+               href="{% url 'user_index' username=username %}">x</a>
             {% endif %}
             <a href="#">{{ tag }}</a>
         </span>
@@ -57,8 +60,12 @@
     {% if tag.name not in tags %}
     <li class="item">
     <span class="tag">
-        <a class="action" href="{% url 'user_tag' slug=tags|add_tag:tag.name username=username %}">+</a>
-        <a class="tag_name" href="{% url 'user_tag' slug=tag.name username=username %}">{{ tag.name }}</a>
+        <a class="action"
+           href="{% url 'user_tag' slug=tags|add_tag:tag.name username=username %}"
+           rel="keep-params">+</a>
+        <a class="tag_name"
+           href="{% url 'user_tag' slug=tag.name username=username %}"
+           rel="keep-params">{{ tag.name }}</a>
     </span>
     <span class="number">{{ tag.num_marks }}</span>
     </li>
@@ -66,13 +73,5 @@
     {% endfor %}
 
 </ul>
-
-{% comment %}
-<form id="bulk_form" action="/felipecortez/bulk/" method="POST">
-    <label for="form_tags">Change tags</label>
-    <input id="form_tags" name="tags" type="text">
-    <input type="submit" value="Change">
-</form>
-{% endcomment %}
 
 {% endblock %}
