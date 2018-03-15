@@ -5,8 +5,8 @@ $.fn.focusTextToEnd = function(){
   return this;
 };
 
-var params = new URLSearchParams(location.search);
 const root_url = "/";
+let params = new URLSearchParams(location.search);
 let all_tags = "";
 let selectedIdx = -1;
 let lastPrefix = "";

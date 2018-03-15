@@ -42,7 +42,7 @@ def user_index(request, username):
     bookmarks = Bookmark.objects.filter(user__username=username)
     noprivates = bookmarks.exclude(tags__name="private")
 
-    if not request.user.is_authenticated():
+    if not username == request.user.username:
         top_tags = Tag.objects.filter(bookmark__in=noprivates)
     else:
         top_tags = Tag.objects.filter(bookmark__in=bookmarks)
@@ -93,7 +93,7 @@ def marks(request, username, tags=[]):
     for tag in tags:
         bookmarks = bookmarks.filter(tags__name=tag)
 
-    if not request.user.is_authenticated() or username != request.user:
+    if not username == request.user.username:
         bookmarks = bookmarks.exclude(tags__name="private")
 
     if sort == "date":

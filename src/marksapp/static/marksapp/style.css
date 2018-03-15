@@ -435,7 +435,7 @@ li, li > a, li span {
 
 .description blockquote {
     color: gray;
-    margin: 0;
+    margin: 2px 0 2px 0;
     padding: 1px 0 1px 10px;
     border-left: 3px solid rgba(0, 0, 0, .3);
 }
