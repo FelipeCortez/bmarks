@@ -181,7 +181,6 @@ $(function() {
   }
 
   let mark_id = 0;
-  $("#filter").hide();
 
   $("#suggestions").on("click", "li", function() {
     let fullTag = $(this).find("a").text();
@@ -361,16 +360,5 @@ $(function() {
 
   $(document).on("focusout", "#id_tags", function(e) {
     $("#suggestions").css({'display': 'none'});
-  });
-
-  $(document).on("change paste keyup", "#filter", function(e) {
-    let filter = $("#filter").val();
-    $(".tag_name").each(function(index) {
-      if ($(this).text().indexOf(filter) != -1) {
-        $(this).parent().show();
-      } else {
-        $(this).parent().hide();
-      }
-    });
   });
 });

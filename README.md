@@ -10,10 +10,11 @@ A bookmarking tool made with Python 3 + Django 1.10. Running [here](https://bmar
 - [x] Descriptions with Markdown support
 - [x] A friendly user guide (not so friendly yet)
 - [x] A bookmarklet
-- [ ] Unlisted marks with dot prefix
+- [x] Unlisted marks with dot prefix
 - [ ] Bulk editing
 - [ ] Wayback Archive Availability API integration
 - [ ] Browser extensions
+- [ ] JavaScriptless mode
 
 ## Bookmarklet
 

@@ -43,6 +43,7 @@ def user_index(request, username):
 
     if not username == request.user.username:
         bookmarks = bookmarks.exclude(tags__name="private")
+        bookmarks = bookmarks.exclude(tags__name__startswith=".")
 
     top_tags = Tag.objects.filter(bookmark__in=bookmarks) \
                           .annotate(num_marks=Count('bookmark'))
@@ -99,6 +100,8 @@ def marks(request, username, tags=[]):
 
     if not username == request.user.username:
         bookmarks = bookmarks.exclude(tags__name="private")
+        if not tags:
+            bookmarks = bookmarks.exclude(tags__name__startswith=".")
 
     if sort == "date":
         bookmarks = bookmarks.order_by('-date_added')
@@ -264,8 +267,8 @@ def edit_selection(request):
 
                     if mark_tag:
                         mark.tags.remove(mark_tag)
-                # wow what's going on here lol
-                if re.match("^[-\w]+$", tag):
+                # optional dot, word characters, hyphens allowed
+                if re.match("^\.?[-\w]+$", tag):
                     t = Tag.objects.get_or_create(name=tag)[0]
                     mark.tags.add(t)
 

@@ -77,7 +77,8 @@ class BookmarkForm(BaseModelForm):
         self.instance.tags.clear()
 
         for tag in form_tags:
-            if re.match("^[-\w]+$", tag):
+            # optional dot, word characters, hyphens allowed
+            if re.match("^\.?[-\w]+$", tag):
                 t = Tag.objects.get_or_create(name=tag)[0]
                 m.tags.add(t)
             else:
