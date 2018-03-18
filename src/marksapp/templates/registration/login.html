@@ -22,7 +22,11 @@ login
         <form method="post" action="{% url 'login' %}">
         <div class="form-container">
         {% csrf_token %}
-        {{ form }}
+        {{ form.non_field_errors }}
+        <label for="{{ form.username.id_for_label }}">Username</label>
+        {{ form.username }}
+        <label for="{{ form.password.id_for_label }}">Password</label>
+        {{ form.password }}
         <input type="submit" value="Login" />
         </form>
         </div>

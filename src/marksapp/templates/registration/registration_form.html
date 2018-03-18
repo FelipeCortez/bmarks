@@ -12,7 +12,22 @@ register
         <form action="#" method="POST">
             <div class="form-container" >
             {% csrf_token %}
-            {{ form }}
+            {{ form.non_field_errors }}
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+
+            <label for="{{ form.email.id_for_label }}">E-mail</label>
+            {{ form.email }}
+
+            <label for="{{ form.visibility.id_for_label }}">Default visibility</label>
+            {% for radio in form.visibility %}
+            <div class="radio-buttons">
+                {{ radio }}
+            </div>
+            {% endfor %}
             <input type="submit" value="Register" />
         </form>
     {% else %}

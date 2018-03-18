@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load filters %}
+
+{% block page_info %}
+    <span class="green-and-bold">
+    ·
+    <a href="{% url index' username=username %}">{{ username }}</a>
+    ·
+    profile
+    </span>
+{% endblock %}
+
+{% block content %}
+    hello world
+{% endblock %}

@@ -1,6 +1,9 @@
 changelog
 ---------
 
+## 2018-03-16
+- Improved register form, added email and visibility fields
+
 ## 2018-03-13
 - More little CSS changes
 

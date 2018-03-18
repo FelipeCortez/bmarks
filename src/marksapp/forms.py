@@ -1,8 +1,8 @@
 from django import forms
-from django.forms import ModelForm, CharField
+from django.forms import ModelForm, CharField, ChoiceField
 from django.utils.safestring import mark_safe
 from django.forms.utils import flatatt
-from marksapp.models import Bookmark, Tag
+from marksapp.models import Bookmark, Tag, Profile
 import marksapp.views
 import re
 
@@ -113,6 +113,13 @@ class RegistrationForm(BaseForm):
     username = CharField(label='Username', required=True)
     password = CharField(label='Password', required=True,
                          widget=forms.PasswordInput)
+    email = CharField(label='E-mail',
+                      required=False,
+                      widget=forms.TextInput(attrs={'placeholder': 'optional! just in case you forget your password'}))
+    visibility = ChoiceField(choices=Profile.visibility_choices,
+                             label='Default visibility',
+                             initial='PB',
+                             widget=forms.RadioSelect())
 
 
 class NetscapeForm(forms.Form):

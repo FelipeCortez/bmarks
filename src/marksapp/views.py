@@ -10,7 +10,7 @@ from django.core import serializers
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
-from marksapp.models import Bookmark, Tag
+from marksapp.models import Bookmark, Tag, Profile
 from collections import OrderedDict
 import json
 import pprint
@@ -64,6 +64,12 @@ def user_index(request, username):
         'page_title': 'home'
     }
     return render(request, "index.html", context)
+
+def user_profile(request, username):
+    context = {
+        'username': username,
+    }
+    return render(request, "profile.html", context)
 
 def user_tag(request, username, slug=None):
     tags = slug.split("+") if slug else []
@@ -298,15 +304,21 @@ def register(request):
             context["form"] = form
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
+            email = form.cleaned_data['email']
+            visibility = form.cleaned_data['visibility']
+
             try:
                 username_db = User.objects.get(username__iexact=username)
                 form.add_error(None, "Username already exists")
             except User.DoesNotExist:
                 user = User.objects.create_user(username=username,
-                                              password=password)
-
+                                                password=password)
                 new_user = authenticate(username=username,
                                         password=password)
+                profile = Profile(user=user,
+                                  visibility=visibility,
+                                  email=email)
+                profile.save()
 
                 if new_user is not None:
                     login(request, new_user)

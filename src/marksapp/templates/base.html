@@ -42,8 +42,13 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{% url 'user_profile' username=user.username %}">
+                        {{ user.username }}
+                    </a>
+                </li>
+                <li>
                     <a href="{% url 'logout' %}">
-                        {{ user.username }} (logout)
+                        logout
                     </a>
                 </li>
                 {% else %}

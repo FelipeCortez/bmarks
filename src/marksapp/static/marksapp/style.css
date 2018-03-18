@@ -38,7 +38,7 @@ body {
 }
 
 .active {
-    font-weight: 500;
+    text-decoration: underline;
 }
 
 /* extra nav ---------------------------------- */
@@ -172,6 +172,10 @@ input[type=checkbox] {
     margin: 0 5px 0 0;
 }
 
+.radio-buttons label {
+    font-size: 14px;
+}
+
 textarea {
     min-height: 17px;
     resize: vertical;
@@ -200,7 +204,7 @@ button:hover {
 }
 
 ::placeholder {
-    color: #CCCCCC;
+    color: #AAAAAA;
     font-style: italic;
 }
 

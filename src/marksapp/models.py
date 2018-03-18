@@ -4,6 +4,19 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import validate_slug
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    PUBLIC = 'PB'
+    PRIVATE = 'PV'
+    visibility_choices = [
+        (PUBLIC, 'Public',),
+        (PRIVATE, 'Private',)
+    ]
+    visibility = models.CharField(choices=visibility_choices,
+                                  max_length=2)
+    email = models.CharField(max_length=128, blank=True)
+
 class Tag(models.Model):
     name = models.SlugField(max_length=50, unique=True)
 
@@ -26,4 +39,3 @@ class Bookmark(models.Model):
 
     def __str__(self):
         return "{}\n{}\n[{}]\n<{}>\n---\n".format(self.user.username, self.name, self.url, self.tags_str())
-
