@@ -7,6 +7,7 @@ A bookmarking tool made with Python 3 + Django 1.10. Running [here](https://bmar
 - [x] Import bookmarks saved in the Netscape format
 - [x] Tag completion in forms
 - [x] Private marks with `private` tag
+- [x] Private accounts
 - [x] Descriptions with Markdown support
 - [x] A friendly user guide (not so friendly yet)
 - [x] A bookmarklet
@@ -15,6 +16,7 @@ A bookmarking tool made with Python 3 + Django 1.10. Running [here](https://bmar
 - [ ] Wayback Archive Availability API integration
 - [ ] Browser extensions
 - [ ] JavaScriptless mode
+- [ ] Export bookmarks
 
 ## Bookmarklet
 

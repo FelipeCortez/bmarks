@@ -4,12 +4,26 @@
 {% block page_info %}
     <span class="green-and-bold">
     ·
-    <a href="{% url index' username=username %}">{{ username }}</a>
+    <a href="{% url 'index' %}">{{ username }}</a>
     ·
     profile
     </span>
 {% endblock %}
 
 {% block content %}
-    hello world
+    <form action="#" method="POST">
+        <div class="form-container" >
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <label for="{{ user_form.email.id_for_label }}">E-mail</label>
+        {{ user_form.email }}
+
+        <label for="{{ profile_form.visibility.id_for_label }}">Default visibility</label>
+        {% for radio in profile_form.visibility %}
+        <div class="radio-buttons">
+            {{ radio }}
+        </div>
+        {% endfor %}
+        <input type="submit" value="Update" />
+    </form>
 {% endblock %}

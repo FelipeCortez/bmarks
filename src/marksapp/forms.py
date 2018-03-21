@@ -2,9 +2,12 @@ from django import forms
 from django.forms import ModelForm, CharField, ChoiceField
 from django.utils.safestring import mark_safe
 from django.forms.utils import flatatt
+from django.contrib.auth.models import User
 from marksapp.models import Bookmark, Tag, Profile
 import marksapp.views
 import re
+
+EMAIL_PLACEHOLDER_STR = 'optional! just in case you forget your password'
 
 # https://github.com/wagtail/wagtail/issues/130#issuecomment-37180123
 # fucking colons...
@@ -116,12 +119,27 @@ class RegistrationForm(BaseForm):
                          widget=forms.PasswordInput)
     email = CharField(label='E-mail',
                       required=False,
-                      widget=forms.TextInput(attrs={'placeholder': 'optional! just in case you forget your password'}))
+                      widget=forms.TextInput(attrs={'placeholder': EMAIL_PLACEHOLDER_STR}))
     visibility = ChoiceField(choices=Profile.visibility_choices,
                              label='Default visibility',
                              initial='PB',
                              widget=forms.RadioSelect())
 
+class ProfileForm(BaseModelForm):
+    class Meta:
+        model = Profile
+        fields = ['visibility']
+        widgets = {
+            'visibility': forms.RadioSelect(),
+        }
+
+class UserForm(BaseModelForm):
+    class Meta:
+        model = User
+        fields = ['email']
+        widgets = {
+            'email': forms.TextInput(attrs={'placeholder': EMAIL_PLACEHOLDER_STR})
+        }
 
 class NetscapeForm(forms.Form):
     file = forms.FileField()

@@ -1,6 +1,9 @@
 changelog
 ---------
 
+## 2018-03-20
+- Default visibility working
+
 ## 2018-03-16
 - Improved register form, added email and visibility fields
 

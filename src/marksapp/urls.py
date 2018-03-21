@@ -53,7 +53,7 @@ urlpatterns = [
     url(r'^(?P<username>\w+)$',
         views.user_index,
         name='user_index'),
-    url(r'^(?P<username>\w+)/profile/$',
+    url(r'^profile/$',
         views.user_profile,
         name='user_profile'),
     url(r'^import_netscape/$',

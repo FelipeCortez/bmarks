@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.core import serializers
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from marksapp.models import Bookmark, Tag, Profile
@@ -36,13 +36,22 @@ def index(request):
 def user_index(request, username):
     get_object_or_404(User, username=username)
 
+    try:
+        profile = Profile.objects.get(user__username=username)
+    except ObjectDoesNotExist:
+        profile = None
+
     search_form = forms.SearchForm()
     sort = request.GET.get('sort', '') or "name"
 
     bookmarks = Bookmark.objects.filter(user__username=username)
 
     if not username == request.user.username:
-        bookmarks = bookmarks.exclude(tags__name="private")
+        if profile and profile.visibility == Profile.PRIVATE:
+            bookmarks = bookmarks.filter(tags__name="public")
+        else:
+            bookmarks = bookmarks.exclude(tags__name="private")
+
         bookmarks = bookmarks.exclude(tags__name__startswith=".")
 
     top_tags = Tag.objects.filter(bookmark__in=bookmarks) \
@@ -66,10 +75,29 @@ def user_index(request, username):
     }
     return render(request, "index.html", context)
 
-def user_profile(request, username):
+def user_profile(request):
+    username = request.user.username
+    user_object = User.objects.get(username__iexact=username)
+    profile_object = Profile.objects.get_or_create(user=request.user)[0]
+
+    if request.method == 'POST':
+        user_form = forms.UserForm(request.POST, instance=user_object)
+        profile_form = forms.ProfileForm(request.POST, instance=profile_object)
+        if profile_form.is_valid() and user_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return HttpResponseRedirect(reverse('index'))
+    else:
+
+        user_form = forms.UserForm(instance=user_object)
+        profile_form = forms.ProfileForm(instance=profile_object)
+
     context = {
         'username': username,
+        'user_form': user_form,
+        'profile_form': profile_form,
     }
+
     return render(request, "profile.html", context)
 
 def user_tag(request, username, slug=None):
@@ -315,12 +343,12 @@ def register(request):
                 form.add_error(None, "Username already exists")
             except User.DoesNotExist:
                 user = User.objects.create_user(username=username,
-                                                password=password)
+                                                password=password,
+                                                email=email)
                 new_user = authenticate(username=username,
                                         password=password)
                 profile = Profile(user=user,
-                                  visibility=visibility,
-                                  email=email)
+                                  visibility=visibility)
                 profile.save()
 
                 if new_user is not None:
