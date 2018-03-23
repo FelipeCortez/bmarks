@@ -12,23 +12,26 @@ guide
 <h1>A user's manual</h1>
 Welcome to Marks. This is a bookmarking website that organizes your links using tags instead of categories.
 <h2>Importing</h2>
-You can import your bookmarks from Chrome, Firefox, Safari, Opera, Internet Explorer, as long as they're in the Netscape bookmark format. Your directories will be converted to tags automatically. If you have a bookmark inside the folders "Photography -> Music" they'll get the tags "Photography" and "Music". If you have a bookmark inside the folders "Music -> Photography", it will get the tags "Photography" and "Music" as well.
+You can import your bookmarks from Chrome, Firefox, Safari, Opera, Internet Explorer, as long as they're in the Netscape bookmark format. Your directories will be converted to tags automatically. If you have a bookmark inside the folders "Photography -> Music" it'll get the tags "Photography" and "Music". If you have a bookmark inside the folders "Music -> Photography", it will get the tags "Photography" and "Music" as well.
 <h2>Adding bookmarks</h2>
 <h3>URL</h3>
 That's the link to your bookmarked site. If you copy and paste it, the title will be fetched from the page automatically and added to the Name field as long as it is blank.
 <h3>Name</h3>
 The name of your bookmark.
 <h3>Tags</h3>
-Comma-separated tags for your bookmark.
-<h3>Private marks</h3>
-If you add the "private" tag to a bookmark, it'll become hidden to everyone but you.
-<h3>Unlisted marks</h3>
-If you prefix a tag with ".", it won't show up when someone else is browsing your tags, but people can still access the tag's contents if they have the URL.
+Comma or space separated tags for your bookmark. "music, songwriting, people" tags a bookmark as "music", "songwriting" and "people". So does "music songwriting people". So does "music, songwriting people"!
 <h3>Descriptions</h3>
 When you add a bookmark, you can write a description for it using Markdown syntax.
 <h2>Viewing bookmarks</h2>
 You can sort bookmark listings by name or by date (most recent first).
  The description for a bookmark is hidden by default and can be seen by clicking on <code>info</code>, or simply clicking <code>expand all</code>.
+<h2>Privacy</h2>
+<h3>Public profiles</h3>
+If you set your profile to public, everyone can see your bookmarks unless they're tagged as "private".
+<h4>Unlisted tags</h4>
+If you prefix a tag with a dot, like ".notsosecret", bookmarks tagged with it won't show up if another user's browsing your tags or bookmarks, but you can still share links to that tag.
+<h3>Private profiles</h3>
+If you set your profile to private, everyone can see your bookmarks unless they're tagged as "public".
 <h2>Contact / Contribute</h2>
 If you need anything or have a suggestion just send an email to felipecortezfi@gmail.com. Marks is open-source software built with Python and Django. You can find all the code at <a href="https://github.com/FelipeCortez/marks">GitHub</a>
 </div>
