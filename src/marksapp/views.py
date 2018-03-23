@@ -96,6 +96,7 @@ def user_profile(request):
         'username': username,
         'user_form': user_form,
         'profile_form': profile_form,
+        'page_title': 'profile'
     }
 
     return render(request, "profile.html", context)

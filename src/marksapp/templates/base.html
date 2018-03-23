@@ -42,8 +42,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'user_profile' %}">
-                        {{ user.username }}
+                    <a {% if page_title == "profile" %} class="active" {% endif %} href="{% url 'user_profile' %}">
+                        profile
                     </a>
                 </li>
                 <li>
