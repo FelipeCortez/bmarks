@@ -12,9 +12,9 @@ A bookmarking tool made with Python 3 + Django 1.10. Running [here](https://bmar
 - [x] A friendly user guide (not so friendly yet)
 - [x] A bookmarklet
 - [x] Unlisted marks with dot prefix
+- [x] Browser extension (Firefox only currently)
 - [ ] Bulk editing
 - [ ] Wayback Archive Availability API integration
-- [ ] Browser extensions
 - [ ] JavaScriptless mode
 - [ ] Export bookmarks
 
