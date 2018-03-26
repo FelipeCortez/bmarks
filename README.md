@@ -21,3 +21,7 @@ A bookmarking tool made with Python 3 + Django 1.10. Running [here](https://bmar
 ## Bookmarklet
 
 ```javascript:location.href='https://bmarks.net/add/?url='+encodeURIComponent(location.href)+'&name='+encodeURIComponent(document.title)```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details

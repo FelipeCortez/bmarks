@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Add to bmarks",
+  "name": "bmarks",
   "version": "1.0",
-  "description": "Add tabs to bmarks!",
+  "description": "Add bookmarks and tab collections to bmarks.net",
   "homepage_url": "https://bmarks.net",
 
   "permissions": [
