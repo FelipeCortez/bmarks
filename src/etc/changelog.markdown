@@ -1,6 +1,9 @@
 changelog
 ---------
 
+## 2018-03-26
+- Added Firefox webextension
+
 ## 2018-03-20
 - Default visibility working
 

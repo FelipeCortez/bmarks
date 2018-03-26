@@ -1,4 +1,4 @@
-$.fn.focusTextToEnd = function(){
+$.fn.focusTextToEnd = function() {
   this.focus();
   let $thisVal = this.val();
   this.val('').val($thisVal);
@@ -30,25 +30,13 @@ function getAllTags() {
   });
 }
 
-let getURLParameter = function getURLParameter(sParam) {
-  let sPageURL = decodeURIComponent(window.location.search.substring(1)),
-                                    sURLletiables = sPageURL.split('&'),
-                                    sParameterName,
-                                    i;
-
-  for (i = 0; i < sURLletiables.length; i++) {
-    sParameterName = sURLletiables[i].split('=');
-
-    if (sParameterName[0] === sParam) {
-      return sParameterName[1] === undefined ? true : sParameterName[1];
-    }
-  }
-};
-
 function populateWithParameters() {
   if ($("#id_name").val() == "" && $("#id_url").val() == "") {
-    $("#id_url").val(getURLParameter("url"));
-    $("#id_name").val(getURLParameter("name"));
+    let params = (new URL(document.location)).searchParams;
+
+    $("#id_url").val(decodeURIComponent(params.get("url")));
+    $("#id_name").val(decodeURIComponent(params.get("name")));
+    $("#id_description").val(decodeURIComponent(params.get("description")));
   }
 }
 
