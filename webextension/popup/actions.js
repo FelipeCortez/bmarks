@@ -1,18 +1,18 @@
-let baseURL = "bmarks.net";
+let baseURL = "https://bmarks.net";
 
 function onGotAll(tabs) {
   let i = 0;
   let description = "";
 
   for (i = 0; i < tabs.length; ++i) {
-    description += `[${ tabs[i].title }](${ tabs[i].url })\n\n`;
+    description += `- [${ tabs[i].title }](${ tabs[i].url })\n`;
 
     if (tabs[i].active) {
       let activeTab = tabs[i];
     }
   }
 
-  var encodedUrl = baseURL + "/add/?name=" + "Tabs" + "&description=" + encodeURIComponent(description);
+  var encodedUrl = baseURL + "/add/?name=" + "Tab collection" + "&description=" + encodeURIComponent(description) + "&tags=tab-collection";
 
   browser.tabs.create({
     url: encodedUrl

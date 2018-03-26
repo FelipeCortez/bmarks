@@ -236,7 +236,7 @@ li > a {
 }
 
 .item > a, .item > .number, .item > .action {
-    margin-right: 5px;
+    margin-right: 3px;
 }
 
 .item > a:hover {
@@ -388,12 +388,12 @@ li > a {
 
 .triangle {
     position: absolute;
-    width: 12px;
-    height: 12px;
+    width: 8px;
+    height: 8px;
     transform: rotate(45deg);
     background-color: #F5F5F5;
-    top: -6px;
-    left: 10px;
+    top: -4px;
+    left: 7px;
     border-left: 1px solid rgba(0, 0, 0, 0.15);
     border-top: 1px solid rgba(0, 0, 0, 0.15);
     z-index: 2;
@@ -437,7 +437,7 @@ li > a {
 }
 
 .description ul li {
-    list-style-type: square;
+    list-style-type: disc;
 }
 
 .description > *:first-child {

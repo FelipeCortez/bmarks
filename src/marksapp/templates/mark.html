@@ -4,6 +4,9 @@
     {% comment %}
     <input name="check_mark" type="checkbox" value="{{ mark.id }}">
     {% endcomment %}
+    {% if mark.description %}
+    <span class="action"><a mark_id="{{ mark.id }}" class="info_btn" href="#" title="{{ mark.date_added }}">[+]</a></span>
+    {% endif %}
     {% if mark.url %}
     <a href="{{ mark.url }}">{{ mark.name }}</a>
     {% else %}
@@ -22,7 +25,6 @@
     {% endfor %}
     {% if user.is_authenticated and user.username == username %}
     <span class="separator">&#183;</span>
-    <span class="action"><a mark_id="{{ mark.id }}" class="info_btn" href="#" title="{{ mark.date_added }}">info</a></span>
     <span class="action"><a mark_id="{{ mark.id }}" class="edit_btn" href="#">edit</a></span>
     <span class="action"><a mark_id="{{ mark.id }}" class="delete_btn" href="#">delete</a></span>
     <span class="action"><a mark_id="{{ mark.id }}" class="bump_btn" href="#">bump</a></span>
