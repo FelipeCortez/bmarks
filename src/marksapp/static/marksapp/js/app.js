@@ -30,13 +30,22 @@ function getAllTags() {
   });
 }
 
-function populateWithParameters() {
+function populateWithSearchParams() {
   if ($("#id_name").val() == "" && $("#id_url").val() == "") {
     let params = (new URL(document.location)).searchParams;
 
-    $("#id_url").val(decodeURIComponent(params.get("url")));
-    $("#id_name").val(decodeURIComponent(params.get("name")));
-    $("#id_description").val(decodeURIComponent(params.get("description")));
+    if (params.get("url")) {
+      $("#id_url").val(decodeURIComponent(params.get("url")));
+    }
+
+    if (params.get("description")) {
+      $("#id_description").val(decodeURIComponent(params.get("description")));
+      $("#id_description").prop("style").height = $("#id_description").prop("scrollHeight") + "px";
+    }
+
+    if (params.get("name")) {
+      $("#id_name").val(decodeURIComponent(params.get("name")));
+    }
   }
 }
 
@@ -161,7 +170,7 @@ function completeWithSuggestedTag(selectedTag) {
 
 
 $(function() {
-  populateWithParameters();
+  populateWithSearchParams();
   getAllTags();
 
   if (params.get("expand") == "all") {

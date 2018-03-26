@@ -1,0 +1,19 @@
+html, body {
+    width: 100px;
+}
+
+.button {
+    margin: 3% auto;
+    padding: 4px;
+    text-align: center;
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 12px;
+    background-color: #FEFEFE;
+    border: 1px solid #979797;
+    border-radius: 2px;
+    color: #959595;
+    padding: 5px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, .04);
+    outline: none;
+    cursor: pointer;
+}
