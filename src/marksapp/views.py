@@ -162,8 +162,9 @@ def add_mark(request):
         # we don't want to expose user to the form but need to validate unique_together!
         if form.is_valid():
             if form.cleaned_data['url'] and Bookmark.objects.filter(url=form.cleaned_data['url'], user=request.user).exists():
-                return HttpResponse(form.cleaned_data['url'])
-                # TODO: show something meaningful urgently
+                existing_mark = Bookmark.objects.get(url=form.cleaned_data['url'], user=request.user)
+                # TODO: maybe a warning would be good
+                return HttpResponseRedirect(reverse('mark_permalink', kwargs={"username": request.user.username, "id": existing_mark.id}))
             else:
                 mark = form.save(commit=False)
                 mark.user = request.user
