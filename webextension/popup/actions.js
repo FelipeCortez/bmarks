@@ -17,6 +17,8 @@ function onGotAll(tabs) {
   browser.tabs.create({
     url: encodedUrl
   });
+
+  window.close();
 }
 
 function onGotActive(tabs) {
@@ -25,6 +27,8 @@ function onGotActive(tabs) {
   browser.tabs.create({
     url: encodedUrl
   });
+
+  window.close();
 }
 
 function onError(error) {

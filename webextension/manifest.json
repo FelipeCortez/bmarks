@@ -1,6 +1,7 @@
 {
   "manifest_version": 2,
   "name": "bmarks",
+  "author": "Felipe Cortez",
   "version": "1.0",
   "description": "Add bookmarks and tab collections to bmarks.net",
   "homepage_url": "https://bmarks.net",
