@@ -10,7 +10,7 @@
     {% if mark.url %}
     <a href="{{ mark.url }}">{{ mark.name }}</a>
     {% else %}
-    {{ mark.name }}
+    <span>{{ mark.name }}</span>
     {% endif %}
     {% for tag in mark.tags.all %}
     <span class="tag">
@@ -23,12 +23,13 @@
            rel="keep-params">{{ tag.name }}</a>
     </span>
     {% endfor %}
-    {% if user.is_authenticated and user.username == username %}
     <span class="separator">&#183;</span>
+    {% if user.is_authenticated and user.username == username %}
     <span class="action"><a mark_id="{{ mark.id }}" class="edit_btn" href="#">edit</a></span>
     <span class="action"><a mark_id="{{ mark.id }}" class="delete_btn" href="#">delete</a></span>
     <span class="action"><a mark_id="{{ mark.id }}" class="bump_btn" href="#">bump</a></span>
     {% endif %}
+    <span class="action"><a href="{% url 'mark_permalink' username=username id=mark.id %}">permalink</a></span>
     {% if mark.description %}
     <div class="description-container" mark_id="{{ mark.id }}">
         <div class="triangle"></div>

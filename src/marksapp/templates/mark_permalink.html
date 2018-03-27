@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load filters %}
+
+{% block page_info %}
+<span class="green-and-bold">
+·
+<a href="{% url 'user_index' username=mark.user.username %}">{{ mark.user.username }}</a>
+</span>
+{% endblock %}
+
+{% block content %}
+<ul class="links">
+<li class="item">
+    {% if mark.url %}
+    <a href="{{ mark.url }}">{{ mark.name }}</a>
+    {% else %}
+    {{ mark.name }}
+    {% endif %}
+    {% for tag in mark.tags.all %}
+    <span class="tag">
+        <a href="{% url 'user_tag' slug=tag.name username=mark.user.username %}">
+            {{ tag.name }}
+        </a>
+    </span>
+    {% endfor %}
+    {% if mark.description %}
+    <div class="description-container" style="display: block" mark_id="{{ mark.id }}">
+        <div class="triangle"></div>
+        <div class="description">
+            {{ mark.description|markdown|safe }}
+        </div>
+    </div>
+    {% endif %}
+</li>
+</ul>
+{% endblock %}

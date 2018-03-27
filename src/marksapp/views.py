@@ -174,19 +174,31 @@ def add_mark(request):
 
     return render(request, 'add.html', {'form': form, 'page_title': 'add'})
 
-@login_required
-def edit_mark(request, id):
+def mark_permalink(request, username, id):
+    user_object = User.objects.get(username__iexact=username)
     mark = Bookmark.objects.get(id=id)
 
-    if request.method == 'POST':
-        form = forms.BookmarkForm(request.POST, instance=mark)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('index'))
-    else:
-        form = forms.BookmarkForm(instance=mark)
+    try:
+        profile = Profile.objects.get(user=user_object)
+    except ObjectDoesNotExist:
+        profile = None
 
-    return render(request, 'edit_mark.html', {'form': form})
+    if username == request.user.username:
+        private = False
+    else:
+        if profile and profile.visibility == Profile.PRIVATE:
+            private = not bool(mark.tags.filter(name__iexact="public").first())
+        else:
+            private = bool(mark.tags.filter(name__iexact="private").first())
+
+    if user_object == mark.user and not private:
+        context = {
+            'mark': mark
+        }
+
+        return render(request, 'mark_permalink.html', context)
+    else:
+        return HttpResponseRedirect(reverse('user_index', kwargs={"username": username}))
 
 @login_required
 def delete_mark(request, id):

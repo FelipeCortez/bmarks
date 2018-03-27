@@ -10,9 +10,6 @@ urlpatterns = [
     url(r'^add/$',
         views.add_mark,
         name='add_mark'),
-    url(r'^mark/(?P<id>[0-9]+)/$',
-        views.edit_mark,
-        name='edit_mark'),
     url(r'^mark/(?P<id>[0-9]+)/delete/$',
         views.delete_mark,
         name='delete_mark'),
@@ -43,7 +40,10 @@ urlpatterns = [
         views.edit_selection,
         name='edit_selection'),
 
-    # user actions
+    # user views
+    url(r'^(?P<username>\w+)/mark/(?P<id>[0-9]+)/$',
+        views.mark_permalink,
+        name='mark_permalink'),
     url(r'^(?P<username>\w+)/tag/(?P<slug>\.?[-\w\d+]+)/$',
         views.user_tag,
         name='user_tag'),

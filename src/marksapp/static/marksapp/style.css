@@ -235,8 +235,8 @@ li > a {
     white-space: nowrap;
 }
 
-.item > a, .item > .number, .item > .action {
-    margin-right: 3px;
+.item > a, .item > .number, .item > .action, .item > span {
+    margin-right: 5px;
 }
 
 .item > a:hover {
@@ -279,7 +279,7 @@ li > a {
 
 .tag > .action {
     /*background-color: #d8d7d2;*/
-    padding: 0 5px 0 5px;
+    padding: 0 3px 0 3px;
     margin-right: 0;
     border-right: 1px solid #d8d7d2;
 }
