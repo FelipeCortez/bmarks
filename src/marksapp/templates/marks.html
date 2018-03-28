@@ -55,6 +55,28 @@
 {% endif %}
 </ul>
 
+<div class="extra-nav">
+    <!--
+        <a id="show-search" href="#">search</a>
+        <span class="separator">·</span>
+        <a href="{% url 'user_tag' username=username %}?sort=date&limit=100">last</a>
+        <span class="separator">·</span>
+    -->
+    {% if before_mark or after_mark %}
+        {% if before_mark %}
+            <a href="?before={{ before_mark.id }}" class="prev">prev</a>
+        {% endif %}
+
+        {% if before_mark and after_mark %}
+            <span class="separator">·</span>
+        {% endif %}
+
+        {% if after_mark %}
+            <a href="?after={{ after_mark.id }}" class="next">next</a>
+        {% endif %}
+    {% else %}that's all{% endif %}
+</div>
+
 <ul id="marks">
     {% for tag in tag_count %}
     {% if tag.name not in tags %}

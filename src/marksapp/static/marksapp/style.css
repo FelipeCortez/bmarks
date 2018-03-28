@@ -210,6 +210,10 @@ button:hover {
 
 /* main site ---------------------------------- */
 
+.links {
+    margin-bottom: 15px;
+}
+
 .marginbottom {
     margin-bottom: 20px;
 }

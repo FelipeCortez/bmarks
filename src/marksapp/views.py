@@ -110,12 +110,13 @@ def marks(request, username, tags=[]):
     get_object_or_404(User, username=username)
 
     bookmarks = Bookmark.objects.filter(user__username=username)
-    sort = request.GET.get('sort', '') or "name"
-    limit = request.GET.get('limit', '')
+    sort = request.GET.get('sort', '') or "date"
+    after = request.GET.get('after', '')
+    before = request.GET.get('before', '')
+    limit = 70
 
     search_query = request.GET.get('query', '')
     search_tags = request.GET.get('tags', '')
-    if limit: limit = int(limit)
 
     if search_query:
         bookmarks = bookmarks.filter(name__search=search_query)
@@ -133,11 +134,34 @@ def marks(request, username, tags=[]):
             bookmarks = bookmarks.exclude(tags__name__startswith=".")
 
     if sort == "date":
-        bookmarks = bookmarks.order_by('-date_added')
+        sorted_bookmarks = bookmarks.order_by('-date_added')
     else:
-        bookmarks = bookmarks.order_by(Lower("name"))
+        sorted_bookmarks = bookmarks.order_by(Lower("name"))
 
-    if limit: bookmarks = bookmarks[:limit]
+    if after:
+        after_id = int(after)
+        after_mark = Bookmark.objects.get(id=after_id)
+        bookmarks = sorted_bookmarks.exclude(date_added__gte=after_mark.date_added)
+        bookmarks = bookmarks[:limit]
+    elif before:
+        before_id = int(before)
+        before_mark = Bookmark.objects.get(id=before_id)
+        bookmarks = bookmarks.order_by('date_added')
+        bookmarks = bookmarks.filter(date_added__gt=before_mark.date_added)
+        bookmarks = bookmarks[:limit:-1]
+    else:
+        bookmarks = sorted_bookmarks[:limit]
+
+    print(bookmarks[0], sorted_bookmarks.first())
+    if bookmarks[0] != sorted_bookmarks.first():
+        before_mark = bookmarks[0]
+    else:
+        before_mark = None
+
+    if bookmarks[len(bookmarks) - 1] != sorted_bookmarks.last():
+        after_mark = bookmarks[len(bookmarks) - 1]
+    else:
+        after_mark = None
 
     tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
                            .annotate(num_marks=Count('bookmark')) \
@@ -150,7 +174,8 @@ def marks(request, username, tags=[]):
         'tags': tags,
         'query': search_query,
         'marks': bookmarks,
-        'limit': limit
+        'before_mark': before_mark,
+        'after_mark': after_mark,
     }
 
     return render(request, "marks.html", context)

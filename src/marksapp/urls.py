@@ -44,7 +44,8 @@ urlpatterns = [
     url(r'^(?P<username>\w+)/mark/(?P<id>[0-9]+)/$',
         views.mark_permalink,
         name='mark_permalink'),
-    url(r'^(?P<username>\w+)/tag/(?P<slug>\.?[-\w\d+]+)/$',
+    # TODO: dots only at the beginning or after a +
+    url(r'^(?P<username>\w+)/tag/(?P<slug>\.?[-\w\d+.]+)/$',
         views.user_tag,
         name='user_tag'),
     url(r'^(?P<username>\w+)/tag/$',
