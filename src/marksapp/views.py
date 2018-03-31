@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, When, Case, Sum, F
 from django.db.models.functions import Lower
@@ -152,33 +152,35 @@ def marks(request, username, tags=[]):
     else:
         bookmarks = sorted_bookmarks[:limit]
 
-    print(bookmarks[0], sorted_bookmarks.first())
-    if bookmarks[0] != sorted_bookmarks.first():
-        before_mark = bookmarks[0]
+    if bookmarks:
+        if bookmarks[0] != sorted_bookmarks.first():
+            before_mark = bookmarks[0]
+        else:
+            before_mark = None
+
+        if bookmarks[len(bookmarks) - 1] != sorted_bookmarks.last():
+            after_mark = bookmarks[len(bookmarks) - 1]
+        else:
+            after_mark = None
+
+        tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
+                            .annotate(num_marks=Count('bookmark')) \
+                            .order_by('-num_marks', 'name')
+
+        context = {
+            'username': username,
+            'sort': sort,
+            'tag_count': tag_count,
+            'tags': tags,
+            'query': search_query,
+            'marks': bookmarks,
+            'before_mark': before_mark,
+            'after_mark': after_mark,
+        }
+
+        return render(request, "marks.html", context)
     else:
-        before_mark = None
-
-    if bookmarks[len(bookmarks) - 1] != sorted_bookmarks.last():
-        after_mark = bookmarks[len(bookmarks) - 1]
-    else:
-        after_mark = None
-
-    tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
-                           .annotate(num_marks=Count('bookmark')) \
-                           .order_by('-num_marks', 'name')
-
-    context = {
-        'username': username,
-        'sort': sort,
-        'tag_count': tag_count,
-        'tags': tags,
-        'query': search_query,
-        'marks': bookmarks,
-        'before_mark': before_mark,
-        'after_mark': after_mark,
-    }
-
-    return render(request, "marks.html", context)
+        return HttpResponseNotFound('<h1>Page not found</h1>')
 
 @login_required
 def add_mark(request):
