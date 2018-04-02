@@ -41,7 +41,6 @@ def user_index(request, username):
     except ObjectDoesNotExist:
         profile = None
 
-    search_form = forms.SearchForm()
     sort = request.GET.get('sort', '') or "name"
 
     bookmarks = Bookmark.objects.filter(user__username=username)
@@ -68,7 +67,6 @@ def user_index(request, username):
     context = {
         'all': bookmarks.count(),
         'sort': sort,
-        'search_form': search_form,
         'tags': top_tags,
         'username': username,
         'page_title': 'home'
@@ -109,21 +107,27 @@ def user_tag(request, username, slug=None):
 def marks(request, username, tags=[]):
     get_object_or_404(User, username=username)
 
+    context = {'username': username}
+
     bookmarks = Bookmark.objects.filter(user__username=username)
     sort = request.GET.get('sort', '') or "date"
     after = request.GET.get('after', '')
     before = request.GET.get('before', '')
-    limit = 70
+    limit = 100
 
-    search_query = request.GET.get('query', '')
-    search_tags = request.GET.get('tags', '')
+    search_title = request.GET.get('search_title', '')
+    search_tags = request.GET.get('search_tags', '')
+    search_description = request.GET.get('search_description', '')
 
-    if search_query:
-        bookmarks = bookmarks.filter(name__search=search_query)
+    if search_title:
+        bookmarks = bookmarks.filter(name__search=search_title)
 
     if search_tags:
         for tag in tags_strip_split(search_tags):
             bookmarks = bookmarks.filter(tags__name=tag)
+
+    if search_description:
+        bookmarks = bookmarks.filter(description__search=search_description)
 
     for tag in tags:
         bookmarks = bookmarks.filter(tags__name=tag)
@@ -167,20 +171,16 @@ def marks(request, username, tags=[]):
                             .annotate(num_marks=Count('bookmark')) \
                             .order_by('-num_marks', 'name')
 
-        context = {
-            'username': username,
+        context.update({
+            'marks': bookmarks,
             'sort': sort,
             'tag_count': tag_count,
             'tags': tags,
-            'query': search_query,
-            'marks': bookmarks,
             'before_mark': before_mark,
             'after_mark': after_mark,
-        }
+        })
 
-        return render(request, "marks.html", context)
-    else:
-        return HttpResponseNotFound('<h1>Page not found</h1>')
+    return render(request, "marks.html", context)
 
 @login_required
 def add_mark(request):

@@ -89,15 +89,6 @@ class BookmarkForm(BaseModelForm):
         print(self.instance.tags)
         return m
 
-class SearchForm(BaseForm):
-    query = CharField(label='Query', required=False)
-    tags = CharField(label='Tags', required=False,
-                     widget=forms.TextInput(attrs={'autocomplete':'off'}))
-
-class TagsSelectedForm(BaseForm):
-    tags = CharField(label='Add tags to selection',
-                     widget=forms.TextInput(attrs={'autocomplete':'off'}))
-
 class TagForm(BaseModelForm):
     class Meta:
         model = Tag

@@ -18,10 +18,10 @@
     <div class="form-container">
     <tr>
         <th>
-            <label for="id_query">Query</label>
+            <label for="id_search_title">Title</label>
         </th>
         <td>
-            <input id="id_query" name="query" type="text" />
+            <input id="id_search_title" name="search_title" type="text" />
         </td>
     </tr>
     <tr>
@@ -29,7 +29,15 @@
             <label for="id_tags">Tags</label>
         </th>
         <td>
-            <input autocomplete="off" id="id_tags" name="tags" type="text" />
+            <input autocomplete="off" id="id_tags" name="search_tags" type="text" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <label for="id_search_description">Description</label>
+        </th>
+        <td>
+            <input autocomplete="off" id="id_search_description" name="search_description" type="text" />
         </td>
     </tr>
     <input type="submit" value="Search" />

@@ -28,6 +28,7 @@
 {% endblock %}
 
 {% block content %}
+{% if marks %}
 <div id="suggestions"></div>
 <div class="extra-nav">
     <!--
@@ -46,13 +47,9 @@
 </div>
 
 <ul class="links">
-{% if marks %}
 {% for mark in marks %}
 {% include "mark.html" %}
 {% endfor %}
-{% else %}
-<p>No results found.</p>
-{% endif %}
 </ul>
 
 <div class="extra-nav">
@@ -95,5 +92,8 @@
     {% endfor %}
 
 </ul>
+{% else %}
+<p>No results found.</p>
+{% endif %}
 
 {% endblock %}

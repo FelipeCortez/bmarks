@@ -276,7 +276,7 @@ $(function() {
 
   $("#show-search").click(function() {
     $("#search-form").show();
-    $("#id_query").focus();
+    $("#id_search_title").focus();
   });
 
   $("a[rel~='keep-params']").click(function(e) {
