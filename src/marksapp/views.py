@@ -13,7 +13,6 @@ from django.utils.translation import ugettext as _
 from marksapp.models import Bookmark, Tag, Profile
 from collections import OrderedDict
 import json
-import pprint
 import urllib.request
 import marksapp.forms as forms
 import marksapp.netscape as netscape
@@ -104,30 +103,32 @@ def user_tag(request, username, slug=None):
 
     return marks(request, username, tags)
 
+def get_param(request, param, params, default=None):
+    value = request.GET.get(param, '')
+    if value:
+        params.update({param: value})
+
+    return value
+
 def marks(request, username, tags=[]):
     get_object_or_404(User, username=username)
 
     context = {'username': username}
+    params = {}
 
     bookmarks = Bookmark.objects.filter(user__username=username)
-    sort = request.GET.get('sort', '') or "date"
-    after = request.GET.get('after', '')
-    before = request.GET.get('before', '')
+
     limit = 100
 
-    search_title = request.GET.get('search_title', '')
-    search_tags = request.GET.get('search_tags', '')
-    search_description = request.GET.get('search_description', '')
+    if get_param(request, "search_title", params):
+        bookmarks = bookmarks.filter(name__search=params["search_title"])
 
-    if search_title:
-        bookmarks = bookmarks.filter(name__search=search_title)
-
-    if search_tags:
-        for tag in tags_strip_split(search_tags):
+    if get_param(request, "search_tags", params):
+        for tag in tags_strip_split(params["search_tags"]):
             bookmarks = bookmarks.filter(tags__name=tag)
 
-    if search_description:
-        bookmarks = bookmarks.filter(description__search=search_description)
+    if get_param(request, "search_description", params):
+        bookmarks = bookmarks.filter(description__search=params["search_description"])
 
     for tag in tags:
         bookmarks = bookmarks.filter(tags__name=tag)
@@ -137,24 +138,40 @@ def marks(request, username, tags=[]):
         if not tags:
             bookmarks = bookmarks.exclude(tags__name__startswith=".")
 
-    if sort == "date":
-        sorted_bookmarks = bookmarks.order_by('-date_added')
+    if get_param(request, "sort", params) and params["sort"] == "name":
+        bookmarks = bookmarks.annotate(name_lower=Lower('name'))
+        sorted_bookmarks = bookmarks.order_by("name_lower")
+        sort = "name"
     else:
-        sorted_bookmarks = bookmarks.order_by(Lower("name"))
+        sorted_bookmarks = bookmarks.order_by('-date_added')
+        sort = "date"
 
-    if after:
-        after_id = int(after)
+    if get_param(request, "after", params):
+        after_id = int(params["after"])
         after_mark = Bookmark.objects.get(id=after_id)
-        bookmarks = sorted_bookmarks.exclude(date_added__gte=after_mark.date_added)
+        if sort == "date":
+            bookmarks = sorted_bookmarks.exclude(date_added__gte=after_mark.date_added)
+        elif sort == "name":
+            lower_name = after_mark.name.lower()
+            bookmarks = sorted_bookmarks.exclude(name_lower__lte=lower_name)
         bookmarks = bookmarks[:limit]
-    elif before:
-        before_id = int(before)
+    elif get_param(request, "before", params):
+        before_id = int(params["before"])
         before_mark = Bookmark.objects.get(id=before_id)
-        bookmarks = bookmarks.order_by('date_added')
-        bookmarks = bookmarks.filter(date_added__gt=before_mark.date_added)
+
+        if sort == "date":
+            bookmarks = bookmarks.order_by('date_added')
+            bookmarks = bookmarks.filter(date_added__gt=before_mark.date_added)
+        elif sort == "name":
+            bookmarks = bookmarks.order_by(Lower("name").desc())
+            lower_name = before_mark.name.lower()
+            bookmarks = bookmarks.filter(name_lower__lt=lower_name)
         bookmarks = bookmarks[:limit:-1]
+
     else:
         bookmarks = sorted_bookmarks[:limit]
+
+    params_str = "&".join(["{}={}".format(param, value) for param, value in params.items()])
 
     if bookmarks:
         if bookmarks[0] != sorted_bookmarks.first():
@@ -162,7 +179,7 @@ def marks(request, username, tags=[]):
         else:
             before_mark = None
 
-        if bookmarks[len(bookmarks) - 1] != sorted_bookmarks.last():
+        if bookmarks[len(bookmarks) - 1] != sorted_bookmarks[len(sorted_bookmarks) - 1]:
             after_mark = bookmarks[len(bookmarks) - 1]
         else:
             after_mark = None
@@ -178,6 +195,8 @@ def marks(request, username, tags=[]):
             'tags': tags,
             'before_mark': before_mark,
             'after_mark': after_mark,
+            'params': params,
+            'params_str': params_str,
         })
 
     return render(request, "marks.html", context)

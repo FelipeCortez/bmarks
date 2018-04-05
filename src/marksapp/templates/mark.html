@@ -16,11 +16,9 @@
     <span class="tag">
         {% if not search and tag.name not in tags %}
         <a class="action"
-           href="{% url 'user_tag' slug=tags|add_tag:tag.name username=username %}"
-           rel="keep-params">+</a>
+           href="{% url 'user_tag' slug=tags|add_tag:tag.name username=username %}">+</a>
         {% endif %}
-        <a href="{% url 'user_tag' slug=tag.name username=username %}"
-           rel="keep-params">{{ tag.name }}</a>
+        <a href="{% url 'user_tag' slug=tag.name username=username %}">{{ tag.name }}</a>
     </span>
     {% endfor %}
     <span class="separator">&#183;</span>

@@ -6,7 +6,7 @@
 <div class="extra-nav">
     <a id="show-search" href="#">search</a>
     <span class="separator">·</span>
-    <a href="{% url 'user_tag' username=username %}?sort=date&limit=100">last</a>
+    <a href="{% url 'user_tag' username=username %}?sort=date">last</a>
     <span class="separator">·</span>
     <span>sorting by </span>
     {% if sort != "name" %}<a href="?sort=name">quantity</a>{% endif %}
