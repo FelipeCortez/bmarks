@@ -2,7 +2,7 @@
 
 <li class="item">
     {% comment %}
-    <input name="check_mark" type="checkbox" value="{{ mark.id }}">
+    <input name="check_mark" type="checkbox" class="edit_checkbox" value="{{ mark.id }}">
     {% endcomment %}
     {% if mark.description %}
     <span class="action"><a mark_id="{{ mark.id }}" class="info_btn" href="#" title="{{ mark.date_added }}">[+]</a></span>

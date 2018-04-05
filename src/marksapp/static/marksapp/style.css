@@ -408,13 +408,14 @@ li > a {
     position: relative;
     color: rgb(75, 75, 75);
     background-color: #F5F5F5;
-    width: 525px;
+    width: 535px;
     padding: 7px;
     margin: 10px 0 10px 0;
     overflow: auto;
     white-space: normal;
     font-size: 12px;
     border-radius: 2px;
+    box-sizing: border-box;
 }
 
 .description h1,
