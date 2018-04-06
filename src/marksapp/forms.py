@@ -45,6 +45,7 @@ class CommaTags(forms.Widget):
     def render(self, name, value, attrs=None):
         if attrs:
             attrs['autocomplete'] = 'off'
+            attrs['class'] = 'tag_field'
         final_attrs = self.build_attrs(attrs, type='text', name=name)
         objects = []
 
@@ -70,7 +71,7 @@ class BookmarkForm(BaseModelForm):
         model = Bookmark
         fields = ['url', 'name', 'tags', 'description']
         widgets = {
-                'description': forms.Textarea(attrs={'rows':3, 'placeholder':'optional'}),
+            'description': forms.Textarea(attrs={'rows': 3, 'placeholder':'optional'}),
         }
 
     def save(self, commit=True, *args, **kwargs):

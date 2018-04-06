@@ -30,6 +30,7 @@ function getAllTags() {
   });
 }
 
+// TODO: move this to its own js file
 function populateWithSearchParams() {
   if ($("#id_name").val() == "" && $("#id_url").val() == "") {
     let params = (new URL(document.location)).searchParams;
@@ -114,6 +115,16 @@ function deleteMark(id) {
   });
 }
 
+function deleteMarks() {
+  $.post({
+    url: root_url + 'api/delete_marks/',
+    data: $("#edit_multiple_form").serialize(),
+    success: function(data) {
+      location.reload();
+    }
+  });
+}
+
 function bumpMark(id) {
   $.post({
     url: root_url + 'api/bump_mark/' + id + '/',
@@ -128,7 +139,7 @@ function appendForm(form, el) {
   el.parent().parent().append(form);
 }
 
-function filterSuggestions(prefix) {
+function filterSuggestions(prefix, field) {
   let list = $("#suggestions");
   if (prefix) {
     list.empty();
@@ -149,8 +160,8 @@ function filterSuggestions(prefix) {
     }
 
     if (list.children().length > 0) {
-      offset = $("#id_tags").offset();
-      input_height = $("#id_tags").outerHeight();
+      offset = field.offset();
+      input_height = field.outerHeight();
       $("#suggestions").css({'top' : (offset.top + input_height) + 'px',
                              'left' : (offset.left) + 'px',
                              'display': 'block'});
@@ -162,12 +173,12 @@ function filterSuggestions(prefix) {
   }
 }
 
-function completeWithSuggestedTag(selectedTag) {
-  let tags = splitTags($("#id_tags").val());
+function completeWithSuggestedTag(selectedTag, field) {
+  let tags = splitTags(field.val());
   let last = tags[tags.length - 1].replace(/ /g,'');
   if (last[0] == "-") { last = last.substr(1); }
 
-  $("#id_tags").val($("#id_tags").val() + selectedTag.slice(last.length - selectedTag.length));
+  field.val(field.val() + selectedTag.slice(last.length - selectedTag.length));
   $("#suggestions").css({'display': 'none'});
   selectedIdx = -1;
 }
@@ -185,7 +196,7 @@ $(function() {
 
   $("#suggestions").on("click", "li", function() {
     let fullTag = $(this).find("a").text();
-    completeWithSuggestedTag(fullTag);
+    completeWithSuggestedTag(fullTag, $(document.activeElement));
   });
 
   $(".edit_btn").click(function(e) {
@@ -228,12 +239,25 @@ $(function() {
     }); // maybe a bit too clever
   });
 
-  $(".collapse_all").click(function(e) {
+  $(".collapse_all_btn").click(function(e) {
     e.preventDefault();
     $(".description-container").hide();
     changeParams(function() {
       params.delete("expand");
     });
+  });
+
+  $(".edit_multiple_btn").click(function(e) {
+    e.preventDefault();
+    $(this).css({'display': 'none'});
+    $(".edit_checkbox").css({'display': 'inline'});
+    $(".edit_multiple_form").css({'display': 'block'});
+    $(".selected_actions").css({'display': 'block'});
+  });
+
+  $(".remove_selected_btn").click(function(e) {
+    e.preventDefault();
+    deleteMarks();
   });
 
   $(document).on("submit", "#edit-mark-form", (function(e) {
@@ -287,8 +311,8 @@ $(function() {
 
   // autocomplete ------------------
 
-  $(document).on("keyup click focus", "#id_tags", function(e) {
-    let tagsStr = $("#id_tags").val();
+  $(document).on("keyup click focus", ".tag_field", function(e) {
+    let tagsStr = $(this).val();
 
     // autocomplete should display when:
     // caret is on the last character
@@ -300,7 +324,7 @@ $(function() {
       let last = tags[tags.length - 1].replace(/ /g, '');
       if (last[0] == "-") { last = last.substr(1); }
       if (last != lastPrefix) {
-        filterSuggestions(last);
+        filterSuggestions(last, $(this));
         selectedIdx = -1;
         lastPrefix = last;
       }
@@ -309,7 +333,7 @@ $(function() {
     }
   });
 
-  $(document).on("keydown", "#id_tags", function(e) {
+  $(document).on("keydown", ".tag_field", function(e) {
     switch (e.keyCode) {
     case 40: // up
       suggestionsSelect(1);
@@ -326,7 +350,9 @@ $(function() {
     case 13: // enter
       if ($("#suggestions").css("display") != "none") {
         e.preventDefault();
-        completeWithSuggestedTag($("#suggestions").children().eq(selectedIdx).find("a").text());
+        // LOL
+        completeWithSuggestedTag($("#suggestions").children().eq(selectedIdx).find("a").text(),
+                                 $(document.activeElement));
         $("#suggestions").css({'display': 'none'});
       }
       break;
@@ -347,7 +373,7 @@ $(function() {
     e.preventDefault();
   });
 
-  $(document).on("focusout", "#id_tags", function(e) {
+  $(document).on("focusout", ".tag_field", function(e) {
     $("#suggestions").css({'display': 'none'});
   });
 });

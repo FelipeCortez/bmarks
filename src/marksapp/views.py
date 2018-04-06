@@ -254,6 +254,16 @@ def delete_mark(request, id):
     return HttpResponseRedirect(reverse('index'))
 
 @login_required
+def api_delete_marks(request):
+    if request.method == 'POST':
+        for mark_id in request.POST.getlist("check_mark"):
+            mark = Bookmark.objects.get(id=mark_id)
+            if mark.user == request.user:
+                mark.delete()
+        return HttpResponse('success')
+    return HttpResponse('failure')
+
+@login_required
 def merge(request, slug1, slug2):
 #    bookmarks1 = Bookmark.objects.filter(tags__name=slug1)
 #    bookmarks2 = Bookmark.objects.filter(tags__name=slug2)
@@ -490,16 +500,19 @@ def api_get_title(request):
 
 @login_required
 def api_delete_mark(request, id):
-    mark = Bookmark.objects.get(id=id).delete()
+    mark = Bookmark.objects.get(id=id)
+    if mark.user == request.user:
+        mark.delete()
 
     if request.method == 'POST':
         return HttpResponse('success')
 
 @login_required
 def api_bump_mark(request, id):
-    mark = get_object_or_404(Bookmark, id=id)
-    mark.date_added = now()
-    mark.save()
+    if mark.user == request.user:
+        mark = get_object_or_404(Bookmark, id=id)
+        mark.date_added = now()
+        mark.save()
 
     if request.method == 'POST':
         return HttpResponse('success')

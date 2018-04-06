@@ -168,6 +168,18 @@ textarea:focus {
     border-color: #1A79AA;
 }
 
+.edit_checkbox {
+    display: none;
+}
+
+.edit_multiple_form {
+    display: none;
+}
+
+.selected_actions {
+    display: none;
+}
+
 input[type=checkbox] {
     margin: 0 5px 0 0;
 }

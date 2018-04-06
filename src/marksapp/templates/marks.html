@@ -42,19 +42,36 @@
     <span class="separator">·</span>
     <a href="#" class="expand_all_btn">expand all</a>
     <span class="separator">·</span>
-    <a href="#" class="collapse_all">collapse all</a>
+    <a href="#" class="collapse_all_btn">collapse all</a>
     <span class="separator">·</span>
-    <a href="#">edit</a>
+    <a href="#" class="edit_multiple_btn">edit multiple</a>
 </div>
 
-<form method="post" action="{% url 'edit_multiple'">
-</form>
+<div id="suggestions"></div>
+
+<form method="post" id="edit_multiple_form">
+<div class="form-container edit_multiple_form">
+{% csrf_token %}
+<label for="add_tags">Add tags</label>
+<input id="id_add_tags" maxlength="512" name="add_tags" type="text" class="tag_field">
+<label for="remove_tags">Remove tags</label>
+<input id="id_remove_tags" maxlength="512" name="remove_tags" type="text" class="tag_field">
+<input type="submit" value="Edit" />
+</div>
+
+<div class="extra-nav selected_actions">
+    <span>selection</span>
+    <span class="separator">·</span>
+    <a href="#" class="remove_selected_btn">remove</a>
+</div>
 
 <ul class="links">
 {% for mark in marks %}
 {% include "mark.html" %}
 {% endfor %}
 </ul>
+
+</form>
 
 <div class="extra-nav">
     <!--
