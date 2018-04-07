@@ -87,8 +87,6 @@ function getTitle(url) {
     success: function(data) {
       if (!("error" in data)) {
         if ($("#id_name").val() == "") {
-          // console.log(he.decode(data["url"]));
-          // $("#id_name").val(he.decode(data["url"]));
           $("#id_name").val(decodeURI(data["url"]));
         }
       }
@@ -209,8 +207,8 @@ $(function() {
 
   $(".edit_btn").click(function(e) {
     e.preventDefault();
-    if ($("#editMarkForm")) {
-      $("#editMarkForm").remove();
+    if ($("#edit_mark_form")) {
+      $("#edit_mark_form").remove();
     }
 
     mark_id = $(this).attr("mark_id");
@@ -279,7 +277,7 @@ $(function() {
     });
   }));
 
-  $(document).on("submit", "#edit-mark-form", (function(e) {
+  $(document).on("submit", "#edit_mark_form", (function(e) {
     e.preventDefault();
     $.post({
       url: root_url + 'block/mark/' + mark_id + '/',
