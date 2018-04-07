@@ -254,16 +254,6 @@ def delete_mark(request, id):
     return HttpResponseRedirect(reverse('index'))
 
 @login_required
-def api_delete_marks(request):
-    if request.method == 'POST':
-        for mark_id in request.POST.getlist("check_mark"):
-            mark = Bookmark.objects.get(id=mark_id)
-            if mark.user == request.user:
-                mark.delete()
-        return HttpResponse('success')
-    return HttpResponse('failure')
-
-@login_required
 def merge(request, slug1, slug2):
 #    bookmarks1 = Bookmark.objects.filter(tags__name=slug1)
 #    bookmarks2 = Bookmark.objects.filter(tags__name=slug2)
@@ -349,33 +339,6 @@ def import_json(request):
     return render(request, 'import.html', {'form': form})
 
 @login_required
-def edit_selection(request):
-    if request.method == 'POST':
-        marks_ids = request.POST.getlist('check_mark')
-        tags = tags_strip_split(request.POST.get('tags'))
-
-        for mark_id in marks_ids:
-            mark = Bookmark.objects.get(id=mark_id)
-            for tag in tags:
-                if tag[0] == "!":
-                    try:
-                        mark_tag = mark.tags.get(name=tag[1:])
-                    except Tag.DoesNotExist:
-                        mark_tag = None
-
-                    if mark_tag:
-                        mark.tags.remove(mark_tag)
-                # optional dot, word characters, hyphens allowed
-                if re.match("^\.?[-\w]+$", tag):
-                    t = Tag.objects.get_or_create(name=tag)[0]
-                    mark.tags.add(t)
-
-        tag_untagged(request.user)
-        return HttpResponse('success')
-
-    return HttpResponse('success')
-
-@login_required
 def edit_mark_form(request, id):
     mark = Bookmark.objects.get(id=id)
 
@@ -439,6 +402,10 @@ def guide(request):
 
 # API ---------------------------------
 
+# TODO: decide on a JSON response standard
+# https://stackoverflow.com/questions/12806386/standard-json-api-response-format
+# the following is very messy but it works
+
 def api_mark(request, id):
     mark = Bookmark.objects.get(id=id)
     mark_dict = {}
@@ -500,12 +467,12 @@ def api_get_title(request):
 
 @login_required
 def api_delete_mark(request, id):
-    mark = Bookmark.objects.get(id=id)
     if mark.user == request.user:
+        mark = Bookmark.objects.get(id=id)
         mark.delete()
 
     if request.method == 'POST':
-        return HttpResponse('success')
+        return JsonResponse({"status": "success"})
 
 @login_required
 def api_bump_mark(request, id):
@@ -515,4 +482,39 @@ def api_bump_mark(request, id):
         mark.save()
 
     if request.method == 'POST':
-        return HttpResponse('success')
+        return JsonResponse({"status": "success"})
+
+@login_required
+def api_delete_marks(request):
+    if request.method == 'POST':
+        for mark_id in request.POST.getlist("check_mark"):
+            mark = Bookmark.objects.get(id=mark_id)
+            if mark.user == request.user:
+                mark.delete()
+        return JsonResponse({"status": "success"})
+    return JsonResponse({"error": "wrong request method"})
+
+@login_required
+def api_edit_multiple(request):
+    print(request.POST)
+    add_tags = request.POST.getlist('add_tags')
+    remove_tags = request.POST.getlist('remove_tags')
+
+    for mark_id in request.POST.getlist("check_mark"):
+        mark = Bookmark.objects.get(id=mark_id)
+        if mark.user == request.user:
+            for tag in tags_strip_split(request.POST.get('add_tags')):
+                t = Tag.objects.get_or_create(name=tag)[0]
+                mark.tags.add(t)
+
+            for tag in tags_strip_split(request.POST.get('remove_tags')):
+                try:
+                    # optional dot, word characters, hyphens allowed
+                    if re.match("^\.?[-\w]+$", tag):
+                        t = mark.tags.get(name=tag)
+                        mark.tags.remove(t)
+                except Tag.DoesNotExist:
+                    t = None
+
+    tag_untagged(request.user)
+    return JsonResponse({"status": "success"})

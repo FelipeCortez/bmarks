@@ -260,9 +260,19 @@ $(function() {
     deleteMarks();
   });
 
+  $(document).on("submit", "#edit_multiple_form", (function(e) {
+    e.preventDefault();
+    $.post({
+      url: root_url + 'api/edit_multiple/',
+      data: $(this).serialize(),
+      success: function(data) {
+        location.reload();
+      }
+    });
+  }));
+
   $(document).on("submit", "#edit-mark-form", (function(e) {
     e.preventDefault();
-    //console.log($(this).serialize());
     $.post({
       url: root_url + 'block/mark/' + mark_id + '/',
       data: $(this).serialize(),
