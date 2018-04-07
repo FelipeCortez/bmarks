@@ -145,7 +145,7 @@ function filterSuggestions(prefix, field) {
     list.empty();
 
     for (i = 0; i < all_tags.length; ++i) {
-      if (all_tags[i]["name"].startsWith(prefix) && all_tags[i]["name"] != prefix) {
+      if (all_tags[i]["name"].startsWith(prefix)) {
         numberElement = $("<span/>").text(all_tags[i]["num_marks"]);
         numberElement.addClass("number");
 
@@ -154,6 +154,10 @@ function filterSuggestions(prefix, field) {
 
         let listElement = $("<li/>").append(tagName);
         listElement.append(numberElement);
+
+        if (prefix == all_tags[i]["name"]) {
+          listElement.addClass("match");
+        }
 
         list.append(listElement);
       }
@@ -178,7 +182,10 @@ function completeWithSuggestedTag(selectedTag, field) {
   let last = tags[tags.length - 1].replace(/ /g,'');
   if (last[0] == "-") { last = last.substr(1); }
 
-  field.val(field.val() + selectedTag.slice(last.length - selectedTag.length));
+  if (last != selectedTag) {
+    field.val(field.val() + selectedTag.slice(last.length - selectedTag.length));
+  }
+
   $("#suggestions").css({'display': 'none'});
   selectedIdx = -1;
 }

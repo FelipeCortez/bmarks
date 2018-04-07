@@ -42,9 +42,6 @@ urlpatterns = [
     url(r'^block/mark/(?P<id>[0-9]+)/$',
         views.edit_mark_form,
         name='edit_mark_form'),
-    url(r'^edit_selection/$',
-        views.edit_selection,
-        name='edit_selection'),
 
     # user views
     url(r'^(?P<username>\w+)/mark/(?P<id>[0-9]+)/$',

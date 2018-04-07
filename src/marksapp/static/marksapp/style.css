@@ -350,6 +350,11 @@ li > a {
     border-bottom: 1px solid #D8D8D8;
 }
 
+#suggestions .match .tag-name {
+    color: #3cb568;
+    font-weight: 500;
+}
+
 #suggestions li:hover, #suggestions .selected {
     background-color: #F5F5F5;
 }
