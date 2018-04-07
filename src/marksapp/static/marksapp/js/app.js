@@ -266,6 +266,16 @@ $(function() {
     deleteMarks();
   });
 
+  $(".select_all_btn").click(function(e) {
+    e.preventDefault();
+    $(".edit_checkbox").prop('checked', true);
+  });
+
+  $(".deselect_all_btn").click(function(e) {
+    e.preventDefault();
+    $(".edit_checkbox").prop('checked', false);
+  });
+
   $(document).on("submit", "#edit_multiple_form", (function(e) {
     e.preventDefault();
     $.post({
