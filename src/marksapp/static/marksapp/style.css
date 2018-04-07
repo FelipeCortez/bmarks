@@ -76,6 +76,10 @@ body {
     margin-right: 3px;
 }
 
+#marks .item {
+    display: inline-block;
+}
+
 /* page title --------------------------------- */
 
 #page-info,
