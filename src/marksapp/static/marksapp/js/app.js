@@ -249,10 +249,10 @@ $(function() {
 
   $(".edit_multiple_btn").click(function(e) {
     e.preventDefault();
-    $(this).css({'display': 'none'});
     $(".edit_checkbox").css({'display': 'inline'});
     $(".edit_multiple_form").css({'display': 'block'});
     $(".selected_actions").css({'display': 'block'});
+    $("#id_add_tags").focus();
   });
 
   $(".remove_selected_btn").click(function(e) {

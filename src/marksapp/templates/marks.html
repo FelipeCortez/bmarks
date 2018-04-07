@@ -53,10 +53,10 @@
 <div class="form-container edit_multiple_form">
 {% csrf_token %}
 <label for="add_tags">Add tags</label>
-<input id="id_add_tags" maxlength="512" name="add_tags" type="text" class="tag_field">
+<input id="id_add_tags" maxlength="512" name="add_tags" type="text" class="tag_field" autocomplete="off">
 <label for="remove_tags">Remove tags</label>
-<input id="id_remove_tags" maxlength="512" name="remove_tags" type="text" class="tag_field">
-<input type="submit" value="Edit" />
+<input id="id_remove_tags" maxlength="512" name="remove_tags" type="text" class="tag_field" autocomplete="off">
+<input type="submit" value="Edit selected" />
 </div>
 
 <div class="extra-nav selected_actions">
