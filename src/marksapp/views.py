@@ -467,8 +467,8 @@ def api_get_title(request):
 
 @login_required
 def api_delete_mark(request, id):
+    mark = Bookmark.objects.get(id=id)
     if mark.user == request.user:
-        mark = Bookmark.objects.get(id=id)
         mark.delete()
 
     if request.method == 'POST':
@@ -476,8 +476,8 @@ def api_delete_mark(request, id):
 
 @login_required
 def api_bump_mark(request, id):
+    mark = get_object_or_404(Bookmark, id=id)
     if mark.user == request.user:
-        mark = get_object_or_404(Bookmark, id=id)
         mark.date_added = now()
         mark.save()
 
@@ -496,7 +496,6 @@ def api_delete_marks(request):
 
 @login_required
 def api_edit_multiple(request):
-    print(request.POST)
     add_tags = request.POST.getlist('add_tags')
     remove_tags = request.POST.getlist('remove_tags')
 
