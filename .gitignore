@@ -1,6 +1,7 @@
 # Created by https://www.gitignore.io and modified by Felipe
 
 # Marks
+src/static
 trash/
 marksenv/
 secrets.py

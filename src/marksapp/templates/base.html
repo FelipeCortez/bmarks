@@ -4,10 +4,19 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Marks</title>
+        <title>bmarks</title>
         {% load static %}
+
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static '/marksapp/favicon/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static '/marksapp/favicon/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static '/marksapp/favicon/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static '/marksapp/favicon/site.webmanifest' %}">
+        <link rel="mask-icon" href="{% static '/marksapp/favicon/safari-pinned-tab.svg' %}" color="#5baf68">
+        <meta name="msapplication-TileColor" content="#5baf68">
+        <meta name="theme-color" content="#5baf68">
+
         <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i" rel="stylesheet">
-        <link rel="stylesheet" href="{% static 'marksapp/style.css' %}">
+        <link rel="stylesheet" href="{% static '/marksapp/style.css' %}">
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49103022-2"></script>
         <script>
@@ -70,7 +79,7 @@
 
         <div id="page-info">
             <span class="green-and-bold">
-                <a href="{% url 'index' %}">marks</a>
+                <a href="{% url 'index' %}">bmarks</a>
             </span>
             {% block page_info %}
             <span class="just-green">
