@@ -4,7 +4,7 @@
 <div id="suggestions"></div>
 
 <div class="extra-nav">
-    <a id="show-search" href="#">search</a>
+    <a id="show_search_btn" href="#">search</a>
     <span class="separator">·</span>
     <a href="{% url 'user_tag' username=username %}?sort=date">last</a>
     <span class="separator">·</span>
@@ -14,7 +14,7 @@
 </div>
 
 {% if user.is_authenticated %}
-<form id="search-form" action="{% url 'user_tag' username=username %}" method="GET">
+<form id="search_form" action="{% url 'user_tag' username=username %}" method="GET">
     <div class="form-container">
     <tr>
         <th>

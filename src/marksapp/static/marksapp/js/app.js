@@ -189,7 +189,6 @@ function completeWithSuggestedTag(selectedTag, field) {
   selectedIdx = -1;
 }
 
-
 $(function() {
   populateWithSearchParams();
   getAllTags();
@@ -324,8 +323,8 @@ $(function() {
     });
   });
 
-  $("#show-search").click(function() {
-    $("#search-form").show();
+  $("#show_search_btn").click(function() {
+    $("#search_form").show();
     $("#id_search_title").focus();
   });
 

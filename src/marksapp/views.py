@@ -124,8 +124,7 @@ def marks(request, username, tags=[]):
         bookmarks = bookmarks.filter(name__search=params["search_title"])
 
     if get_param(request, "search_tags", params):
-        for tag in tags_strip_split(params["search_tags"]):
-            bookmarks = bookmarks.filter(tags__name=tag)
+        tags.extend(tags_strip_split(params["search_tags"]))
 
     if get_param(request, "search_description", params):
         bookmarks = bookmarks.filter(description__search=params["search_description"])

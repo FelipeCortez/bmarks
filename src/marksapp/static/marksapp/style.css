@@ -107,6 +107,10 @@ body {
     color: #3cb568;
 }
 
+.search_title {
+    color: #3f91cc;
+}
+
 .plus {
     padding: 0 5px 0 5px;
     margin-right: 5px;
@@ -378,7 +382,7 @@ li > a {
     background-color: #36b2e8;
 }
 
-#search-form {
+#search_form {
     display: none;
 }
 
