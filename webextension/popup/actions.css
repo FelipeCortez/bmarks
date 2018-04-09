@@ -1,19 +1,48 @@
 html, body {
-    width: 100px;
+  margin: 0;
+  padding: 3px 0 3px 0;
+  width: 68px;
+}
+
+.section-title {
+  color: #7F7F7F;
+  font-family: sans-serif;
+  font-size: 13px;
+  padding: 5px 0 7px 13px;
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
 }
 
 .button {
-    margin: 3% auto;
-    padding: 4px;
-    text-align: center;
-    font-family: "Helvetica", "Arial", sans-serif;
-    font-size: 12px;
-    background-color: #FEFEFE;
-    border: 1px solid #979797;
-    border-radius: 2px;
-    color: #959595;
-    padding: 5px;
-    box-shadow: 2px 2px 0 rgba(0, 0, 0, .04);
-    outline: none;
-    cursor: pointer;
+  background-color: #FCFCFC;
+  border: 0;
+  color: #1A1A1A;
+  font-family: sans-serif;
+  font-size: 13px;
+  margin: 0;
+  outline: none;
+  padding: 5px 0 5px 13px;
+  text-align: left;
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+}
+
+.button .indented {
+  padding: 5px 0 5px 18px;
+}
+
+.button:hover {
+  background-color: #EBEBEC;
+}
+
+.button:active {
+  background-color: #E0E0E0;
+}
+
+.green {
+  color: #5BAF68;
 }
