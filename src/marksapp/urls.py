@@ -1,5 +1,6 @@
 from django.conf.urls import include, url
 from django.conf.urls import url
+from marksapp.misc import multitag_regex
 
 from . import views
 
@@ -47,8 +48,7 @@ urlpatterns = [
     url(r'^(?P<username>\w+)/mark/(?P<id>[0-9]+)/$',
         views.mark_permalink,
         name='mark_permalink'),
-    # TODO: dots only at the beginning or after a +
-    url(r'^(?P<username>\w+)/tag/(?P<slug>\.?[-\w\d+.]+)/$',
+    url(r'^(?P<username>\w+)/tag/(?P<slug>{})/$'.format(multitag_regex[1:-1]),
         views.user_tag,
         name='user_tag'),
     url(r'^(?P<username>\w+)/tag/$',
@@ -78,5 +78,6 @@ urlpatterns = [
     url(r'^guide/$',
         views.guide,
         name='guide'),
-    url(r'^', include('django.contrib.auth.urls'), {'extra_context':{'page_title': 'login'}}),
+    url(r'^', include('django.contrib.auth.urls'),
+        {'extra_context': {'page_title': 'login'}}),
 ]

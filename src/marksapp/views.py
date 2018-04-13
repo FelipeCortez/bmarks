@@ -12,6 +12,7 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from marksapp.models import Bookmark, Tag, Profile
 from collections import OrderedDict
+from marksapp.misc import tag_regex
 import json
 import urllib.request
 import marksapp.forms as forms
@@ -19,18 +20,23 @@ import marksapp.netscape as netscape
 import re
 import markdown
 
+
 def tags_strip_split(tags):
     return tags.replace(",", " ").split() if tags else []
+
 
 def tag_untagged(user):
     for mark in Bookmark.objects.filter(user=user, tags__isnull=True):
         mark.tags.add(Tag.objects.get_or_create(name="untagged")[0])
 
+
 def index(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('user_index', args=[request.user.username]))
+        return HttpResponseRedirect(
+            reverse('user_index', args=[request.user.username]))
     else:
         return HttpResponseRedirect(reverse('login'))
+
 
 def user_index(request, username):
     get_object_or_404(User, username=username)
@@ -72,6 +78,7 @@ def user_index(request, username):
     }
     return render(request, "index.html", context)
 
+
 def user_profile(request):
     username = request.user.username
     user_object = User.objects.get(username__iexact=username)
@@ -98,10 +105,12 @@ def user_profile(request):
 
     return render(request, "profile.html", context)
 
+
 def user_tag(request, username, slug=None):
     tags = slug.split("+") if slug else []
 
     return marks(request, username, tags)
+
 
 def get_param(request, param, params, default=None):
     value = request.GET.get(param, '')
@@ -109,6 +118,7 @@ def get_param(request, param, params, default=None):
         params.update({param: value})
 
     return value
+
 
 def marks(request, username, tags=[]):
     get_object_or_404(User, username=username)
@@ -127,7 +137,8 @@ def marks(request, username, tags=[]):
         tags.extend(tags_strip_split(params["search_tags"]))
 
     if get_param(request, "search_description", params):
-        bookmarks = bookmarks.filter(description__search=params["search_description"])
+        bookmarks = bookmarks.filter(
+            description__search=params["search_description"])
 
     for tag in tags:
         bookmarks = bookmarks.filter(tags__name=tag)
@@ -149,7 +160,8 @@ def marks(request, username, tags=[]):
         after_id = int(params["after"])
         after_mark = Bookmark.objects.get(id=after_id)
         if sort == "date":
-            bookmarks = sorted_bookmarks.exclude(date_added__gte=after_mark.date_added)
+            bookmarks = sorted_bookmarks.exclude(
+                date_added__gte=after_mark.date_added)
         elif sort == "name":
             lower_name = after_mark.name.lower()
             bookmarks = sorted_bookmarks.exclude(name_lower__lte=lower_name)
@@ -170,7 +182,8 @@ def marks(request, username, tags=[]):
     else:
         bookmarks = sorted_bookmarks[:limit]
 
-    params_str = "&".join(["{}={}".format(param, value) for param, value in params.items()])
+    params_str = "&".join(
+        ["{}={}".format(param, value) for param, value in params.items()])
 
     if bookmarks:
         if bookmarks[0] != sorted_bookmarks.first():
@@ -178,7 +191,8 @@ def marks(request, username, tags=[]):
         else:
             before_mark = None
 
-        if bookmarks[len(bookmarks) - 1] != sorted_bookmarks[len(sorted_bookmarks) - 1]:
+        if bookmarks[len(bookmarks)
+                     - 1] != sorted_bookmarks[len(sorted_bookmarks) - 1]:
             after_mark = bookmarks[len(bookmarks) - 1]
         else:
             after_mark = None
@@ -200,16 +214,25 @@ def marks(request, username, tags=[]):
 
     return render(request, "marks.html", context)
 
+
 @login_required
 def add_mark(request):
     if request.method == 'POST':
         form = forms.BookmarkForm(request.POST)
         # we don't want to expose user to the form but need to validate unique_together!
         if form.is_valid():
-            if form.cleaned_data['url'] and Bookmark.objects.filter(url=form.cleaned_data['url'], user=request.user).exists():
-                existing_mark = Bookmark.objects.get(url=form.cleaned_data['url'], user=request.user)
+            if form.cleaned_data['url'] and Bookmark.objects.filter(
+                    url=form.cleaned_data['url'], user=request.user).exists():
+                existing_mark = Bookmark.objects.get(
+                    url=form.cleaned_data['url'], user=request.user)
                 # TODO: maybe a warning would be good
-                return HttpResponseRedirect(reverse('mark_permalink', kwargs={"username": request.user.username, "id": existing_mark.id}))
+                return HttpResponseRedirect(
+                    reverse(
+                        'mark_permalink',
+                        kwargs={
+                            "username": request.user.username,
+                            "id": existing_mark.id
+                        }))
             else:
                 mark = form.save(commit=False)
                 mark.user = request.user
@@ -219,6 +242,7 @@ def add_mark(request):
         form = forms.BookmarkForm()
 
     return render(request, 'add.html', {'form': form, 'page_title': 'add'})
+
 
 def mark_permalink(request, username, id):
     user_object = User.objects.get(username__iexact=username)
@@ -238,13 +262,13 @@ def mark_permalink(request, username, id):
             private = bool(mark.tags.filter(name__iexact="private").first())
 
     if user_object == mark.user and not private:
-        context = {
-            'mark': mark
-        }
+        context = {'mark': mark}
 
         return render(request, 'mark_permalink.html', context)
     else:
-        return HttpResponseRedirect(reverse('user_index', kwargs={"username": username}))
+        return HttpResponseRedirect(
+            reverse('user_index', kwargs={"username": username}))
+
 
 @login_required
 def delete_mark(request, id):
@@ -252,21 +276,23 @@ def delete_mark(request, id):
 
     return HttpResponseRedirect(reverse('index'))
 
+
 @login_required
 def merge(request, slug1, slug2):
-#    bookmarks1 = Bookmark.objects.filter(tags__name=slug1)
-#    bookmarks2 = Bookmark.objects.filter(tags__name=slug2)
-#    tag1 = get_object_or_404(Tag, name=slug1)
-#    tag2 = get_object_or_404(Tag, name=slug2)
-#
-#    if bookmarks1:
-#        if bookmarks2:
-#            tag2.delete()
-#            for mark in bookmarks2:
-#                mark.tags.add(tag1)
-#        return HttpResponseRedirect(reverse('tag', args=[slug1]))
-#
+    #    bookmarks1 = Bookmark.objects.filter(tags__name=slug1)
+    #    bookmarks2 = Bookmark.objects.filter(tags__name=slug2)
+    #    tag1 = get_object_or_404(Tag, name=slug1)
+    #    tag2 = get_object_or_404(Tag, name=slug2)
+    #
+    #    if bookmarks1:
+    #        if bookmarks2:
+    #            tag2.delete()
+    #            for mark in bookmarks2:
+    #                mark.tags.add(tag1)
+    #        return HttpResponseRedirect(reverse('tag', args=[slug1]))
+    #
     return HttpResponseRedirect(reverse('index'))
+
 
 @login_required
 def delete_tag(request, slug):
@@ -279,14 +305,17 @@ def delete_tag(request, slug):
 
     return HttpResponseRedirect(reverse('index'))
 
+
 def orphans(request):
-    bookmarks = Bookmark.objects.filter(tags__isnull = True).order_by(Lower("name"))
+    bookmarks = Bookmark.objects.filter(tags__isnull=True).order_by(
+        Lower("name"))
 
     context = {
         'marks': bookmarks,
     }
 
     return render(request, "search.html", context)
+
 
 @login_required
 def import_netscape(request):
@@ -297,12 +326,17 @@ def import_netscape(request):
             return HttpResponseRedirect(reverse('index'))
     else:
         form = forms.NetscapeForm()
-    return render(request, 'import.html', {'form': form, 'page_title': 'import'})
+    return render(request, 'import.html', {
+        'form': form,
+        'page_title': 'import'
+    })
+
 
 @login_required
 def export_json(request):
     if Bookmark.objects.filter(user=request.user).exists():
-        bookmarks = Bookmark.objects.filter(user__username=request.user.username)
+        bookmarks = Bookmark.objects.filter(
+            user__username=request.user.username)
         marks_dict = {"marks": []}
         for mark in bookmarks:
             mark_dict = {}
@@ -316,6 +350,7 @@ def export_json(request):
 
     return JsonResponse(marks_dict)
 
+
 @login_required
 def import_json(request):
     if request.method == 'POST':
@@ -324,7 +359,8 @@ def import_json(request):
         marks = json.loads(marks)
 
         for mark in marks["marks"]:
-            b = Bookmark.objects.update_or_create(user=request.user, url=mark['url'])[0]
+            b = Bookmark.objects.update_or_create(
+                user=request.user, url=mark['url'])[0]
             b.name = mark["name"]
             b.date_added = mark["date_added"]
 
@@ -336,6 +372,7 @@ def import_json(request):
     else:
         form = forms.ImportJsonForm()
     return render(request, 'import.html', {'form': form})
+
 
 @login_required
 def edit_mark_form(request, id):
@@ -352,9 +389,11 @@ def edit_mark_form(request, id):
 
     return render(request, 'edit_mark_form.html', {'form': form})
 
+
 def changelog(request):
     with open('etc/changelog.markdown') as f:
         return HttpResponse(markdown.markdown(f.read()))
+
 
 def register(request):
     context = {}
@@ -374,13 +413,10 @@ def register(request):
                 username_db = User.objects.get(username__iexact=username)
                 form.add_error(None, "Username already exists")
             except User.DoesNotExist:
-                user = User.objects.create_user(username=username,
-                                                password=password,
-                                                email=email)
-                new_user = authenticate(username=username,
-                                        password=password)
-                profile = Profile(user=user,
-                                  visibility=visibility)
+                user = User.objects.create_user(
+                    username=username, password=password, email=email)
+                new_user = authenticate(username=username, password=password)
+                profile = Profile(user=user, visibility=visibility)
                 profile.save()
 
                 if new_user is not None:
@@ -395,15 +431,18 @@ def register(request):
 
     return render(request, 'registration/registration_form.html', context)
 
+
 def guide(request):
     context = {'page_title': 'guide'}
     return render(request, 'guide.html', context)
+
 
 # API ---------------------------------
 
 # TODO: decide on a JSON response standard
 # https://stackoverflow.com/questions/12806386/standard-json-api-response-format
 # the following is very messy but it works
+
 
 def api_mark(request, id):
     mark = Bookmark.objects.get(id=id)
@@ -413,6 +452,7 @@ def api_mark(request, id):
     mark_dict["tags"] = mark.tags_str()
 
     return JsonResponse(mark_dict)
+
 
 def api_tags(request, prefix=None):
     tags = Tag.objects.all()
@@ -438,6 +478,7 @@ def api_tags(request, prefix=None):
     tags_dict["tags"] = tag_list
     return JsonResponse(tags_dict)
 
+
 @login_required
 def api_get_title(request):
     if request.method == 'POST':
@@ -446,12 +487,20 @@ def api_get_title(request):
         if not (url.startswith('http://') or url.startswith('https://')):
             url = 'http://' + url
 
-        hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-               'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-               'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-               'Accept-Encoding': 'none',
-               'Accept-Language': 'en-US,en;q=0.8',
-               'Connection': 'keep-alive'}
+        hdr = {
+            'User-Agent':
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+            'Accept':
+            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Charset':
+            'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+            'Accept-Encoding':
+            'none',
+            'Accept-Language':
+            'en-US,en;q=0.8',
+            'Connection':
+            'keep-alive'
+        }
 
         req = urllib.request.Request(url, headers=hdr)
 
@@ -464,6 +513,7 @@ def api_get_title(request):
         except:
             return JsonResponse({"error": "couldn't load title"})
 
+
 @login_required
 def api_delete_mark(request, id):
     mark = Bookmark.objects.get(id=id)
@@ -472,6 +522,7 @@ def api_delete_mark(request, id):
 
     if request.method == 'POST':
         return JsonResponse({"status": "success"})
+
 
 @login_required
 def api_bump_mark(request, id):
@@ -483,6 +534,7 @@ def api_bump_mark(request, id):
     if request.method == 'POST':
         return JsonResponse({"status": "success"})
 
+
 @login_required
 def api_delete_marks(request):
     if request.method == 'POST':
@@ -492,6 +544,7 @@ def api_delete_marks(request):
                 mark.delete()
         return JsonResponse({"status": "success"})
     return JsonResponse({"error": "wrong request method"})
+
 
 @login_required
 def api_edit_multiple(request):
@@ -507,8 +560,7 @@ def api_edit_multiple(request):
 
             for tag in tags_strip_split(request.POST.get('remove_tags')):
                 try:
-                    # optional dot, word characters, hyphens allowed
-                    if re.match("^\.?[-\w]+$", tag):
+                    if re.match(tag_regex, tag):
                         t = mark.tags.get(name=tag)
                         mark.tags.remove(t)
                 except Tag.DoesNotExist:
