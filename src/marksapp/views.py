@@ -31,7 +31,7 @@ def tag_untagged(user):
 
 
 def index(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return HttpResponseRedirect(
             reverse('user_index', args=[request.user.username]))
     else:
@@ -61,7 +61,7 @@ def user_index(request, username):
     top_tags = Tag.objects.filter(bookmark__in=bookmarks) \
                           .annotate(num_marks=Count('bookmark'))
 
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         top_tags = top_tags.exclude(name="private")
 
     if sort == "quantity":
@@ -457,7 +457,7 @@ def api_mark(request, id):
 def api_tags(request, prefix=None):
     tags = Tag.objects.all()
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         tags = Tag.objects.filter(bookmark__user__username=request.user)
 
     if prefix:

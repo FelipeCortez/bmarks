@@ -1,6 +1,6 @@
 # Marks
 
-A bookmarking tool made with Python 3 + Django 1.10. Running [here](https://bmarks.net/felipecortez).
+A bookmarking tool made with Python 3 + Django 2.0. Running [here](https://bmarks.net/felipecortez).
 
 ## Features
 
@@ -13,7 +13,7 @@ A bookmarking tool made with Python 3 + Django 1.10. Running [here](https://bmar
 - [x] A bookmarklet
 - [x] Unlisted marks with dot prefix
 - [x] Browser extension (Firefox only currently)
-- [ ] Bulk editing
+- [x] Bulk editing
 - [ ] Wayback Archive Availability API integration
 - [ ] JavaScriptless mode
 - [ ] Export bookmarks
