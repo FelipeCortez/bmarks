@@ -1,7 +1,6 @@
 from django import forms
 from django.forms import ModelForm, CharField, ChoiceField
-from django.utils.safestring import mark_safe
-from django.forms.utils import flatatt
+from django.forms.widgets import TextInput
 from django.contrib.auth.models import User
 from marksapp.models import Bookmark, Tag, Profile
 from marksapp.misc import tag_regex
@@ -44,32 +43,16 @@ class BaseModelForm(forms.ModelForm):
                 })
 
 
-#http://stackoverflow.com/questions/4960445/display-a-comma-separated-list-of-manytomany-items-in-a-charfield-on-a-modelform
-#http://pastebin.com/uvPL8Aat
-class CommaTags(forms.Widget):
-    # this is an awful way to do this
-    # but I can't understand how django's widgets work so it will have to do for now
-    def render(self, name, value, attrs=None):
-        if attrs:
-            attrs['autocomplete'] = 'off'
-            attrs['class'] = 'tag_field'
-        final_attrs = self.build_attrs(attrs, type='text', name=name)
-        objects = []
+class CommaTags(TextInput):
+    template_name = 'comma_tags.html'
 
-        if value is not None:
-            if type(value) is not str:
-                for each in value:
-                    objects.append(each)
-            else:
-                objects = marksapp.views.tags_strip_split(value)
+    def get_context(self, name, value, attrs):
+        if value:
+            objects = []
+            value = ', '.join([tag.name for tag in value])
 
-        values = []
-        for each in objects:
-            values.append(str(each))
-
-        value = ', '.join(values)
-        final_attrs['value'] = value
-        return mark_safe(u'<input%s />' % flatatt(final_attrs))
+        context = super(TextInput, self).get_context(name, value, attrs)
+        return context
 
 
 class BookmarkForm(BaseModelForm):

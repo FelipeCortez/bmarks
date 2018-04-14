@@ -74,6 +74,8 @@ function editMarkForm(id, form) {
     success: function(data) {
       appendForm(data, form);
       $("#id_name").focusTextToEnd();
+      $("#id_description").prop("style").height = $("#id_description").prop("scrollHeight") + "px";
+
     }
   });
 }
