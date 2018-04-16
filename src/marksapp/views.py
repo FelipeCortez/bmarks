@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, When, Case, Sum, F
 from django.db.models.functions import Lower
@@ -39,7 +39,9 @@ def index(request):
 
 
 def user_index(request, username):
-    get_object_or_404(User, username=username)
+    # get_object_or_404(User, username=username)
+    if not User.objects.filter(username=username).exists():
+        raise Http404("User doesn't exist")
 
     try:
         profile = Profile.objects.get(user__username=username)
@@ -126,7 +128,8 @@ def marks(request, username, tags=[]):
     context = {'username': username}
     params = {}
 
-    bookmarks = Bookmark.objects.filter(user__username=username)
+    bookmarks = Bookmark.objects.all().prefetch_related('tags').filter(
+        user__username=username)
 
     limit = 100
 
@@ -185,8 +188,10 @@ def marks(request, username, tags=[]):
     params_str = "&".join(
         ["{}={}".format(param, value) for param, value in params.items()])
 
+    first_mark = sorted_bookmarks.first()
+
     if bookmarks:
-        if bookmarks[0] != sorted_bookmarks.first():
+        if bookmarks[0] != first_mark:
             before_mark = bookmarks[0]
         else:
             before_mark = None
