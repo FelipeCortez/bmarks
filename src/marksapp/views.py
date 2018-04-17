@@ -15,6 +15,7 @@ from collections import OrderedDict
 from marksapp.misc import tag_regex
 import json
 import urllib.request
+import html
 import marksapp.forms as forms
 import marksapp.netscape as netscape
 import re
@@ -511,9 +512,12 @@ def api_get_title(request):
 
         try:
             with urllib.request.urlopen(req) as f:
-                contents = f.read().decode('UTF-8', 'backslashreplace')
+
+                contents = f.read().decode('ISO-8859-1', 'backslashreplace')
+                contents = html.unescape(contents)
                 pattern = re.compile(r"<title.*?>(.+?)</title>")
                 response = {"url": re.findall(pattern, contents)[0]}
+                print(response)
                 return JsonResponse(response)
         except:
             return JsonResponse({"error": "couldn't load title"})

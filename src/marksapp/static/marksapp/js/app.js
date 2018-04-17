@@ -89,7 +89,7 @@ function getTitle(url) {
     success: function(data) {
       if (!("error" in data)) {
         if ($("#id_name").val() == "") {
-          $("#id_name").val(decodeURI(data["url"]));
+          $("#id_name").val(data["url"]);
         }
       }
     }
