@@ -40,15 +40,20 @@
         <a href="{% url 'user_tag' username=username %}?sort=date&limit=100">last</a>
         <span class="separator">·</span>
     -->
+  <div class="nav-item">
     <span>sorting by </span>
-    {% if sort != "name" %}<a href="?sort=name">date</a>{% endif %}
-    {% if sort != "date" %}<a href="?sort=date">name</a>{% endif %}
-    <span class="separator">·</span>
+    {%   if sort != "name" %}<a href="?sort=name">date</a>
+    {% elif sort != "date" %}<a href="?sort=date">name</a>{% endif %}
+  </div>
+  <div class="nav-item">
     <a href="#" class="expand_all_btn">expand all</a>
-    <span class="separator">·</span>
+  </div>
+  <div class="nav-item">
     <a href="#" class="collapse_all_btn">collapse all</a>
-    <span class="separator">·</span>
+  </div>
+  <div class="nav-item">
     <a href="#" class="edit_multiple_btn">edit multiple</a>
+  </div>
 </div>
 
 <div id="suggestions"></div>
@@ -64,13 +69,18 @@
 </div>
 
 <div class="extra-nav selected_actions">
+  <div class="nav-item">
     <span>selection</span>
-    <span class="separator">·</span>
+  </div>
+  <div class="nav-item">
     <a href="#" class="select_all_btn">select all</a>
-    <span class="separator">·</span>
+  </div>
+  <div class="nav-item">
     <a href="#" class="deselect_all_btn">deselect all</a>
-    <span class="separator">·</span>
+  </div>
+  <div class="nav-item">
     <a href="#" class="remove_selected_btn">remove selected</a>
+  </div>
 </div>
 </form>
 

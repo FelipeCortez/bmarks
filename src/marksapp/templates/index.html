@@ -4,13 +4,17 @@
 <div id="suggestions"></div>
 
 <div class="extra-nav">
+  <div class="nav-item">
     <a id="show_search_btn" href="#">search</a>
-    <span class="separator">·</span>
+  </div>
+  <div class="nav-item">
     <a href="{% url 'user_tag' username=username %}?sort=date">last</a>
-    <span class="separator">·</span>
+  </div>
+  <div class="nav-item">
     <span>sorting by </span>
-    {% if sort != "name" %}<a href="?sort=name">quantity</a>{% endif %}
-    {% if sort != "quantity" %}<a href="?sort=quantity">name</a>{% endif %}
+    {%   if sort != "name" %}<a href="?sort=name">quantity</a>
+    {% elif sort != "quantity" %}<a href="?sort=quantity">name</a>{% endif %}
+  </div>
 </div>
 
 {% if user.is_authenticated %}
