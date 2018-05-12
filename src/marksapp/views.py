@@ -36,7 +36,7 @@ def index(request):
         return HttpResponseRedirect(
             reverse('user_index', args=[request.user.username]))
     else:
-        return HttpResponseRedirect(reverse('login'))
+        return HttpResponseRedirect(reverse('guide'))
 
 
 def user_index(request, username):
