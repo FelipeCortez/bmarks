@@ -83,6 +83,13 @@ body {
   margin-right: 3px;
 }
 
+#tags-flex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 535px;
+}
+
 #marks .item {
   display: inline-block;
 }

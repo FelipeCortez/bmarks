@@ -1,11 +1,35 @@
 from django.test import TestCase
 from marksapp.models import Tag, Bookmark
-from marksapp.misc import tag_regex, multitag_regex
+from marksapp.misc import tag_regex, multitag_regex, websiteFromURL
 import marksapp.views as views
 import re
 
+class WebsiteFromURL(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Tag.objects.create(name="music")
+        Tag.objects.create(name="compsci")
 
-class TagSplit(TestCase):
+    def test_extract(self):
+        strs_to_test = {
+            "https://bmarks.net" : "bmarks.net",
+            "http://bmarks.net"  : "bmarks.net",
+            "ftp://bmarks.net"   : "bmarks.net",
+            "bmarks.net"         : "bmarks.net",
+            "www.bmarks.net"     : "bmarks.net",
+            "www.bmarks.net/"    : "bmarks.net",
+            "www.bmarks.net/etc" : "bmarks.net",
+            "subdomain.bmarks.net/etc" : "bmarks.net",
+            "iamnotadomain" : None,
+        }
+
+        for url, expected in strs_to_test.items():
+            print(url, websiteFromURL(url))
+            # self.assertEquals(
+            #     views.tags_strip_split(string), ["music", "compsci", "art"])
+
+
+class TagSplitTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         Tag.objects.create(name="music")
