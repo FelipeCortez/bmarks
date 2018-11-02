@@ -40,7 +40,6 @@ def index(request):
 
 
 def user_index(request, username):
-    # get_object_or_404(User, username=username)
     if not User.objects.filter(username=username).exists():
         raise Http404("User doesn't exist")
 
@@ -284,23 +283,6 @@ def delete_mark(request, id):
 
 
 @login_required
-def merge(request, slug1, slug2):
-    #    bookmarks1 = Bookmark.objects.filter(tags__name=slug1)
-    #    bookmarks2 = Bookmark.objects.filter(tags__name=slug2)
-    #    tag1 = get_object_or_404(Tag, name=slug1)
-    #    tag2 = get_object_or_404(Tag, name=slug2)
-    #
-    #    if bookmarks1:
-    #        if bookmarks2:
-    #            tag2.delete()
-    #            for mark in bookmarks2:
-    #                mark.tags.add(tag1)
-    #        return HttpResponseRedirect(reverse('tag', args=[slug1]))
-    #
-    return HttpResponseRedirect(reverse('index'))
-
-
-@login_required
 def delete_tag(request, slug):
     bookmarks = Bookmark.objects.filter(user=request.user, tags__name=slug)
 
@@ -445,10 +427,6 @@ def guide(request):
 
 # API ---------------------------------
 
-# TODO: decide on a JSON response standard
-# https://stackoverflow.com/questions/12806386/standard-json-api-response-format
-# the following is very messy but it works
-
 
 def api_mark(request, id):
     mark = Bookmark.objects.get(id=id)
@@ -484,41 +462,40 @@ def api_tags(request, prefix=None):
     tags_dict["tags"] = tag_list
     return JsonResponse(tags_dict)
 
+def get_title(url):
+    if not (url.startswith('http://') or url.startswith('https://')):
+        url = 'http://' + url
+
+    hdr = {
+        'User-Agent':
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+        'Accept':
+        'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Charset':
+        'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+        'Accept-Encoding':
+        'none',
+        'Accept-Language':
+        'en-US,en;q=0.8',
+        'Connection':
+        'keep-alive'
+    }
+
+    req = urllib.request.Request(url, headers=hdr)
+
+    with urllib.request.urlopen(req) as f:
+        contents = f.read().decode('utf-8', 'backslashreplace')
+        contents = html.unescape(contents)
+        pattern = re.compile(r"<title.*?>(.+?)</title>")
+        response = {"url": re.findall(pattern, contents)[0]}
+        print(response)
+        return JsonResponse(response)
 
 @login_required
 def api_get_title(request):
     if request.method == 'POST':
-        url = request.POST.get('url')
-
-        if not (url.startswith('http://') or url.startswith('https://')):
-            url = 'http://' + url
-
-        hdr = {
-            'User-Agent':
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-            'Accept':
-            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Charset':
-            'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-            'Accept-Encoding':
-            'none',
-            'Accept-Language':
-            'en-US,en;q=0.8',
-            'Connection':
-            'keep-alive'
-        }
-
-        req = urllib.request.Request(url, headers=hdr)
-
         try:
-            with urllib.request.urlopen(req) as f:
-
-                contents = f.read().decode('ISO-8859-1', 'backslashreplace')
-                contents = html.unescape(contents)
-                pattern = re.compile(r"<title.*?>(.+?)</title>")
-                response = {"url": re.findall(pattern, contents)[0]}
-                print(response)
-                return JsonResponse(response)
+            get_title(request.POST.get('url'))
         except:
             return JsonResponse({"error": "couldn't load title"})
 
