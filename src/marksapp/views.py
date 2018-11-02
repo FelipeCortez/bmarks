@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Count, When, Case, Sum, F
+from django.db.models import Count, When, Case, Sum, F, Q
 from django.db.models.functions import Lower
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -20,6 +20,43 @@ import marksapp.forms as forms
 import marksapp.netscape as netscape
 import re
 import markdown
+
+
+def paginate(marks, after=None, before=None, limit=100, sort_column="-date_added"):
+    after_link = None
+    before_link = None
+
+    ordering = [sort_column, '-id']
+
+    marks = marks.order_by(*ordering)
+    earliest = marks.earliest(*ordering)
+    latest = marks.latest(*ordering)
+
+    if after:
+        marks = marks.filter(Q(date_added__lt = after.date_added) |
+                             (Q(date_added__exact = after.date_added) & Q(id__lt = after.id)))
+
+    if before:
+        marks = marks.filter(Q(date_added__gt = before.date_added) |
+                             (Q(date_added__exact = before.date_added) & Q(id__gt = before.id)))
+        marks = marks.reverse()
+
+    paginated_marks = list(marks.all()[:limit])
+
+    if before: paginated_marks = paginated_marks[::-1]
+
+    if paginated_marks[-1] != latest:
+        after_link = paginated_marks[-1]
+
+    if paginated_marks[0] != earliest:
+        before_link = paginated_marks[0]
+
+    return {
+        "paginated_marks": [m.name for m in paginated_marks],
+        "real_marks": paginated_marks,
+        "after_link": after_link,
+        "before_link": before_link
+    }
 
 
 def tags_strip_split(tags):
@@ -159,63 +196,79 @@ def marks(request, username, tags=[]):
         sorted_bookmarks = bookmarks.order_by('-date_added')
         sort = "date"
 
+    after_mark = None
+    before_mark = None
+
     if get_param(request, "after", params):
         after_id = int(params["after"])
         after_mark = Bookmark.objects.get(id=after_id)
-        if sort == "date":
-            bookmarks = sorted_bookmarks.exclude(
-                date_added__gte=after_mark.date_added)
-        elif sort == "name":
-            lower_name = after_mark.name.lower()
-            bookmarks = sorted_bookmarks.exclude(name_lower__lte=lower_name)
-        bookmarks = bookmarks[:limit]
     elif get_param(request, "before", params):
         before_id = int(params["before"])
         before_mark = Bookmark.objects.get(id=before_id)
 
-        if sort == "date":
-            bookmarks = bookmarks.order_by('date_added')
-            bookmarks = bookmarks.filter(date_added__gt=before_mark.date_added)
-        elif sort == "name":
-            bookmarks = bookmarks.order_by(Lower("name").desc())
-            lower_name = before_mark.name.lower()
-            bookmarks = bookmarks.filter(name_lower__lt=lower_name)
-        bookmarks = bookmarks[:limit:-1]
+    print(after_mark)
+    print("paginated")
+    pagination = paginate(sorted_bookmarks, after_mark, before_mark)
+    bookmarks = pagination["real_marks"]
+    after_mark = pagination["after_link"]
+    before_mark = pagination["before_link"]
 
-    else:
-        bookmarks = sorted_bookmarks[:limit]
+#    if get_param(request, "after", params):
+#        after_mark = Bookmark.objects.get(id=after_id)
+#        if sort == "date":
+#            bookmarks = sorted_bookmarks.exclude(
+#                date_added__gte=after_mark.date_added)
+#        elif sort == "name":
+#            lower_name = after_mark.name.lower()
+#            bookmarks = sorted_bookmarks.exclude(name_lower__lte=lower_name)
+#        bookmarks = bookmarks[:limit]
+#    elif get_param(request, "before", params):
+#        before_id = int(params["before"])
+#        before_mark = Bookmark.objects.get(id=before_id)
+#
+#        if sort == "date":
+#            bookmarks = bookmarks.order_by('date_added')
+#            bookmarks = bookmarks.filter(date_added__gt=before_mark.date_added)
+#        elif sort == "name":
+#            bookmarks = bookmarks.order_by(Lower("name").desc())
+#            lower_name = before_mark.name.lower()
+#            bookmarks = bookmarks.filter(name_lower__lt=lower_name)
+#        bookmarks = bookmarks[:limit:-1]
+#
+#    else:
+#        bookmarks = sorted_bookmarks[:limit]
 
     params_str = "&".join(
         ["{}={}".format(param, value) for param, value in params.items()])
 
-    first_mark = sorted_bookmarks.first()
+#    first_mark = sorted_bookmarks.first()
 
-    if bookmarks:
-        if bookmarks[0] != first_mark:
-            before_mark = bookmarks[0]
-        else:
-            before_mark = None
+#    if bookmarks:
+#        if bookmarks[0] != first_mark:
+#            before_mark = bookmarks[0]
+#        else:
+#            before_mark = None
+#
+#        if bookmarks[len(bookmarks)
+#                     - 1] != sorted_bookmarks[len(sorted_bookmarks) - 1]:
+#            after_mark = bookmarks[len(bookmarks) - 1]
+#        else:
+#            after_mark = None
 
-        if bookmarks[len(bookmarks)
-                     - 1] != sorted_bookmarks[len(sorted_bookmarks) - 1]:
-            after_mark = bookmarks[len(bookmarks) - 1]
-        else:
-            after_mark = None
+    tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
+                        .annotate(num_marks=Count('bookmark')) \
+                        .order_by('-num_marks', 'name')
 
-        tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
-                            .annotate(num_marks=Count('bookmark')) \
-                            .order_by('-num_marks', 'name')
-
-        context.update({
-            'marks': bookmarks,
-            'sort': sort,
-            'tag_count': tag_count,
-            'tags': tags,
-            'before_mark': before_mark,
-            'after_mark': after_mark,
-            'params': params,
-            'params_str': params_str,
-        })
+    context.update({
+        'marks': bookmarks,
+        'sort': sort,
+        'tag_count': tag_count,
+        'tags': tags,
+        'before_mark': before_mark,
+        'after_mark': after_mark,
+        'params': params,
+        'params_str': params_str,
+    })
 
     return render(request, "marks.html", context)
 
