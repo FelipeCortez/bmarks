@@ -23,8 +23,7 @@ import markdown
 
 
 def paginate(marks, after=None, before=None, limit=100, sort_column="-date_added"):
-    after_link = None
-    before_link = None
+    after_link = before_link = None
 
     ordering = [sort_column, '-id']
 
@@ -32,25 +31,26 @@ def paginate(marks, after=None, before=None, limit=100, sort_column="-date_added
     earliest = marks.earliest(*ordering)
     latest = marks.latest(*ordering)
 
-    ops = ["gt", "lt"]
+    rel_ops = ["gt", "lt"]
 
     if sort_column.startswith("-"):
         normalized_sort_column = sort_column[1:]
-        ops.reverse()
+        rel_ops.reverse()
     else:
         normalized_sort_column = sort_column
 
+    def get_filter_kwargs(rel_op, entity):
+        return {f"{normalized_sort_column}__{rel_op}": getattr(entity, normalized_sort_column)}
+
     if after:
-        kwargs_f1 = {f"{normalized_sort_column}__{ops[0]}": getattr(after, normalized_sort_column)}
-        kwargs_f2 = {f"{normalized_sort_column}__exact":    getattr(after, normalized_sort_column)}
-        marks = marks.filter(Q(**kwargs_f1) |
-                             (Q(**kwargs_f2) & Q(id__lt = after.id)))
+        kwargs_after = get_filter_kwargs(rel_ops[0], after)
+        kwargs_equal = get_filter_kwargs("exact", after)
+        marks = marks.filter(Q(**kwargs_after) | (Q(**kwargs_equal) & Q(id__lt = after.id)))
 
     if before:
-        kwargs_f1 = {f"{normalized_sort_column}__{ops[1]}": getattr(before, normalized_sort_column)}
-        kwargs_f2 = {f"{normalized_sort_column}__exact":    getattr(before, normalized_sort_column)}
-        marks = marks.filter(Q(**kwargs_f1) |
-                             (Q(**kwargs_f2) & Q(id__gt = before.id)))
+        kwargs_before = get_filter_kwargs(rel_ops[1], before)
+        kwargs_equal = get_filter_kwargs("exact", before)
+        marks = marks.filter(Q(**kwargs_before) | (Q(**kwargs_equal) & Q(id__gt = before.id)))
         marks = marks.reverse()
 
     paginated_marks = list(marks.all()[:limit])
@@ -64,8 +64,7 @@ def paginate(marks, after=None, before=None, limit=100, sort_column="-date_added
         before_link = paginated_marks[0]
 
     return {
-        "paginated_marks": [m.name for m in paginated_marks],
-        "real_marks": paginated_marks,
+        "marks": paginated_marks,
         "after_link": after_link,
         "before_link": before_link
     }
@@ -202,10 +201,10 @@ def marks(request, username, tags=[]):
 
     if get_param(request, "sort", params) and params["sort"] == "name":
         bookmarks = bookmarks.annotate(name_lower=Lower('name'))
-        sorted_bookmarks = bookmarks.order_by("name_lower")
+        sort_column = "name"
         sort = "name"
     else:
-        sorted_bookmarks = bookmarks.order_by('-date_added')
+        sort_column = "-date_added"
         sort = "date"
 
     after_mark = None
@@ -218,54 +217,13 @@ def marks(request, username, tags=[]):
         before_id = int(params["before"])
         before_mark = Bookmark.objects.get(id=before_id)
 
-    print(after_mark)
-    print("paginated")
-    pagination = paginate(sorted_bookmarks, after_mark, before_mark)
-    bookmarks = pagination["real_marks"]
+    pagination = paginate(bookmarks, after_mark, before_mark, 100, sort_column)
+    bookmarks = pagination["marks"]
     after_mark = pagination["after_link"]
     before_mark = pagination["before_link"]
 
-#    if get_param(request, "after", params):
-#        after_mark = Bookmark.objects.get(id=after_id)
-#        if sort == "date":
-#            bookmarks = sorted_bookmarks.exclude(
-#                date_added__gte=after_mark.date_added)
-#        elif sort == "name":
-#            lower_name = after_mark.name.lower()
-#            bookmarks = sorted_bookmarks.exclude(name_lower__lte=lower_name)
-#        bookmarks = bookmarks[:limit]
-#    elif get_param(request, "before", params):
-#        before_id = int(params["before"])
-#        before_mark = Bookmark.objects.get(id=before_id)
-#
-#        if sort == "date":
-#            bookmarks = bookmarks.order_by('date_added')
-#            bookmarks = bookmarks.filter(date_added__gt=before_mark.date_added)
-#        elif sort == "name":
-#            bookmarks = bookmarks.order_by(Lower("name").desc())
-#            lower_name = before_mark.name.lower()
-#            bookmarks = bookmarks.filter(name_lower__lt=lower_name)
-#        bookmarks = bookmarks[:limit:-1]
-#
-#    else:
-#        bookmarks = sorted_bookmarks[:limit]
-
     params_str = "&".join(
         ["{}={}".format(param, value) for param, value in params.items()])
-
-#    first_mark = sorted_bookmarks.first()
-
-#    if bookmarks:
-#        if bookmarks[0] != first_mark:
-#            before_mark = bookmarks[0]
-#        else:
-#            before_mark = None
-#
-#        if bookmarks[len(bookmarks)
-#                     - 1] != sorted_bookmarks[len(sorted_bookmarks) - 1]:
-#            after_mark = bookmarks[len(bookmarks) - 1]
-#        else:
-#            after_mark = None
 
     tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
                         .annotate(num_marks=Count('bookmark')) \

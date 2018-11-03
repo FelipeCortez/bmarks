@@ -76,25 +76,10 @@ class RegexTests(TestCase):
         for string in multi_tags:
             assert re.match(multitag_regex, string) is not None
 
-class PaginateTests(TestCase):
-    """
-    ---
-    1. One
-    1. Two
-    1. Three
-    1. ---
-    1. Four
-    2. Five
-    2. Six
-    2. ---
-    2. Seven
-    2. Eight
-    2. Nine
-    2. ---
-    2. Ten
-    2. Eleven
-    """
+def marks_names(marks):
+    return [m.name for m in marks]
 
+class PaginateTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         User.objects.create_user(username='testuser')
@@ -104,7 +89,7 @@ class PaginateTests(TestCase):
 
     def test_first_page(self):
         result = views.paginate(Bookmark.objects, limit = 3)
-        self.assertEqual(result["paginated_marks"], ["b11", "b10", "b9"])
+        self.assertEqual(marks_names(result["marks"]), ["b11", "b10", "b9"])
         self.assertEqual(result["after_link"].name, "b9")
         self.assertIs(result["before_link"], None)
 
@@ -113,7 +98,7 @@ class PaginateTests(TestCase):
         after_first = first_page["after_link"]
         second_page = views.paginate(Bookmark.objects, after = after_first, limit = 3)
 
-        self.assertEqual(second_page["paginated_marks"], ["b8", "b7", "b6"])
+        self.assertEqual(marks_names(second_page["marks"]), ["b8", "b7", "b6"])
         self.assertEqual(second_page["after_link"].name, "b6")
         self.assertEqual(second_page["before_link"].name, "b8")
 
@@ -121,7 +106,7 @@ class PaginateTests(TestCase):
         b7 = Bookmark.objects.get(name="b7")
         result = views.paginate(Bookmark.objects, after = b7, limit = 3)
 
-        self.assertEqual(result["paginated_marks"], ["b6", "b5", "b4"])
+        self.assertEqual(marks_names(result["marks"]), ["b6", "b5", "b4"])
         self.assertEqual(result["after_link"].name, "b4")
         self.assertEqual(result["before_link"].name, "b6")
 
@@ -129,7 +114,7 @@ class PaginateTests(TestCase):
         b6 = Bookmark.objects.get(name="b6")
         result = views.paginate(Bookmark.objects, before = b6, limit = 3)
 
-        self.assertEqual(result["paginated_marks"], ["b9", "b8", "b7"])
+        self.assertEqual(marks_names(result["marks"]), ["b9", "b8", "b7"])
         self.assertEqual(result["after_link"].name, "b7")
         self.assertEqual(result["before_link"].name, "b9")
 
@@ -137,20 +122,20 @@ class PaginateTests(TestCase):
         b3 = Bookmark.objects.get(name="b3")
         result = views.paginate(Bookmark.objects, after = b3, limit = 3)
 
-        self.assertEqual(result["paginated_marks"], ["b2", "b1"])
+        self.assertEqual(marks_names(result["marks"]), ["b2", "b1"])
         self.assertIs(result["after_link"], None)
         self.assertEqual(result["before_link"].name, "b2")
 
     def test_pagination_by_name(self):
         result = views.paginate(Bookmark.objects, limit = 5, sort_column = "name")
 
-        self.assertEqual(result["paginated_marks"], ["b1", "b10", "b11", "b2", "b3"])
+        self.assertEqual(marks_names(result["marks"]), ["b1", "b10", "b11", "b2", "b3"])
         self.assertEqual(result["after_link"].name, "b3")
         self.assertIs(result["before_link"], None)
 
     def test_pagination_by_name_inverse(self):
         result = views.paginate(Bookmark.objects, limit = 5, sort_column = "-name")
 
-        self.assertEqual(result["paginated_marks"], ["b9", "b8", "b7", "b6", "b5"])
+        self.assertEqual(marks_names(result["marks"]), ["b9", "b8", "b7", "b6", "b5"])
         self.assertEqual(result["after_link"].name, "b5")
         self.assertIs(result["before_link"], None)
