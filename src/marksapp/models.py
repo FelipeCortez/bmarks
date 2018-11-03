@@ -43,4 +43,4 @@ class Bookmark(models.Model):
         return ", ".join(t.name for t in self.tags.all())
 
     def __str__(self):
-        return "{}\n{}\n[{}]\n<{}>\n---\n".format(self.user.username, self.name, self.url, self.tags_str())
+        return "[{}] - {} - {} - [{}] - <{}>".format(self.date_added, self.user.username, self.name, self.url, self.tags_str())
