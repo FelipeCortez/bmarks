@@ -32,13 +32,25 @@ def paginate(marks, after=None, before=None, limit=100, sort_column="-date_added
     earliest = marks.earliest(*ordering)
     latest = marks.latest(*ordering)
 
+    ops = ["gt", "lt"]
+
+    if sort_column.startswith("-"):
+        normalized_sort_column = sort_column[1:]
+        ops.reverse()
+    else:
+        normalized_sort_column = sort_column
+
     if after:
-        marks = marks.filter(Q(date_added__lt = after.date_added) |
-                             (Q(date_added__exact = after.date_added) & Q(id__lt = after.id)))
+        kwargs_f1 = {f"{normalized_sort_column}__{ops[0]}": getattr(after, normalized_sort_column)}
+        kwargs_f2 = {f"{normalized_sort_column}__exact":    getattr(after, normalized_sort_column)}
+        marks = marks.filter(Q(**kwargs_f1) |
+                             (Q(**kwargs_f2) & Q(id__lt = after.id)))
 
     if before:
-        marks = marks.filter(Q(date_added__gt = before.date_added) |
-                             (Q(date_added__exact = before.date_added) & Q(id__gt = before.id)))
+        kwargs_f1 = {f"{normalized_sort_column}__{ops[1]}": getattr(before, normalized_sort_column)}
+        kwargs_f2 = {f"{normalized_sort_column}__exact":    getattr(before, normalized_sort_column)}
+        marks = marks.filter(Q(**kwargs_f1) |
+                             (Q(**kwargs_f2) & Q(id__gt = before.id)))
         marks = marks.reverse()
 
     paginated_marks = list(marks.all()[:limit])

@@ -140,3 +140,17 @@ class PaginateTests(TestCase):
         self.assertEqual(result["paginated_marks"], ["b2", "b1"])
         self.assertIs(result["after_link"], None)
         self.assertEqual(result["before_link"].name, "b2")
+
+    def test_pagination_by_name(self):
+        result = views.paginate(Bookmark.objects, limit = 5, sort_column = "name")
+
+        self.assertEqual(result["paginated_marks"], ["b1", "b10", "b11", "b2", "b3"])
+        self.assertEqual(result["after_link"].name, "b3")
+        self.assertIs(result["before_link"], None)
+
+    def test_pagination_by_name_inverse(self):
+        result = views.paginate(Bookmark.objects, limit = 5, sort_column = "-name")
+
+        self.assertEqual(result["paginated_marks"], ["b9", "b8", "b7", "b6", "b5"])
+        self.assertEqual(result["after_link"].name, "b5")
+        self.assertIs(result["before_link"], None)
