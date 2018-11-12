@@ -1,6 +1,8 @@
-from .secrets import *
-from .config import *
+from . import config
+from .secrets import SECRET_KEY
+
 import os
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -75,12 +77,12 @@ if 'TRAVIS' in os.environ:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': DB_NAME,
-            'USER': DB_USER,
-            'PASSWORD': DB_PW,
-            'HOST': '127.0.0.1',
-            'PORT': DB_PORT
+            'ENGINE'  : 'django.db.backends.postgresql',
+            'NAME'    : config.DB_NAME,
+            'USER'    : config.DB_USER,
+            'PASSWORD': config.DB_PW,
+            'HOST'    : config.DB_HOST,
+            'PORT'    : config.DB_PORT
         }
 }
 
