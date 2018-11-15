@@ -1,41 +1,38 @@
-const baseURL = "https://bmarks.net";
+const baseURL = "https://bmarks.net/add/";
 
 function onGotAll(tabs) {
-  let i = 0;
   let description = "";
 
-  for (i = 0; i < tabs.length; ++i) {
-    description += `- [${ tabs[i].title }](${ tabs[i].url })\n`;
-
-    if (tabs[i].active) {
-      let activeTab = tabs[i];
-    }
+  for (let tab of tabs) {
+    description += `- [${ tab.title }](${ tab.url })\\n`;
   }
 
-  let encodedUrl = baseURL +
-      "/add/?name=Tab collection&description=" +
-      encodeURIComponent(description) +
-      "&tags=tab-collection";
+  let contentScript = `
+    let tagsField = document.querySelector("#id_tags");
+    tagsField.value = ".tab-collection";
 
-  browser.tabs.create({
-    url: encodedUrl
-  });
+    let descriptionField = document.querySelector("#id_description");
+    descriptionField.value = "${ description }";
+    descriptionField.style.height = (descriptionField.scrollHeight + 10) + "px";
+  `;
 
-  window.close();
+  browser.tabs.create({url: baseURL})
+    .then(() => { browser.tabs.executeScript({code: contentScript}); window.close(); });
 }
 
 function onGotActive(tabs) {
-  const encodedUrl = baseURL +
-        "/add/?name=" +
-        encodeURIComponent(tabs[0].title) +
-        "&url=" +
-        encodeURIComponent(tabs[0].url);
+  let contentScript = `
+    let urlField = document.querySelector("#id_url");
+    urlField.value = "${ tabs[0].url }";
 
-  browser.tabs.create({
-    url: encodedUrl
-  });
+    let titleField = document.querySelector("#id_name");
+    titleField.value = "${ tabs[0].title }";
+    titleField.focus();
+  `;
 
-  window.close();
+  browser.tabs.create({url: baseURL})
+    .then(() => { browser.tabs.executeScript({code: contentScript}); window.close(); });
+
 }
 
 function onError(error) {

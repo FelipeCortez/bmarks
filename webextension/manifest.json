@@ -7,7 +7,9 @@
   "homepage_url": "https://bmarks.net",
 
   "permissions": [
-    "tabs"
+    "tabs",
+    "activeTab",
+    "<all_urls>"
   ],
 
   "icons": {
