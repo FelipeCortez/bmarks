@@ -1,11 +1,12 @@
 * {
   box-sizing: border-box;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 html, body {
   margin: 0;
-  padding: 3px 0 3px 0;
-  width: 68px;
+  padding: 3px 0;
+  width: 200px;
 }
 
 .button {
@@ -15,9 +16,8 @@ html, body {
   border: 0;
   width: 100%;
   color: #1A1A1A;
-  font-family: sans-serif;
   font-size: 13px;
-  padding: 5px 13px 5px 13px;
+  padding: 5px 13px;
   text-align: left;
   user-select: none;
   -moz-user-select: none;
@@ -31,4 +31,9 @@ html, body {
 
 .button:active {
   background-color: #E0E0E0;
+}
+
+.shortcut {
+  color: gray;
+  float: right;
 }
