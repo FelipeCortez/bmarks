@@ -12,6 +12,13 @@
     "<all_urls>"
   ],
 
+  "content_scripts": [
+    {
+      "matches": ["*://bmarks.net/*"],
+      "js": ["/content-script.js"]
+    }
+  ],
+
   "icons": {
     "24": "icons/icon-24.png",
     "32": "icons/icon-32.png",
