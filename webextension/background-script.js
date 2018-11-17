@@ -2,15 +2,15 @@ const baseURL = "https://bmarks.net/add/";
 
 // shortcuts
 browser.commands.onCommand.addListener((command) => {
-  callCommandFunction(command);
+  callFunctionForCommand(command);
 });
 
 // popup
 browser.runtime.onMessage.addListener((message) => {
-  callCommandFunction(message.command);
+  callFunctionForCommand(message.command);
 });
 
-function callCommandFunction(command) {
+function callFunctionForCommand(command) {
   switch (command) {
   case "bookmark-current":
     bookmarkCurrentPage(); break;
