@@ -10,3 +10,11 @@ allTabsBtn.onclick = function() {
   browser.runtime.sendMessage({command: "bookmark-all"});
   window.close();
 };
+
+for (let shortcutSpan of document.querySelectorAll(".shortcut")) {
+  let rows = Array.from(shortcutSpan.innerText)
+                   .map((char) => `<td>${ char }</td>`)
+                   .join('');
+
+  shortcutSpan.innerHTML = `<table><tr>${ rows }</tr></table>`;
+}
