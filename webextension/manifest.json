@@ -27,7 +27,7 @@
   },
 
   "background": {
-    "scripts": ["core.js", "background-script.js"]
+    "scripts": ["background-script.js"]
   },
 
   "browser_action": {
