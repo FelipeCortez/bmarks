@@ -41,13 +41,13 @@
       "suggested_key": {
         "default": "Alt+Shift+T"
       },
-      "description": "Bookmark the current tab"
+      "description": "This tab"
     },
     "bookmark-all": {
       "suggested_key": {
         "default": "Alt+Shift+W"
       },
-      "description": "Bookmark all opened tabs on the current window"
+      "description": "Window tabs"
     }
   }
 }

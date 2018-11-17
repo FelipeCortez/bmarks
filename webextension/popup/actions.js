@@ -1,20 +1,31 @@
-const activeBtn  = document.getElementById("add-active-button");
-const allTabsBtn = document.getElementById("all-tabs-button");
+function createCommandElement(name, shortcut, command) {
+  var aElement = document.createElement("a");
+  aElement.classList.add("button");
 
-activeBtn.onclick = function() {
-  browser.runtime.sendMessage({command: "bookmark-current"});
-  window.close();
-};
+  var textElement = document.createElement("span");
+  textElement.innerText = name;
+  textElement.classList.add("text");
+  aElement.appendChild(textElement);
 
-allTabsBtn.onclick = function() {
-  browser.runtime.sendMessage({command: "bookmark-all"});
-  window.close();
-};
+  if (shortcut !== null) {
+    var shortcutElement = document.createElement("span");
+    shortcutElement.innerText = shortcut;
+    shortcutElement.classList.add("shortcut");
+    aElement.appendChild(shortcutElement);
+  }
 
-for (let shortcutSpan of document.querySelectorAll(".shortcut")) {
-  let rows = Array.from(shortcutSpan.innerText)
-                   .map((char) => `<td>${ char }</td>`)
-                   .join('');
+  aElement.onclick = () => {
+    browser.runtime.sendMessage({command: command});
+    window.close();
+  };
 
-  shortcutSpan.innerHTML = `<table><tr>${ rows }</tr></table>`;
+  return aElement;
 }
+
+browser.commands.getAll().then((commands) => {
+  const commandsElement = document.getElementById("commands");
+
+  for (command of commands) {
+    commandsElement.appendChild(createCommandElement(command.description, command.shortcut, command.name));
+  }
+});
