@@ -6,7 +6,6 @@
 html, body {
   margin: 0;
   padding: 3px 0;
-  width: 200px;
 }
 
 .button {
@@ -38,7 +37,8 @@ html, body {
 }
 
 .text {
-  flex-grow: 10;
+  flex-grow: 1;
+  margin-right: 16px;
 }
 
 .shortcut {
