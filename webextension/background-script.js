@@ -1,26 +1,26 @@
-const baseURL = "https://bmarks.net/add/";
+const baseURL = 'https://bmarks.net/add/';
 
 // shortcuts
-browser.commands.onCommand.addListener((command) => {
+browser.commands.onCommand.addListener(command => {
   callFunctionForCommand(command);
 });
 
 // popup
-browser.runtime.onMessage.addListener((message) => {
+browser.runtime.onMessage.addListener(message => {
   callFunctionForCommand(message.command);
 });
 
 function callFunctionForCommand(command) {
   switch (command) {
-  case "bookmark-current":
+  case 'bookmark-current':
     bookmarkCurrentPage(); break;
-  case "bookmark-all":
+  case 'bookmark-all':
     bookmarkAllTabsOnWindow(); break;
   }
 }
 
 function createTabAndSendMessage(message) {
-  browser.tabs.create({url: baseURL}).then((marksTab) => {
+  browser.tabs.create({url: baseURL}).then(marksTab => {
     browser.tabs.executeScript({code: ''}).then(() => {
       browser.tabs.sendMessage(marksTab.id, message);
     });
@@ -28,18 +28,18 @@ function createTabAndSendMessage(message) {
 }
 
 function bookmarkCurrentPage() {
-  browser.tabs.query({currentWindow: true, active: true}).then((tabs) => {
+  browser.tabs.query({currentWindow: true, active: true}).then(tabs => {
     let title = tabs[0].title;
     let url = tabs[0].url;
 
-    createTabAndSendMessage({command: "insertCurrentTab", title: title, url: url});
+    createTabAndSendMessage({command: 'insertCurrentTab', title: title, url: url});
   });
 }
 
 function bookmarkAllTabsOnWindow() {
-  browser.tabs.query({currentWindow: true}).then((tabs) => {
-    let description = tabs.map(tab => `- [${ tab.title }](${ tab.url })`).join("\\n");
+  browser.tabs.query({currentWindow: true}).then(tabs => {
+    let description = tabs.map(tab => `- [${ tab.title }](${ tab.url })`).join('\\n');
 
-    createTabAndSendMessage({command: "insertAllTabs", description: description});
+    createTabAndSendMessage({command: 'insertAllTabs', description: description});
   });
 }
