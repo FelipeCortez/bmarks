@@ -38,7 +38,7 @@ function bookmarkCurrentPage() {
 
 function bookmarkAllTabsOnWindow() {
   browser.tabs.query({currentWindow: true}).then(tabs => {
-    let description = tabs.map(tab => `- [${ tab.title }](${ tab.url })`).join('\\n');
+    let description = tabs.map(tab => `- [${ tab.title }](${ tab.url })`).join('\n');
 
     createTabAndSendMessage({command: 'insertAllTabs', description: description});
   });

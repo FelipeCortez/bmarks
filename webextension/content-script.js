@@ -29,7 +29,8 @@
 
     let descriptionField = document.querySelector('#id_description');
     descriptionField.value = description;
-    descriptionField.style.height = (descriptionField.scrollHeight + 10) + 'px';
+    descriptionField.style.whiteSpace = 'pre';
+    descriptionField.style.height = `${ descriptionField.scrollHeight + 32 }px`;
 
     let titleField = document.querySelector('#id_name');
     titleField.focus();
