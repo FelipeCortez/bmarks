@@ -9,7 +9,7 @@
   "permissions": [
     "tabs",
     "activeTab",
-    "<all_urls>"
+    "*://bmarks.net/*"
   ],
 
   "content_scripts": [
