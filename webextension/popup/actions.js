@@ -1,56 +1,60 @@
-const baseURL = "https://bmarks.net";
+const nameToUnicode = {
+  'Ctrl'  : '⌘',
+  'Alt'   : '⌥',
+  'Shift' : '⇧'
+}
 
-function onGotAll(tabs) {
-  let i = 0;
-  let description = "";
+function shortcutToMac(shortcut) {
+  return shortcut.split('+')
+    .map(key => nameToUnicode[key] || key)
+    .join('');
+}
 
-  for (i = 0; i < tabs.length; ++i) {
-    description += `- [${ tabs[i].title }](${ tabs[i].url })\n`;
+function convertShortcutToSymbolsIfMac(shortcutElement) {
+  browser.runtime.getPlatformInfo().then(info => {
+    if (info.os == 'mac') {
+      let rows = Array.from(shortcutToMac(shortcutElement.innerText),
+                            char => `<td>${ char }</td>`)
+          .join('');
 
-    if (tabs[i].active) {
-      let activeTab = tabs[i];
+      shortcutElement.innerHTML = `<table><tr>${ rows }</tr></table>`;
     }
+  });
+}
+
+function createCommandElement(name, shortcut, command) {
+  var aElement = document.createElement('a');
+  aElement.classList.add('button');
+
+  var textElement = document.createElement('span');
+  textElement.innerText = name;
+  textElement.classList.add('text');
+  aElement.appendChild(textElement);
+
+  if (shortcut !== null) {
+    var shortcutElement = document.createElement('span');
+    shortcutElement.innerText = shortcut;
+    shortcutElement.classList.add('shortcut');
+    convertShortcutToSymbolsIfMac(shortcutElement);
+    aElement.appendChild(shortcutElement);
   }
 
-  let encodedUrl = baseURL +
-      "/add/?name=Tab collection&description=" +
-      encodeURIComponent(description) +
-      "&tags=tab-collection";
+  aElement.onclick = () => {
+    browser.runtime.sendMessage({command: command});
+    window.close();
+  };
 
-  browser.tabs.create({
-    url: encodedUrl
+  return aElement;
+}
+
+browser.commands.getAll().then(commands => {
+  const commandsDiv = document.getElementById('commands');
+
+  commands.forEach(command => {
+    let commandElement = createCommandElement(command.description,
+                                              command.shortcut,
+                                              command.name);
+
+    commandsDiv.appendChild(commandElement);
   });
-
-  window.close();
-}
-
-function onGotActive(tabs) {
-  const encodedUrl = baseURL +
-        "/add/?name=" +
-        encodeURIComponent(tabs[0].title) +
-        "&url=" +
-        encodeURIComponent(tabs[0].url);
-
-  browser.tabs.create({
-    url: encodedUrl
-  });
-
-  window.close();
-}
-
-function onError(error) {
-  //
-}
-
-const active  = document.getElementById("add-active-button");
-const allTabs = document.getElementById("all-tabs-button");
-
-active.onclick = function() {
-  browser.tabs.query({currentWindow: true, active: true})
-    .then(onGotActive, onError);
-};
-
-allTabs.onclick = function() {
-  browser.tabs.query({currentWindow: true})
-    .then(onGotAll, onError);
-};
+});
