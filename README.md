@@ -1,4 +1,6 @@
-# Marks
+# bmarks
+
+[![Build Status](https://travis-ci.org/FelipeCortez/bmarks.svg?branch=master)](https://travis-ci.org/FelipeCortez/bmarks)
 
 A bookmarking tool made with Python 3 + Django 2.0. Running [here](https://bmarks.net/felipecortez).
 

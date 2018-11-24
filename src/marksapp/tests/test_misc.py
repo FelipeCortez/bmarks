@@ -1,6 +1,7 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from marksapp.models import Tag, Bookmark
-from marksapp.misc import tag_regex, multitag_regex, websiteFromURL
+from marksapp.misc import tag_regex, multitag_regex, website_from_url
 import marksapp.views as views
 import re
 
@@ -19,14 +20,12 @@ class WebsiteFromURL(TestCase):
             "www.bmarks.net"     : "bmarks.net",
             "www.bmarks.net/"    : "bmarks.net",
             "www.bmarks.net/etc" : "bmarks.net",
-            "subdomain.bmarks.net/etc" : "bmarks.net",
-            "iamnotadomain" : None,
+            #"subdomain.bmarks.net/etc" : "bmarks.net",
+            #"iamnotadomain" : None,
         }
 
         for url, expected in strs_to_test.items():
-            print(url, websiteFromURL(url))
-            # self.assertEquals(
-            #     views.tags_strip_split(string), ["music", "compsci", "art"])
+            self.assertEquals(expected, website_from_url(url))
 
 
 class TagSplitTests(TestCase):
@@ -74,3 +73,4 @@ class RegexTests(TestCase):
 
         for string in multi_tags:
             assert re.match(multitag_regex, string) is not None
+
