@@ -14,7 +14,7 @@ class PaginateTests(TestCase):
         User.objects.create_user(username='testuser')
 
         for i in range(1, 12):
-            Bookmark.objects.create(name=f"b{i}", date_added="2018-11-02")
+            Bookmark.objects.create(name=f"b{i}", date_added="2018-11-02T00:00+0000")
 
     def test_first_page(self):
         result = views.paginate(Bookmark.objects, limit = 3)
