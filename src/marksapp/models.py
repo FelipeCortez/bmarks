@@ -31,6 +31,15 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+class BookmarkManager(models.Manager):
+    def create_with_tags(self, tags, **kwargs):
+        bookmark = Bookmark.objects.create(**kwargs)
+
+        for tag_title in tags:
+            bookmark.tags.add(Tag.objects.get_or_create(name=tag_title)[0])
+
+        return bookmark
+
 class Bookmark(models.Model):
     name = models.CharField(max_length=128)
     url = models.CharField(max_length=512, blank=True)
@@ -38,6 +47,7 @@ class Bookmark(models.Model):
     date_added = models.DateTimeField('date added', default=timezone.now)
     tags = models.ManyToManyField(Tag)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    objects = BookmarkManager()
 
     def tags_str(self):
         return ", ".join(t.name for t in self.tags.all())
