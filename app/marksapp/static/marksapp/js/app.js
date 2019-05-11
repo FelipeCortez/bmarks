@@ -336,6 +336,29 @@ $(function() {
     }
   });
 
+  function populateWithSearchParams() {
+    if ($("#id_name").val() == "" && $("#id_url").val() == "") {
+      let params = (new URL(document.location)).searchParams;
+
+      if (params.get("name")) {
+        $("#id_name").val(decodeURIComponent(params.get("name")));
+      }
+
+      if (params.get("url")) {
+        $("#id_url").val(decodeURIComponent(params.get("url")));
+      }
+
+      if (params.get("tags")) {
+        $("#id_tags").val(decodeURIComponent(params.get("tags")));
+      }
+
+      if (params.get("description")) {
+        $("#id_description").val(decodeURIComponent(params.get("description")));
+        $("#id_description").prop("style").height = $("#id_description").prop("scrollHeight") + "px";
+      }
+    }
+  }
+
   $(document).on("keydown", ".tag_field", function(e) {
     switch (e.keyCode) {
     case 40: // up
