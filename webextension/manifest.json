@@ -2,12 +2,21 @@
   "manifest_version": 2,
   "name": "bmarks",
   "author": "Felipe Cortez",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Add bookmarks and tab collections to bmarks.net",
   "homepage_url": "https://bmarks.net",
 
   "permissions": [
-    "tabs"
+    "tabs",
+    "activeTab",
+    "*://bmarks.net/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["*://bmarks.net/*"],
+      "js": ["/content-script.js"]
+    }
   ],
 
   "icons": {
@@ -17,9 +26,28 @@
     "96": "icons/icon-96.png"
   },
 
+  "background": {
+    "scripts": ["background-script.js"]
+  },
+
   "browser_action": {
     "default_icon": "icons/icon-24.png",
     "default_title": "bmarks",
     "default_popup": "popup/actions.html"
+  },
+
+  "commands": {
+    "bookmark-current": {
+      "suggested_key": {
+        "default": "Alt+Shift+T"
+      },
+      "description": "This tab"
+    },
+    "bookmark-all": {
+      "suggested_key": {
+        "default": "Alt+Shift+W"
+      },
+      "description": "Window tabs"
+    }
   }
 }

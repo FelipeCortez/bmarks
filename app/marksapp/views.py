@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Count, When, Case, Sum, F
+from django.db.models import Count, When, Case, Sum, F, Q
 from django.db.models.functions import Lower
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -22,6 +22,54 @@ import re
 import markdown
 
 
+def paginate(marks, after=None, before=None, limit=100, sort_column="-date_added"):
+    after_link = before_link = None
+
+    ordering = [sort_column, '-id']
+
+    marks = marks.order_by(*ordering)
+    earliest = marks.earliest(*ordering)
+    latest = marks.latest(*ordering)
+
+    rel_ops = ["gt", "lt"]
+
+    if sort_column.startswith("-"):
+        normalized_sort_column = sort_column[1:]
+        rel_ops.reverse()
+    else:
+        normalized_sort_column = sort_column
+
+    def get_filter_kwargs(rel_op, entity):
+        return {f"{normalized_sort_column}__{rel_op}": getattr(entity, normalized_sort_column)}
+
+    if after:
+        kwargs_after = get_filter_kwargs(rel_ops[0], after)
+        kwargs_equal = get_filter_kwargs("exact", after)
+        marks = marks.filter(Q(**kwargs_after) | (Q(**kwargs_equal) & Q(id__lt = after.id)))
+
+    if before:
+        kwargs_before = get_filter_kwargs(rel_ops[1], before)
+        kwargs_equal = get_filter_kwargs("exact", before)
+        marks = marks.filter(Q(**kwargs_before) | (Q(**kwargs_equal) & Q(id__gt = before.id)))
+        marks = marks.reverse()
+
+    paginated_marks = list(marks.all()[:limit])
+
+    if before: paginated_marks = paginated_marks[::-1]
+
+    if paginated_marks[-1] != latest:
+        after_link = paginated_marks[-1]
+
+    if paginated_marks[0] != earliest:
+        before_link = paginated_marks[0]
+
+    return {
+        "marks": paginated_marks,
+        "after_link": after_link,
+        "before_link": before_link
+    }
+
+
 def tags_strip_split(tags):
     return tags.replace(",", " ").split() if tags else []
 
@@ -40,7 +88,6 @@ def index(request):
 
 
 def user_index(request, username):
-    # get_object_or_404(User, username=username)
     if not User.objects.filter(username=username).exists():
         raise Http404("User doesn't exist")
 
@@ -154,69 +201,44 @@ def marks(request, username, tags=[]):
 
     if get_param(request, "sort", params) and params["sort"] == "name":
         bookmarks = bookmarks.annotate(name_lower=Lower('name'))
-        sorted_bookmarks = bookmarks.order_by("name_lower")
+        sort_column = "name"
         sort = "name"
     else:
-        sorted_bookmarks = bookmarks.order_by('-date_added')
+        sort_column = "-date_added"
         sort = "date"
+
+    after_mark = None
+    before_mark = None
 
     if get_param(request, "after", params):
         after_id = int(params["after"])
         after_mark = Bookmark.objects.get(id=after_id)
-        if sort == "date":
-            bookmarks = sorted_bookmarks.exclude(
-                date_added__gte=after_mark.date_added)
-        elif sort == "name":
-            lower_name = after_mark.name.lower()
-            bookmarks = sorted_bookmarks.exclude(name_lower__lte=lower_name)
-        bookmarks = bookmarks[:limit]
     elif get_param(request, "before", params):
         before_id = int(params["before"])
         before_mark = Bookmark.objects.get(id=before_id)
 
-        if sort == "date":
-            bookmarks = bookmarks.order_by('date_added')
-            bookmarks = bookmarks.filter(date_added__gt=before_mark.date_added)
-        elif sort == "name":
-            bookmarks = bookmarks.order_by(Lower("name").desc())
-            lower_name = before_mark.name.lower()
-            bookmarks = bookmarks.filter(name_lower__lt=lower_name)
-        bookmarks = bookmarks[:limit:-1]
-
-    else:
-        bookmarks = sorted_bookmarks[:limit]
+    pagination = paginate(bookmarks, after_mark, before_mark, 100, sort_column)
+    bookmarks = pagination["marks"]
+    after_mark = pagination["after_link"]
+    before_mark = pagination["before_link"]
 
     params_str = "&".join(
         ["{}={}".format(param, value) for param, value in params.items()])
 
-    first_mark = sorted_bookmarks.first()
+    tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
+                        .annotate(num_marks=Count('bookmark')) \
+                        .order_by('-num_marks', 'name')
 
-    if bookmarks:
-        if bookmarks[0] != first_mark:
-            before_mark = bookmarks[0]
-        else:
-            before_mark = None
-
-        if bookmarks[len(bookmarks)
-                     - 1] != sorted_bookmarks[len(sorted_bookmarks) - 1]:
-            after_mark = bookmarks[len(bookmarks) - 1]
-        else:
-            after_mark = None
-
-        tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
-                            .annotate(num_marks=Count('bookmark')) \
-                            .order_by('-num_marks', 'name')
-
-        context.update({
-            'marks': bookmarks,
-            'sort': sort,
-            'tag_count': tag_count,
-            'tags': tags,
-            'before_mark': before_mark,
-            'after_mark': after_mark,
-            'params': params,
-            'params_str': params_str,
-        })
+    context.update({
+        'marks': bookmarks,
+        'sort': sort,
+        'tag_count': tag_count,
+        'tags': tags,
+        'before_mark': before_mark,
+        'after_mark': after_mark,
+        'params': params,
+        'params_str': params_str,
+    })
 
     return render(request, "marks.html", context)
 
@@ -280,23 +302,6 @@ def mark_permalink(request, username, id):
 def delete_mark(request, id):
     get_object_or_404(Bookmark, id=id).delete()
 
-    return HttpResponseRedirect(reverse('index'))
-
-
-@login_required
-def merge(request, slug1, slug2):
-    #    bookmarks1 = Bookmark.objects.filter(tags__name=slug1)
-    #    bookmarks2 = Bookmark.objects.filter(tags__name=slug2)
-    #    tag1 = get_object_or_404(Tag, name=slug1)
-    #    tag2 = get_object_or_404(Tag, name=slug2)
-    #
-    #    if bookmarks1:
-    #        if bookmarks2:
-    #            tag2.delete()
-    #            for mark in bookmarks2:
-    #                mark.tags.add(tag1)
-    #        return HttpResponseRedirect(reverse('tag', args=[slug1]))
-    #
     return HttpResponseRedirect(reverse('index'))
 
 
@@ -445,10 +450,6 @@ def guide(request):
 
 # API ---------------------------------
 
-# TODO: decide on a JSON response standard
-# https://stackoverflow.com/questions/12806386/standard-json-api-response-format
-# the following is very messy but it works
-
 
 def api_mark(request, id):
     mark = Bookmark.objects.get(id=id)
@@ -484,41 +485,40 @@ def api_tags(request, prefix=None):
     tags_dict["tags"] = tag_list
     return JsonResponse(tags_dict)
 
+def get_title(url):
+    if not (url.startswith('http://') or url.startswith('https://')):
+        url = 'http://' + url
+
+    hdr = {
+        'User-Agent':
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+        'Accept':
+        'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Charset':
+        'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+        'Accept-Encoding':
+        'none',
+        'Accept-Language':
+        'en-US,en;q=0.8',
+        'Connection':
+        'keep-alive'
+    }
+
+    req = urllib.request.Request(url, headers=hdr)
+
+    with urllib.request.urlopen(req) as f:
+        contents = f.read().decode('utf-8', 'backslashreplace')
+        contents = html.unescape(contents)
+        pattern = re.compile(r"<title.*?>(.+?)</title>")
+        response = {"url": re.findall(pattern, contents)[0]}
+        print(response)
+        return JsonResponse(response)
 
 @login_required
 def api_get_title(request):
     if request.method == 'POST':
-        url = request.POST.get('url')
-
-        if not (url.startswith('http://') or url.startswith('https://')):
-            url = 'http://' + url
-
-        hdr = {
-            'User-Agent':
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-            'Accept':
-            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Charset':
-            'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-            'Accept-Encoding':
-            'none',
-            'Accept-Language':
-            'en-US,en;q=0.8',
-            'Connection':
-            'keep-alive'
-        }
-
-        req = urllib.request.Request(url, headers=hdr)
-
         try:
-            with urllib.request.urlopen(req) as f:
-
-                contents = f.read().decode('ISO-8859-1', 'backslashreplace')
-                contents = html.unescape(contents)
-                pattern = re.compile(r"<title.*?>(.+?)</title>")
-                response = {"url": re.findall(pattern, contents)[0]}
-                print(response)
-                return JsonResponse(response)
+            get_title(request.POST.get('url'))
         except:
             return JsonResponse({"error": "couldn't load title"})
 
