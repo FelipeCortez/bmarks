@@ -4,8 +4,8 @@ python:
 env:
   - DJANGO_DEVELOPMENT=1
 install:
-  - pip install -r reqs.txt
+  - pip install -r app/reqs.txt
 before_script:
-  - echo 'SECRET_KEY = "test"' > src/marks/secrets.py
+  - echo 'SECRET_KEY = "test"' > app/marks/secrets.py
 script:
-  - python3 src/manage.py test
+  - python3 app/manage.py test
