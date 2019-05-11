@@ -26,6 +26,14 @@ A bookmarking tool made with Python 3 + Django 2.0. Running [here](https://bmark
 
 ```javascript:location.href='https://bmarks.net/add/?url='+encodeURIComponent(location.href)+'&name='+encodeURIComponent(document.title)```
 
+## Running with Docker
+
+In the `app` folder, run `docker-compose up --build`.
+
+To run the migrations, `docker-compose run web python3 manage.py migrate`.
+
+Your develop environment should be up and running afterwards.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details

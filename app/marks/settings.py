@@ -1,6 +1,9 @@
 from .secrets import *
 from .config import *
 import os
+import logging
+
+SECRET_KEY = "hey"
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -63,26 +66,26 @@ WSGI_APPLICATION = 'marks.wsgi.application'
 
 if 'TRAVIS' in os.environ:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME':     'test_db',
-            'USER':     'postgres',
-            'PASSWORD': '',
-            'HOST':     'localhost',
-            'PORT':     '',
-        }
-    }
+            'default': {
+                'ENGINE':   'django.db.backends.postgresql',
+                'NAME':     'test_db',
+                'USER':     'postgres',
+                'PASSWORD': '',
+                'HOST':     'localhost',
+                'PORT':     '',
+                }
+            }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': DB_NAME,
-            'USER': DB_USER,
-            'PASSWORD': DB_PW,
-            'HOST': '127.0.0.1',
-            'PORT': DB_PORT
-        }
-}
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': DB_NAME,
+                'USER': DB_USER,
+                'PASSWORD': DB_PW,
+                'HOST': '127.0.0.1',
+                'PORT': DB_PORT
+                }
+            }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
