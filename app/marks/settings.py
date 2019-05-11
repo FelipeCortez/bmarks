@@ -82,7 +82,7 @@ else:
                 'NAME': DB_NAME,
                 'USER': DB_USER,
                 'PASSWORD': DB_PW,
-                'HOST': '127.0.0.1',
+                'HOST': 'db',
                 'PORT': DB_PORT
                 }
             }
