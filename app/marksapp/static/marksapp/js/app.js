@@ -336,26 +336,61 @@ $(function() {
     }
   });
 
+  function populateWithSearchParams() {
+    if ($("#id_name").val() == "" && $("#id_url").val() == "") {
+      let params = (new URL(document.location)).searchParams;
+
+      if (params.get("name")) {
+        $("#id_name").val(decodeURIComponent(params.get("name")));
+      }
+
+      if (params.get("url")) {
+        $("#id_url").val(decodeURIComponent(params.get("url")));
+      }
+
+      if (params.get("tags")) {
+        $("#id_tags").val(decodeURIComponent(params.get("tags")));
+      }
+
+      if (params.get("description")) {
+        $("#id_description").val(decodeURIComponent(params.get("description")));
+        $("#id_description").prop("style").height = $("#id_description").prop("scrollHeight") + "px";
+      }
+    }
+  }
+
   $(document).on("keydown", ".tag_field", function(e) {
+    keyMap = {
+      "up": 40,
+      "down": 38,
+      "esc": 27,
+      "enter": 13
+    };
+
     switch (e.keyCode) {
-    case 40: // up
+    case keyMap.up:
       suggestionsSelect(1);
       e.preventDefault();
       break;
-    case 38: // down
+    case keyMap.down:
       suggestionsSelect(-1);
       e.preventDefault();
       break;
-    case 27: // esc
+    case keyMap.esc:
       e.preventDefault();
       $("#suggestions").css({'display': 'none'});
       break;
-    case 13: // enter
+    case keyMap.enter:
       if ($("#suggestions").css("display") != "none") {
         e.preventDefault();
-        // LOL
-        completeWithSuggestedTag($("#suggestions").children().eq(selectedIdx).find("a").text(),
-                                 $(document.activeElement));
+
+        const selectedTag = $("#suggestions")
+              .children()
+              .eq(selectedIdx)
+              .find("a")
+              .text();
+
+        completeWithSuggestedTag(selectedTag, $(document.activeElement));
         $("#suggestions").css({'display': 'none'});
       }
       break;
@@ -372,8 +407,7 @@ $(function() {
   }
 
   $(document).on("mousedown", "#suggestions", function(e) {
-    // prevents input from blurring when clicking suggestions
-    e.preventDefault();
+    e.preventDefault(); // prevents input from blurring when clicking suggestions
   });
 
   $(document).on("focusout", ".tag_field", function(e) {
