@@ -217,28 +217,30 @@ def marks(request, username, tags=[]):
         before_id = int(params["before"])
         before_mark = Bookmark.objects.get(id=before_id)
 
-    pagination = paginate(bookmarks, after_mark, before_mark, 100, sort_column)
-    bookmarks = pagination["marks"]
-    after_mark = pagination["after_link"]
-    before_mark = pagination["before_link"]
+    if bookmarks.exists():
+        pagination = paginate(bookmarks, after_mark, before_mark, 100, sort_column)
+        bookmarks = pagination["marks"]
+        after_mark = pagination["after_link"]
+        before_mark = pagination["before_link"]
 
-    params_str = "&".join(
-        ["{}={}".format(param, value) for param, value in params.items()])
+        params_str = "&".join(
+            ["{}={}".format(param, value) for param, value in params.items()])
 
-    tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
-                        .annotate(num_marks=Count('bookmark')) \
-                        .order_by('-num_marks', 'name')
+        tag_count = Tag.objects.filter(bookmark__in=bookmarks) \
+                            .annotate(num_marks=Count('bookmark')) \
+                            .order_by('-num_marks', 'name')
 
-    context.update({
-        'marks': bookmarks,
-        'sort': sort,
-        'tag_count': tag_count,
-        'tags': tags,
-        'before_mark': before_mark,
-        'after_mark': after_mark,
-        'params': params,
-        'params_str': params_str,
-    })
+        l = locals()
+        context.update({v: l[v] for v in
+                        ['bookmarks',
+                         'sort',
+                         'tag_count',
+                         'tags',
+                         'before_mark',
+                         'after_mark',
+                         'params',
+                         'params_str']
+        })
 
     return render(request, "marks.html", context)
 

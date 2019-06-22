@@ -2,44 +2,38 @@
 {% load filters %}
 
 {% block page_info %}
-    <span class="green-and-bold">
-    ·
-    <a href="{% url 'user_index' username=username %}">{{ username }}</a>
-    {% if params.search_title %}
-    ·
-    <span class="search_title">{{ params.search_title }}</span>{% endif %}
-    {% if tags %}
-    ·
-    {% endif %}
-    </span>
-    {% for tag in tags %}
-        <span class="tag">
-            {% if tags|length > 1 %}
-            <a class="action"
-               href="{% url 'user_tag' slug=tags|remove_tag:tag username=username %}">x</a>
-            {% else %}
-            <a class="action"
-               href="{% url 'user_index' username=username %}">x</a>
-            {% endif %}
-            <a href="#">{{ tag }}</a>
-        </span>
-        {% if not forloop.last %}
-            <span class="plus">&</span>
-        {% endif %}
-    {% endfor %}
+<span class="green-and-bold">
+  ·
+  <a href="{% url 'user_index' username=username %}">{{ username }}</a>
+  {% if params.search_title %}
+  ·
+  <span class="search_title">{{ params.search_title }}</span>{% endif %}
+  {% if tags %}
+  ·
+  {% endif %}
+</span>
+{% for tag in tags %}
+<span class="tag">
+  {% if tags|length > 1 %}
+  <a class="action"
+    href="{% url 'user_tag' slug=tags|remove_tag:tag username=username %}">x</a>
+  {% else %}
+  <a class="action"
+    href="{% url 'user_index' username=username %}">x</a>
+  {% endif %}
+  <a href="#">{{ tag }}</a>
+</span>
+{% if not forloop.last %}
+<span class="plus">&</span>
+{% endif %}
+{% endfor %}
 {% endblock %}
 
 {% block content %}
 
-{% if marks %}
+{% if bookmarks %}
 <div id="suggestions"></div>
 <div class="extra-nav">
-    <!--
-        <a id="show-search" href="#">search</a>
-        <span class="separator">·</span>
-        <a href="{% url 'user_tag' username=username %}?sort=date&limit=100">last</a>
-        <span class="separator">·</span>
-    -->
   <div class="nav-item">
     <span>sorting by </span>
     {%   if sort != "name" %}<a href="?sort=name">date</a>
@@ -59,74 +53,68 @@
 <div id="suggestions"></div>
 
 <form method="post" id="edit_multiple_form">
-<div class="form-container edit_multiple_form">
-{% csrf_token %}
-<label for="add_tags">Add tags</label>
-<input id="id_add_tags" maxlength="512" name="add_tags" type="text" class="tag_field" autocomplete="off">
-<label for="remove_tags">Remove tags</label>
-<input id="id_remove_tags" maxlength="512" name="remove_tags" type="text" class="tag_field" autocomplete="off">
-<input type="submit" value="Edit selected" />
-</div>
+  <div class="form-container edit_multiple_form">
+    {% csrf_token %}
+    <label for="add_tags">Add tags</label>
+    <input id="id_add_tags" maxlength="512" name="add_tags" type="text" class="tag_field" autocomplete="off">
+    <label for="remove_tags">Remove tags</label>
+    <input id="id_remove_tags" maxlength="512" name="remove_tags" type="text" class="tag_field" autocomplete="off">
+    <input type="submit" value="Edit selected" />
+  </div>
 
-<div class="extra-nav selected_actions">
-  <div class="nav-item">
-    <span>selection</span>
+  <div class="extra-nav selected_actions">
+    <div class="nav-item">
+      <span>selection</span>
+    </div>
+    <div class="nav-item">
+      <a href="#" class="select_all_btn">select all</a>
+    </div>
+    <div class="nav-item">
+      <a href="#" class="deselect_all_btn">deselect all</a>
+    </div>
+    <div class="nav-item">
+      <a href="#" class="remove_selected_btn">remove selected</a>
+    </div>
   </div>
-  <div class="nav-item">
-    <a href="#" class="select_all_btn">select all</a>
-  </div>
-  <div class="nav-item">
-    <a href="#" class="deselect_all_btn">deselect all</a>
-  </div>
-  <div class="nav-item">
-    <a href="#" class="remove_selected_btn">remove selected</a>
-  </div>
-</div>
 </form>
 
 <ul class="links">
-{% for mark in marks %}
-{% include "mark.html" %}
-{% endfor %}
+  {% for mark in bookmarks %}
+  {% include "mark.html" %}
+  {% endfor %}
 </ul>
 
 <div class="extra-nav">
-    <!--
-        <a id="show-search" href="#">search</a>
-        <span class="separator">·</span>
-        <a href="{% url 'user_tag' username=username %}?sort=date&limit=100">last</a>
-        <span class="separator">·</span>
-    -->
-    {% if before_mark or after_mark %}
-        {% if before_mark %}
-            <a href="?sort={{ sort }}&before={{ before_mark.id }}" class="prev">prev</a>
-        {% endif %}
+  {% if before_mark or after_mark %}
+  {% if before_mark %}
+  <a href="?sort={{ sort }}&before={{ before_mark.id }}" class="prev">prev</a>
+  {% endif %}
 
-        {% if before_mark and after_mark %}
-            <span class="separator">·</span>
-        {% endif %}
+  {% if before_mark and after_mark %}
+  <span class="separator">·</span>
+  {% endif %}
 
-        {% if after_mark %}
-            <a href="?sort={{ sort }}&after={{ after_mark.id }}" class="next">next</a>
-        {% endif %}
-    {% else %}that's all{% endif %}
+  {% if after_mark %}
+  <a href="?sort={{ sort }}&after={{ after_mark.id }}" class="next">next</a>
+  {% endif %}
+  {% else %}that's all{% endif %}
 </div>
 
 
 <ul id="tags-flex">
-    {% for tag in tag_count %}
-    {% if tag.name not in tags %}
-    <li class="item">
+  {% for tag in tag_count %}
+  {% if tag.name not in tags %}
+  <li class="item">
     <span class="tag">
-        <a class="action"
-           href="{% url 'user_tag' slug=tags|add_tag:tag.name username=username %}">+</a>
-        <a class="tag_name"
-           href="{% url 'user_tag' slug=tag.name username=username %}">{{ tag.name }}</a>
+      <a class="action"
+        href="{% url 'user_tag' slug=tags|add_tag:tag.name username=username %}">+</a>
+      <a class="tag_name"
+        href="{% url 'user_tag' slug=tag.name username=username %}">{{ tag.name }}</a>
     </span>
     <span class="number">{{ tag.num_marks }}</span>
-    </li>
-    {% endif %}
-    {% endfor %}
+  </li>
+  {% endif %}
+  {% endfor %}
 </ul>
 {% else %}
 <p>No results found.</p>
