@@ -4,7 +4,6 @@
 src/static
 trash/
 marksenv/
-secrets.py
 
 ### OSX ###
 .DS_Store
