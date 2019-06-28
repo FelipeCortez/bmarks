@@ -2,8 +2,6 @@ FROM python:3.7-alpine
 
 ENV PYTHONUNBUFFERED 1
 
-ENV DJANGO_DEVELOPMENT 1
-
 RUN mkdir /code
 
 WORKDIR /code
