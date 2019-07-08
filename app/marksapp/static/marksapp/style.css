@@ -2,7 +2,7 @@ body {
   background-color: #F5F5F5;
   padding-top: 0;
   margin: 0;
-  font-family: 'Rubik', Helvetica, Arial, sans-serif;
+  font-family: 'ff-real-headline-pro', Helvetica, Arial, sans-serif;
   width: 100%;
   height: 100%;
 }
@@ -107,7 +107,7 @@ body {
 
 .just-green,
 .just-green a {
-  font-weight: 400;
+  font-weight: 300;
   color: #3cb568;
 }
 
@@ -117,7 +117,7 @@ body {
 
 .green-and-bold,
 .green-and-bold a {
-  font-weight: 500;
+  font-weight: 400;
   color: #3cb568;
 }
 
@@ -167,7 +167,7 @@ input[type=email],
 input[type=file],
 textarea {
   box-sizing: border-box;
-  font-family: 'Rubik', Helvetica, Arial, sans-serif;
+  font-family: 'ff-real-headline-pro', Helvetica, Arial, sans-serif;
   background-color: #FEFEFE;
   border: 1px solid #979797;
   border-radius: 2px;
@@ -219,7 +219,7 @@ textarea {
 input[type=submit],
 button {
   position: relative;
-  font-family: 'Rubik', Helvetica, Arial, sans-serif;
+  font-family: 'ff-real-headline-pro', Helvetica, Arial, sans-serif;
   background-color: #FEFEFE;
   border: 1px solid #979797;
   border-radius: 2px;
@@ -262,7 +262,7 @@ ul, ol {
 
 li, li > a, li span {
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 300;
   text-decoration: none;
 }
 
@@ -296,7 +296,7 @@ li > a {
   text-decoration: none;
   padding: 0 5px 0 5px;
   background-color: #F5F5F5;
-  font-weight: 400;
+  font-weight: 300;
 }
 
 .tag a:hover {
@@ -349,7 +349,7 @@ li > a {
 .number {
   color: #B2B2B2;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 300;
 }
 
 /* suggestions -------------------------------- */
@@ -376,7 +376,7 @@ li > a {
 
 #suggestions .match .tag-name {
   color: #3cb568;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 #suggestions li:hover, #suggestions .selected {
@@ -465,7 +465,7 @@ li > a {
 .description h4,
 .description h5,
 .description h6 {
-  font-weight: 400;
+  font-weight: 300;
   margin-top: 5px;
   margin-bottom: 5px;
 }
