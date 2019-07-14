@@ -21,7 +21,7 @@
   <a class="action"
     href="{% url 'user_index' username=username %}">x</a>
   {% endif %}
-  <a href="#">{{ tag }}</a>
+  <a href="{% url 'user_tag' slug=tag username=username %}">{{ tag }}</a>
 </span>
 {% if not forloop.last %}
 <span class="plus">&</span>
