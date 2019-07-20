@@ -28,6 +28,7 @@ login
         <label for="{{ form.password.id_for_label }}">Password</label>
         {{ form.password }}
         <input type="submit" value="Login" />
+        <input type="hidden" name="next" value="{{ next }}">
         </form>
         </div>
     {% else %}
