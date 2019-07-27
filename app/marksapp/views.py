@@ -319,17 +319,6 @@ def delete_tag(request, slug):
     return HttpResponseRedirect(reverse('index'))
 
 
-def orphans(request):
-    bookmarks = Bookmark.objects.filter(tags__isnull=True).order_by(
-        Lower("name"))
-
-    context = {
-        'marks': bookmarks,
-    }
-
-    return render(request, "search.html", context)
-
-
 @login_required
 def import_netscape(request):
     if request.method == 'POST':
