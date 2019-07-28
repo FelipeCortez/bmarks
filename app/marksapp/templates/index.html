@@ -20,9 +20,17 @@
 {% if user.is_authenticated %}
 <form id="search_form" action="{% url 'user_tag' username=username %}" method="GET">
     <div class="form-container">
+      <tr>
+        <th>
+          <label for="id_search_url">URL</label>
+        </th>
+        <td>
+          <input id="id_search_url" name="search_url" type="text" />
+        </td>
+      </tr>
     <tr>
         <th>
-            <label for="id_search_title">Title</label>
+            <label for="id_search_title">Name</label>
         </th>
         <td>
             <input id="id_search_title" name="search_title" type="text" />

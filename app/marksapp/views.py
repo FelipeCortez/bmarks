@@ -181,6 +181,9 @@ def marks(request, username, tags=[]):
 
     limit = 100
 
+    if get_param(request, "search_url", params):
+        bookmarks = bookmarks.filter(url__contains=params["search_url"])
+
     if get_param(request, "search_title", params):
         bookmarks = bookmarks.filter(name__search=params["search_title"])
 
