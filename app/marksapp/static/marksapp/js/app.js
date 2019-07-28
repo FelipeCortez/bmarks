@@ -303,7 +303,7 @@ $(function() {
 
   $("#show_search_btn").click(function() {
     $("#search_form").show();
-    $("#id_search_title").focus();
+    $("#id_search_url").focus();
   });
 
   $(document).on("change", "#id_url", function(e) {
