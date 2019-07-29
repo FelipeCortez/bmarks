@@ -103,7 +103,7 @@
 
 <ul id="tags-flex">
   {% for tag in tag_count %}
-  {% if tag.name not in tags %}
+  {% if tag.name and tag.name not in tags %}
   <li class="item">
     <span class="tag">
       <a class="action"

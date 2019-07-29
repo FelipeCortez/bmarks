@@ -64,10 +64,12 @@
     </li>
 
     {% for tag in tags %}
-    <li class="item">
-        <a class="tag_name" href="{% url 'user_tag' slug=tag.name username=username %}">{{ tag.name }}</a>
-        <span class="number">{{ tag.num_marks }}</span>
-    </li>
+        {% if tag.name %}
+        <li class="item">
+            <a class="tag_name" href="{% url 'user_tag' slug=tag.name username=username %}">{{ tag.name }}</a>
+            <span class="number">{{ tag.num_marks }}</span>
+        </li>
+        {% endif %}
     {% endfor %}
 </ul>
 
