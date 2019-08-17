@@ -273,6 +273,7 @@ li > a {
 .item {
   margin-bottom: 5px;
   white-space: nowrap;
+  color: #333333;
 }
 
 .item > a, .item > .number, .item > .action, .item > span {
