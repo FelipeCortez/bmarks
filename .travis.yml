@@ -9,8 +9,10 @@ python:
 env:
     - DJANGO_DEVELOPMENT=1
 before_install:
-    - openssl aes-256-cbc -K $encrypted_e90f233010dc_key -iv $encrypted_e90f233010dc_iv
-      -in travis.enc -out travis -d
+    - openssl aes-256-cbc -K $encrypted_e90f233010dc_key -iv $encrypted_e90f233010dc_iv -in travis.enc -out /tmp/travis_rsa -d
+    - eval "$(ssh-agent -s)"
+    - chmod 600 /tmp/travis_rsa
+    - ssh-add /tmp/travis_rsa
 install:
     - pip install -r app/reqs.txt
 before_script:
