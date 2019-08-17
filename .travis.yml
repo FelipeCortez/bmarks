@@ -3,7 +3,6 @@ python:
     - '3.6'
 env:
     - DJANGO_DEVELOPMENT=1
-    - TRAVIS=1
 install:
     - pip install -r app/reqs.txt
 before_script:
