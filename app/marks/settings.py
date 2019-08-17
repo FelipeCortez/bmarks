@@ -1,9 +1,8 @@
-from .secrets import *
 from .config import *
 import os
 import logging
 
-SECRET_KEY = "hey"
+SECRET_KEY = "defaultkey"
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

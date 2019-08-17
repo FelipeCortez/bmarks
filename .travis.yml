@@ -16,7 +16,6 @@ before_install:
 install:
     - pip install -r app/reqs.txt
 before_script:
-    - echo 'SECRET_KEY = "test"' > app/marks/secrets.py
     - psql -c "CREATE DATABASE test_db;" -U postgres
 script:
     - python3 app/manage.py test
