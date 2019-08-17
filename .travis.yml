@@ -1,14 +1,17 @@
 language: python
 python:
-- '3.6'
+    - '3.6'
 env:
-- DJANGO_DEVELOPMENT=1
+    - DJANGO_DEVELOPMENT=1
 install:
-- pip install -r app/reqs.txt
+    - pip install -r app/reqs.txt
 before_script:
-- echo 'SECRET_KEY = "test"' > app/marks/secrets.py
+    - echo 'SECRET_KEY = "test"' > app/marks/secrets.py
 script:
-- python3 app/manage.py test
+    - python3 app/manage.py test
 before_install:
-- openssl aes-256-cbc -K $encrypted_e90f233010dc_key -iv $encrypted_e90f233010dc_iv
-  -in travis.enc -out travis -d
+    - openssl aes-256-cbc -K $encrypted_e90f233010dc_key -iv $encrypted_e90f233010dc_iv
+      -in travis.enc -out travis -d
+deploy:
+    - provider: script
+      script: ssh felipecortez@felipecortez.net "cd /srv/www/bmarks.net/app && git pull"
