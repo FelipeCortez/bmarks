@@ -65,6 +65,8 @@ WSGI_APPLICATION = 'marks.wsgi.application'
 
 
 if 'TRAVIS' in os.environ:
+    print("Using Travis CI for testing")
+
     DATABASES = {
             'default': {
                 'ENGINE':   'django.db.backends.postgresql',
