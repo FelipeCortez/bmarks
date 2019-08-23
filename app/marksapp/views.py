@@ -197,8 +197,17 @@ def marks(request, username, tags=[]):
     for tag in tags:
         bookmarks = bookmarks.filter(tags__name=tag)
 
+    try:
+        profile = Profile.objects.get(user__username=username)
+    except ObjectDoesNotExist:
+        profile = None
+
     if not username == request.user.username:
-        bookmarks = bookmarks.exclude(tags__name="private")
+        if profile and profile.visibility == Profile.PRIVATE:
+            bookmarks = bookmarks.filter(tags__name="public")
+        else:
+            bookmarks = bookmarks.exclude(tags__name="private")
+
         if not tags:
             bookmarks = bookmarks.exclude(tags__name__startswith=".")
 
