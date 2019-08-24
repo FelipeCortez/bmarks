@@ -304,8 +304,28 @@ li > a {
   background-color: #DDDDDD;
 }
 
+.actions {
+  display: none;
+}
+
 .action {
   margin-right: 3px;
+}
+
+.inline {
+  display: inline;
+}
+
+.show-actions-checkbox {
+  display: none;
+}
+
+.show-actions-checkbox:checked {
+  display: none;
+}
+
+.show-actions-checkbox:checked ~ .actions {
+  display: inline;
 }
 
 .action, .action a {

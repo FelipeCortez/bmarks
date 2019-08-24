@@ -22,12 +22,16 @@
     </span>
     {% endfor %}
     <span class="separator">&#183;</span>
-    {% if user.is_authenticated and user.username == username %}
-    <span class="action"><a mark_id="{{ mark.id }}" class="edit_btn" href="#">edit</a></span>
-    <span class="action"><a mark_id="{{ mark.id }}" class="delete_btn" href="#">delete</a></span>
-    <span class="action"><a mark_id="{{ mark.id }}" class="bump_btn" href="#">bump</a></span>
-    {% endif %}
-    <span class="action"><a href="{% url 'mark_permalink' username=username id=mark.id %}">permalink</a></span>
+    <label for="show{{ mark.id }}" class="inline"><span class="action inline">actions</span></label>
+    <input id="show{{ mark.id }}" type=checkbox class="show-actions-checkbox">
+    <div class="actions">
+      {% if user.is_authenticated and user.username == username %}
+      <span class="action"><a mark_id="{{ mark.id }}" class="edit_btn" href="#">edit</a></span>
+      <span class="action"><a mark_id="{{ mark.id }}" class="delete_btn" href="#">delete</a></span>
+      <span class="action"><a mark_id="{{ mark.id }}" class="bump_btn" href="#">bump</a></span>
+      {% endif %}
+      <span class="action"><a href="{% url 'mark_permalink' username=username id=mark.id %}">permalink</a></span>
+    </div>
     {% if mark.description %}
     <div class="description-container" mark_id="{{ mark.id }}">
         <div class="triangle"></div>
