@@ -1,6 +1,7 @@
 from html.parser import HTMLParser
 from datetime import datetime
 
+
 class NetscapeParser(HTMLParser):
     add_mark = False
     add_cat = False
@@ -12,9 +13,9 @@ class NetscapeParser(HTMLParser):
     bookmarks = []
 
     def handle_starttag(self, tag, attrs):
-        if(tag == "h3"):
+        if tag == "h3":
             self.add_cat = True
-        if(tag == "a"):
+        if tag == "a":
             self.add_mark = True
             for attr in attrs:
                 if attr[0] == "href":
@@ -27,7 +28,7 @@ class NetscapeParser(HTMLParser):
                     self.tags = attr[1].split(",")
 
     def handle_endtag(self, tag):
-        if(tag == "dl"):
+        if tag == "dl":
             if self.categories:
                 self.categories.pop()
 
@@ -46,8 +47,9 @@ class NetscapeParser(HTMLParser):
             self.tags = ""
             self.add_mark = False
 
+
 def bookmarks_from_file(filename):
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         bookmarks = f.read()
 
         parser = NetscapeParser()

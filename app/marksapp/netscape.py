@@ -3,6 +3,7 @@ from marksapp.models import Bookmark, Tag
 from html.parser import HTMLParser
 import datetime
 
+
 class NetscapeParser(HTMLParser):
     add_mark = False
     add_cat = False
@@ -14,22 +15,24 @@ class NetscapeParser(HTMLParser):
     bookmarks = []
 
     def handle_starttag(self, tag, attrs):
-        if(tag == "h3"):
+        if tag == "h3":
             self.add_cat = True
-        if(tag == "a"):
+        if tag == "a":
             self.add_mark = True
             for attr in attrs:
                 if attr[0] == "href":
                     self.href = attr[1]
                 elif attr[0] == "add_date":
-                    self.add_date = datetime.datetime.utcfromtimestamp(int(attr[1])).replace(tzinfo=datetime.timezone.utc)
+                    self.add_date = datetime.datetime.utcfromtimestamp(
+                        int(attr[1])
+                    ).replace(tzinfo=datetime.timezone.utc)
                 elif attr[0] == "icon":
                     self.icon = attr[1]
                 elif attr[0] == "tags":
                     self.tags = attr[1].split(",")
 
     def handle_endtag(self, tag):
-        if(tag == "dl"):
+        if tag == "dl":
             if self.categories:
                 self.categories.pop()
 
@@ -47,6 +50,7 @@ class NetscapeParser(HTMLParser):
             self.bookmarks.append(mark)
             self.tags = []
             self.add_mark = False
+
 
 def bookmarks_from_file(f, user):
     bookmarks = f.read()

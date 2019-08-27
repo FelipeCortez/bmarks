@@ -5,13 +5,9 @@ from django.db.models import Count
 from django.conf import settings
 from marksapp.models import Bookmark, Tag
 
-urlpatterns = [
-    url(r'^', include('marksapp.urls')),
-    url(r'^admin/', admin.site.urls),
-]
+urlpatterns = [url(r"^", include("marksapp.urls")), url(r"^admin/", admin.site.urls)]
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns += [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ]
+
+    urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls))]

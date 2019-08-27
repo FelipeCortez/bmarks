@@ -5,6 +5,7 @@ from marksapp.misc import tag_regex, multitag_regex, website_from_url
 import marksapp.views as views
 import re
 
+
 class WebsiteFromURL(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -13,15 +14,15 @@ class WebsiteFromURL(TestCase):
 
     def test_extract(self):
         strs_to_test = {
-            "https://bmarks.net" : "bmarks.net",
-            "http://bmarks.net"  : "bmarks.net",
-            "ftp://bmarks.net"   : "bmarks.net",
-            "bmarks.net"         : "bmarks.net",
-            "www.bmarks.net"     : "bmarks.net",
-            "www.bmarks.net/"    : "bmarks.net",
-            "www.bmarks.net/etc" : "bmarks.net",
-            #"subdomain.bmarks.net/etc" : "bmarks.net",
-            #"iamnotadomain" : None,
+            "https://bmarks.net": "bmarks.net",
+            "http://bmarks.net": "bmarks.net",
+            "ftp://bmarks.net": "bmarks.net",
+            "bmarks.net": "bmarks.net",
+            "www.bmarks.net": "bmarks.net",
+            "www.bmarks.net/": "bmarks.net",
+            "www.bmarks.net/etc": "bmarks.net",
+            # "subdomain.bmarks.net/etc" : "bmarks.net",
+            # "iamnotadomain" : None,
         }
 
         for url, expected in strs_to_test.items():
@@ -51,7 +52,9 @@ class TagSplitTests(TestCase):
 
         for string in strs_to_test:
             self.assertEquals(
-                views.tags_strip_split(string), ["music", "compsci", "art"])
+                views.tags_strip_split(string), ["music", "compsci", "art"]
+            )
+
 
 class RegexTests(TestCase):
     @classmethod
@@ -73,4 +76,3 @@ class RegexTests(TestCase):
 
         for string in multi_tags:
             assert re.match(multitag_regex, string) is not None
-

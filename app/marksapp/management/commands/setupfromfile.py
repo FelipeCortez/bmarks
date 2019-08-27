@@ -4,6 +4,7 @@ from marksapp.models import Bookmark, Tag
 from html.parser import HTMLParser
 import datetime
 
+
 class NetscapeParser(HTMLParser):
     add_mark = False
     add_cat = False
@@ -15,22 +16,24 @@ class NetscapeParser(HTMLParser):
     bookmarks = []
 
     def handle_starttag(self, tag, attrs):
-        if(tag == "h3"):
+        if tag == "h3":
             self.add_cat = True
-        if(tag == "a"):
+        if tag == "a":
             self.add_mark = True
             for attr in attrs:
                 if attr[0] == "href":
                     self.href = attr[1]
                 elif attr[0] == "add_date":
-                    self.add_date = datetime.datetime.utcfromtimestamp(int(attr[1])).replace(tzinfo=datetime.timezone.utc)
+                    self.add_date = datetime.datetime.utcfromtimestamp(
+                        int(attr[1])
+                    ).replace(tzinfo=datetime.timezone.utc)
                 elif attr[0] == "icon":
                     self.icon = attr[1]
                 elif attr[0] == "tags":
                     self.tags = attr[1].split(",")
 
     def handle_endtag(self, tag):
-        if(tag == "dl"):
+        if tag == "dl":
             if self.categories:
                 self.categories.pop()
 
@@ -49,19 +52,21 @@ class NetscapeParser(HTMLParser):
             self.tags = []
             self.add_mark = False
 
+
 def bookmarks_from_file(filename):
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         bookmarks = f.read()
 
         parser = NetscapeParser()
         parser.feed(bookmarks)
         return parser.bookmarks
 
+
 class Command(BaseCommand):
-    help = 'Populate DB from a Netscape bookmark file'
+    help = "Populate DB from a Netscape bookmark file"
 
     def add_arguments(self, parser):
-        parser.add_argument('filename')
+        parser.add_argument("filename")
 
     def handle(self, *args, **options):
         Bookmark.objects.all().delete()
@@ -80,24 +85,24 @@ class Command(BaseCommand):
 
         print(Bookmark.objects.all())
 
-        #b1 = Bookmark(name="Opa",
+        # b1 = Bookmark(name="Opa",
         #              url="opa.com")
-        #b2 = Bookmark(name="Bicho",
+        # b2 = Bookmark(name="Bicho",
         #              url="bicho.com")
-        #b2.save()
+        # b2.save()
 
-        #t1 = Tag(name="inutil")
-        #t2 = Tag(name="util")
-        #t3 = Tag(name="teste")
-        #b1.save()
-        #t1.save()
-        #t2.save()
-        #t3.save()
-        #b1.tags.add(t1)
-        #b1.save()
-        #b2.tags.add(t2)
-        #b2.tags.add(t3)
-        #b2.save()
+        # t1 = Tag(name="inutil")
+        # t2 = Tag(name="util")
+        # t3 = Tag(name="teste")
+        # b1.save()
+        # t1.save()
+        # t2.save()
+        # t3.save()
+        # b1.tags.add(t1)
+        # b1.save()
+        # b2.tags.add(t2)
+        # b2.tags.add(t3)
+        # b2.save()
 
-        #print(b1)
-        #print(b2)
+        # print(b1)
+        # print(b2)
