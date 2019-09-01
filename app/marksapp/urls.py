@@ -45,6 +45,7 @@ urlpatterns = [
     re_path(r"^changelog/$", views.changelog, name="changelog"),
     re_path(r"^register/$", views.register, name="register"),
     re_path(r"^guide/$", views.guide, name="guide"),
+    re_path(r"^csv/$", views.csv_export, name="csv"),
     re_path(
         r"^",
         include("django.contrib.auth.urls"),

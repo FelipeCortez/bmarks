@@ -26,6 +26,7 @@ import marksapp.forms as forms
 import marksapp.netscape as netscape
 import re
 import markdown
+import csv
 
 
 def paginate(marks, after=None, before=None, limit=100, sort_column="-date_added"):
@@ -183,6 +184,23 @@ def get_param(request, param, params, default=None):
         params.update({param: value})
 
     return value
+
+
+@login_required
+def csv_export(request):
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="bookmarks.csv"'
+
+    bookmarks = Bookmark.objects.all().filter(user=request.user)
+    csv_writer = csv.writer(response)
+    csv_writer.writerow(["url", "title", "tags", "date_added"])
+
+    for bookmark in bookmarks:
+        csv_writer.writerow(
+            [bookmark.url, bookmark.name, bookmark.tags_str(), bookmark.date_added]
+        )
+
+    return response
 
 
 def marks(request, username, tags=[]):
