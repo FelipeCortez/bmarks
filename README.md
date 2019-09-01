@@ -16,11 +16,11 @@ A bookmarking tool made with Python 3 + Django 2.0. Running [here](https://bmark
 - [x] Unlisted marks with dot prefix
 - [x] [Browser extension](https://addons.mozilla.org/en-US/firefox/addon/bmarks/?src=userprofile) (Firefox only currently)
 - [x] Bulk editing
+- [x] Export bookmarks (JSON, CSV)
 - [ ] Wayback Archive Availability API integration
 - [ ] Offline archive with full-text search
 - [ ] Toggle between compact/one-line and spacious/multi-line views
 - [ ] JavaScriptless mode
-- [ ] Export bookmarks
 
 ## Bookmarklet
 
