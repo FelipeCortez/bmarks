@@ -17,7 +17,6 @@
   </div>
 </div>
 
-{% if user.is_authenticated %}
 <form id="search_form" action="{% url 'user_tag' username=username %}" method="GET">
     <div class="form-container">
       <tr>
@@ -55,8 +54,6 @@
     <input type="submit" value="Search" />
     </div>
 </form>
-{% endif %}
-
 
 <ul id="tags">
     <li class="item">
