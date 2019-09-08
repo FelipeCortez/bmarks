@@ -7,14 +7,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('marksapp', '0008_auto_20170414_1238'),
-    ]
+    dependencies = [("marksapp", "0008_auto_20170414_1238")]
 
     operations = [
         migrations.AddField(
-            model_name='bookmark',
-            name='description',
+            model_name="bookmark",
+            name="description",
             field=models.TextField(blank=True),
-        ),
+        )
     ]

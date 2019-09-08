@@ -10,29 +10,49 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Bookmark',
+            name="Bookmark",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=128)),
-                ('url', models.CharField(max_length=512)),
-                ('date_added', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date added')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=128)),
+                ("url", models.CharField(max_length=512)),
+                (
+                    "date_added",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="date added"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Tag',
+            name="Tag",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.SlugField(unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.SlugField(unique=True)),
             ],
         ),
         migrations.AddField(
-            model_name='bookmark',
-            name='tags',
-            field=models.ManyToManyField(to='marksapp.Tag'),
+            model_name="bookmark",
+            name="tags",
+            field=models.ManyToManyField(to="marksapp.Tag"),
         ),
     ]

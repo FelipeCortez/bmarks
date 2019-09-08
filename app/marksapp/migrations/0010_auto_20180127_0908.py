@@ -7,18 +7,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('marksapp', '0009_bookmark_description'),
-    ]
+    dependencies = [("marksapp", "0009_bookmark_description")]
 
     operations = [
-        migrations.AlterModelOptions(
-            name='tag',
-            options={'ordering': ['name']},
-        ),
+        migrations.AlterModelOptions(name="tag", options={"ordering": ["name"]}),
         migrations.AlterField(
-            model_name='bookmark',
-            name='url',
+            model_name="bookmark",
+            name="url",
             field=models.CharField(blank=True, max_length=512),
         ),
     ]

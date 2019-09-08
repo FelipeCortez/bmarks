@@ -9,14 +9,17 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('marksapp', '0004_auto_20170409_1630'),
-    ]
+    dependencies = [("marksapp", "0004_auto_20170409_1630")]
 
     operations = [
         migrations.AlterField(
-            model_name='bookmark',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
-        ),
+            model_name="bookmark",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
+        )
     ]

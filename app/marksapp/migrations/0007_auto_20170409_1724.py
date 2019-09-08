@@ -7,13 +7,8 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('marksapp', '0006_auto_20170409_1713'),
-    ]
+    dependencies = [("marksapp", "0006_auto_20170409_1713")]
 
     operations = [
-        migrations.AlterUniqueTogether(
-            name='bookmark',
-            unique_together=set([]),
-        ),
+        migrations.AlterUniqueTogether(name="bookmark", unique_together=set([]))
     ]

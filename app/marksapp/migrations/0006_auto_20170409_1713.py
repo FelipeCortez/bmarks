@@ -10,12 +10,11 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('marksapp', '0005_auto_20170409_1652'),
+        ("marksapp", "0005_auto_20170409_1652"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='bookmark',
-            unique_together=set([('user', 'url')]),
-        ),
+            name="bookmark", unique_together=set([("user", "url")])
+        )
     ]
