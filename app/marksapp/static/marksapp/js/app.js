@@ -114,7 +114,7 @@ function bumpMark(id) {
 
 function wayback(mark_url, mark_date) {
   $.ajax({
-    url: `http://archive.org/wayback/available?url=${mark_url}&timestamp=${mark_date}&callback=?`,
+    url: `https://archive.org/wayback/available?url=${mark_url}&timestamp=${mark_date}&callback=?`,
     jsonp: "callback",
     dataType: "jsonp",
     success: function(data) {
