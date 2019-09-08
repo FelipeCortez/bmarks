@@ -112,6 +112,22 @@ function bumpMark(id) {
   });
 }
 
+function wayback(mark_url, mark_date) {
+  $.ajax({
+    url: `http://archive.org/wayback/available?url=${mark_url}&timestamp=${mark_date}&callback=?`,
+    jsonp: "callback",
+    dataType: "jsonp",
+    success: function(data) {
+      console.log(data);
+      if ("archived_snapshots" in data &&
+          "closest" in data["archived_snapshots"] &&
+          "url" in data["archived_snapshots"]["closest"]) {
+        window.location.href = data["archived_snapshots"]["closest"]["url"];
+      }
+    }
+  });
+}
+
 function appendForm(form, el) {
   el.parent().parent().append(form);
 }
@@ -204,6 +220,13 @@ $(function() {
     e.preventDefault();
     mark_id = $(this).attr("mark_id");
     bumpMark(mark_id);
+  });
+
+  $(".wayback_btn").click(function(e) {
+    e.preventDefault();
+    mark_url = $(this).attr("mark_url");
+    mark_date = $(this).attr("mark_date");
+    wayback(mark_url, mark_date);
   });
 
   $(".info_btn").click(function(e) {

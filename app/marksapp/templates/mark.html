@@ -26,9 +26,13 @@
     <input id="show{{ mark.id }}" type=checkbox class="show-actions-checkbox">
     <div class="actions">
       {% if user.is_authenticated and user.username == username %}
-      <span class="action"><a mark_id="{{ mark.id }}" class="edit_btn" href="#">edit</a></span>
-      <span class="action"><a mark_id="{{ mark.id }}" class="delete_btn" href="#">delete</a></span>
-      <span class="action"><a mark_id="{{ mark.id }}" class="bump_btn" href="#">bump</a></span>
+      <span class="action"><a class="edit_btn"     mark_id="{{ mark.id }}" href="#">edit</a></span>
+      <span class="action"><a class="delete_btn"   mark_id="{{ mark.id }}" href="#">delete</a></span>
+      <span class="action"><a class="bump_btn"     mark_id="{{ mark.id }}" href="#">bump</a></span>
+      {% if mark.url %}
+      <span class="action"><a class ="wayback_btn" mark_url="{{ mark.url }}" mark_date="{{ mark.date_added | date:"Ymd" }}" href="#">wayback</a></span>
+      {% endif %}
+
       {% endif %}
       <span class="action"><a href="{% url 'mark_permalink' username=username id=mark.id %}">permalink</a></span>
     </div>
