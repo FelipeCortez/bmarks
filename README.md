@@ -17,7 +17,7 @@ A bookmarking tool made with Python 3 + Django 2.0. Running [here](https://bmark
 - [x] [Browser extension](https://addons.mozilla.org/en-US/firefox/addon/bmarks/?src=userprofile) (Firefox only currently)
 - [x] Bulk editing
 - [x] Export bookmarks (JSON, CSV)
-- [ ] Wayback Archive Availability API integration
+- [x] [Wayback Machine](https://archive.org/web/) Availability API integration
 - [ ] Offline archive with full-text search
 - [ ] Toggle between compact/one-line and spacious/multi-line views
 - [ ] JavaScriptless mode
