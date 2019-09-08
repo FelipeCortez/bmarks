@@ -334,6 +334,11 @@ li > a {
   display: inline;
 }
 
+.actions-btn:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .action, .action a {
   color: #8badc0;
   padding: 0 1px 0 1px;
@@ -345,7 +350,6 @@ li > a {
 }
 
 .tag > .action {
-  /*background-color: #d8d7d2;*/
   padding: 0 3px 0 3px;
   margin-right: 0;
   border-right: 1px solid #d8d7d2;
