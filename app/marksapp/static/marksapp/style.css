@@ -391,7 +391,6 @@ li > a {
   box-shadow: inset 2px 2px 0 rgba(0, 0, 0, .04), 2px 2px 0 rgba(0, 0, 0, .04);
   border-radius: 2px;
   border-top: 0;
-  width: 500px;
   background-color: white;
   display: none;
   z-index: 2;

@@ -163,9 +163,11 @@ function filterSuggestions(prefix, field) {
     if (list.children().length > 0) {
       offset = field.offset();
       input_height = field.outerHeight();
+      console.log(field);
       $("#suggestions").css({'top' : (offset.top + input_height) + 'px',
                              'left' : (offset.left) + 'px',
-                             'display': 'block'});
+                             'display': 'block',
+                             'width': field.innerWidth() + 'px'});
     } else {
       $("#suggestions").css({'display': 'none'});
     }
