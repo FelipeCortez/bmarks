@@ -312,6 +312,12 @@ li > a {
   margin-right: 3px;
 }
 
+.failed-action {
+  color: #c08b8b !important;
+  pointer-events: none;
+  cursor: default;
+}
+
 .inline {
   display: inline;
 }

@@ -112,7 +112,7 @@ function bumpMark(id) {
   });
 }
 
-function wayback(mark_url, mark_date) {
+function wayback(mark_url, mark_date, el) {
   $.ajax({
     url: `https://archive.org/wayback/available?url=${mark_url}&timestamp=${mark_date}&callback=?`,
     jsonp: "callback",
@@ -123,6 +123,10 @@ function wayback(mark_url, mark_date) {
           "closest" in data["archived_snapshots"] &&
           "url" in data["archived_snapshots"]["closest"]) {
         window.location.href = data["archived_snapshots"]["closest"]["url"];
+      } else {
+        el.classList.add("failed-action");
+        el.classList.remove("wayback_btn");
+        el.removeAttribute("href");
       }
     }
   });
@@ -226,7 +230,7 @@ $(function() {
     e.preventDefault();
     mark_url = $(this).attr("mark_url");
     mark_date = $(this).attr("mark_date");
-    wayback(mark_url, mark_date);
+    wayback(mark_url, mark_date, this);
   });
 
   $(".info_btn").click(function(e) {
