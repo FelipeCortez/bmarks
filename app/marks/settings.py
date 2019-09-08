@@ -13,7 +13,7 @@ else:
 
 ALLOWED_HOSTS = ["127.0.0.1", ".bmarks.net"]
 
-INTERNAL_IPS = ("127.0.0.1",)
+INTERNAL_IPS = ["127.0.0.1",]
 
 AUTHENTICATION_BACKENDS = ["marksapp.backends.CaseInsensitiveModelBackend"]
 
