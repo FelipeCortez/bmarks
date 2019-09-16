@@ -35,6 +35,7 @@ class Bookmark(models.Model):
     url = models.CharField(max_length=512, blank=True)
     description = models.TextField(blank=True)
     date_added = models.DateTimeField("date added", default=timezone.now)
+    last_bumped = models.DateTimeField("last bumped", blank=True, null=True)
     tags = models.ManyToManyField(Tag)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
 
