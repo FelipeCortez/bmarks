@@ -580,7 +580,7 @@ def api_delete_mark(request, id):
 def api_bump_mark(request, id):
     mark = get_object_or_404(Bookmark, id=id)
     if mark.user == request.user:
-        mark.date_added = now()
+        mark.last_bumped = now()
         mark.save()
 
     if request.method == "POST":
