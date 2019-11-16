@@ -219,6 +219,7 @@ textarea {
 input[type=submit],
 button {
   position: relative;
+  display: block;
   font-family: 'ff-real-headline-pro', Helvetica, Arial, sans-serif;
   background-color: #FEFEFE;
   border: 1px solid #979797;
