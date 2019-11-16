@@ -156,9 +156,12 @@ def user_profile(request):
         user_form = forms.UserForm(request.POST, instance=user_object)
         password_form = PasswordChangeForm(user_object, request.POST)
         profile_form = forms.ProfileForm(request.POST, instance=profile_object)
-        if profile_form.is_valid() and user_form.is_valid() and password_form.is_valid():
+        if profile_form.is_valid() and user_form.is_valid():
             user_form.save()
             profile_form.save()
+            return HttpResponseRedirect(reverse("index"))
+
+        if password_form.is_valid():
             password_form.save()
             update_session_auth_hash(request, user_object)
             return HttpResponseRedirect(reverse("index"))
