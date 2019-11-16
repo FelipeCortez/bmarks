@@ -228,7 +228,6 @@ button {
   padding: 10px;
   box-shadow: 2px 2px 0 rgba(0, 0, 0, .04);
   outline: none;
-  float: right;
 }
 
 input[type=submit]:hover,
@@ -241,6 +240,12 @@ button:hover {
 ::placeholder {
   color: #AAAAAA;
   font-style: italic;
+}
+
+.errorlist {
+  background-color: rgb(255, 245, 153);
+  color: rgb(100, 100, 38);
+  padding: 8px;
 }
 
 /* main site ---------------------------------- */

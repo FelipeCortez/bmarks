@@ -11,8 +11,8 @@
 {% endblock %}
 
 {% block content %}
-    <form action="#" method="POST">
-        <div class="form-container" >
+      <div class="form-container" >
+        <form action="#" method="POST">
         {% csrf_token %}
         {{ form.non_field_errors }}
         <label for="{{ user_form.email.id_for_label }}">E-mail</label>
@@ -21,9 +21,35 @@
         <label for="{{ profile_form.visibility.id_for_label }}">Default visibility</label>
         {% for radio in profile_form.visibility %}
         <div class="radio-buttons">
-            {{ radio }}
+          {{ radio }}
         </div>
         {% endfor %}
+
         <input type="submit" value="Update" />
-    </form>
+        </form>
+
+        <hr style="margin: 32px 0">
+
+        <form action="#" method="POST">
+          {% csrf_token %}
+
+          {{ password_form.non_field_errors }}
+
+          <label for="{{ password_form.old_password.id_for_label }}">Current password</label>
+          <input type="password" name="old_password" required="" id="id_old_password">
+          {{ password_form.old_password.errors }}
+
+          <label for="{{ password_form.old_password.id_for_label }}">New password</label>
+          {{ password_form.new_password1 }}
+          {{ password_form.new_password1.errors }}
+
+          <label for="{{ password_form.old_password.id_for_label }}">New password again</label>
+          {{ password_form.new_password2 }}
+          {{ password_form.new_password2.errors }}
+
+          <input type="submit" value="Change password" />
+        </form>
+
+      </div>
+
 {% endblock %}
