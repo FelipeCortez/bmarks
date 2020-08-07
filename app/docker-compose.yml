@@ -9,6 +9,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=marks
+    restart: always
   web:
     build: .
     command: python3 manage.py runserver 0.0.0.0:8000
@@ -20,6 +21,7 @@ services:
       - DJANGO_DEVELOPMENT
     depends_on:
       - db
+    restart: always
 
 volumes:
   postgres_data:
