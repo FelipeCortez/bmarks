@@ -1,4 +1,4 @@
-version: '3'
+version: '2.2'
 
 services:
   db:
@@ -21,6 +21,7 @@ services:
       - DJANGO_DEVELOPMENT
     depends_on:
       - db
+    cpus: 0.75
     restart: always
 
 volumes:
