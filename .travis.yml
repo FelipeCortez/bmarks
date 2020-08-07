@@ -21,6 +21,6 @@ script:
     - python3 app/manage.py test
 deploy:
     - provider: script
-      script: ssh felipecortez@felipecortez.net "cd /srv/www/bmarks.net/app && git pull"
+      script: ssh felipecortez@api.felipecortez.net "cd /srv/www/bmarks.net/app && git pull"
       on:
          branch: develop
