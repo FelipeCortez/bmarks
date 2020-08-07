@@ -2,6 +2,7 @@ language: python
 addons:
     ssh_known_hosts:
         - felipecortez.net
+        - api.felipecortez.net
 services:
     - postgresql
 python:
