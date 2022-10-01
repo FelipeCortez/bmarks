@@ -1,7 +1,5 @@
 # bmarks
 
-[![Build Status](https://travis-ci.org/FelipeCortez/bmarks.svg?branch=master)](https://travis-ci.org/FelipeCortez/bmarks)
-
 A bookmarking tool made with Python 3 + Django 2.0. Running [here](https://bmarks.net/felipecortez).
 
 ## Features
@@ -24,18 +22,6 @@ A bookmarking tool made with Python 3 + Django 2.0. Running [here](https://bmark
 ## Bookmarklet
 
 ```javascript:location.href='https://bmarks.net/add/?url='+encodeURIComponent(location.href)+'&name='+encodeURIComponent(document.title)```
-
-## Running with Docker
-
-In a staging environment, run `export DJANGO_DEVELOPMENT=1` before starting your containers.
-
-In the `app` folder, run `docker-compose up --build`.
-
-To run the migrations, `docker-compose run web python3 manage.py migrate`.
-
-The application should be up and running afterwards.
-
-In a production environment, set `STATIC_ROOT`, run `collectstatic` and serve the static files with Nginx or Apache as mentioned in the [Django documentation](https://docs.djangoproject.com/en/2.2/howto/static-files/deployment/).
 
 ## License
 
